@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import static hous.server.common.success.SuccessStatusCode.CREATED;
 import static hous.server.common.success.SuccessStatusCode.OK;
 
 @Getter
@@ -20,11 +21,12 @@ public enum SuccessCode {
     REISSUE_TOKEN_SUCCESS(OK, "토큰 갱신 성공입니다."),
 
     // 온보딩
-    CHECK_ONBOARDING_SUCCESS(OK, "온보딩 등록여부 조회 성공입니다.");
+    CHECK_ONBOARDING_SUCCESS(OK, "온보딩 등록여부 조회 성공입니다."),
 
     /**
      * 201 CREATED
      */
+    SET_ONBOARDING_SUCCESS(CREATED, "온보딩 정보 등록 성공입니다.")
 
     /**
      * 202 ACCEPTED
