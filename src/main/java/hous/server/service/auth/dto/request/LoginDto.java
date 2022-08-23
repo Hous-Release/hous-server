@@ -14,11 +14,13 @@ public class LoginDto {
 
     private String token;
 
-    public static LoginDto of(UserSocialType socialType, String token) {
-        return new LoginDto(socialType, token);
+    private String fcmToken;
+
+    public static LoginDto of(UserSocialType socialType, String token, String fcmToken) {
+        return new LoginDto(socialType, token, fcmToken);
     }
 
     public CreateUserDto toCreateUserDto(String socialId) {
-        return CreateUserDto.of(socialId, socialType);
+        return CreateUserDto.of(socialId, socialType, fcmToken);
     }
 }

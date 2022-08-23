@@ -17,7 +17,7 @@ public class UserService {
     @Transactional
     public Long registerUser(CreateUserDto request) {
         UserServiceUtils.validateNotExistsUser(userRepository, request.getSocialId(), request.getSocialType());
-        User user = userRepository.save(User.newInstance(request.getSocialId(), request.getSocialType()));
+        User user = userRepository.save(User.newInstance(request.getSocialId(), request.getSocialType(), request.getFcmToken()));
         return user.getId();
     }
 }

@@ -16,7 +16,7 @@ import javax.persistence.Enumerated;
 @Embeddable
 public class SocialInfo {
 
-    @Column(nullable = false, length = 200)
+    @Column(nullable = false, length = 300)
     private String socialId;
 
     @Column(nullable = false, length = 30)
