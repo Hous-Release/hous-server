@@ -6,6 +6,7 @@ import hous.server.domain.common.AuditingTimeEntity;
 import hous.server.domain.personality.Personality;
 import hous.server.domain.room.Participate;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -55,4 +56,21 @@ public class Onboarding extends AuditingTimeEntity {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "badge_id")
     private final List<Badge> badges = new ArrayList<>();
+
+    @Builder(access = AccessLevel.PRIVATE)
+    public Onboarding(String nickname, LocalDateTime birthday, String introduction, boolean isChecked, Personality personality, Represent represent, TestScore testScore) {
+        this.nickname = nickname;
+        this.birthday = birthday;
+        this.introduction = introduction;
+        this.isChecked = isChecked;
+        this.personality = personality;
+        this.represent = represent;
+        this.testScore = testScore;
+    }
+
+    public static Onboarding newInstance() {
+        return Onboarding.builder()
+                .isChecked(false)
+                .build();
+    }
 }

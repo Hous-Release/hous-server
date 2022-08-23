@@ -34,13 +34,15 @@ public class User extends AuditingTimeEntity {
     @JoinColumn(name = "setting_id", nullable = false)
     private Setting setting;
 
-    private User(String socialId, UserSocialType socialType, String fcmToken) {
+    private User(String socialId, UserSocialType socialType, String fcmToken, Onboarding onboarding, Setting setting) {
         this.socialInfo = SocialInfo.of(socialId, socialType);
         this.fcmToken = fcmToken;
         this.status = UserStatus.ACTIVE;
+        this.onboarding = onboarding;
+        this.setting = setting;
     }
 
-    public static User newInstance(String socialId, UserSocialType socialType, String fcmToken) {
-        return new User(socialId, socialType, fcmToken);
+    public static User newInstance(String socialId, UserSocialType socialType, String fcmToken, Onboarding onboarding, Setting setting) {
+        return new User(socialId, socialType, fcmToken, onboarding, setting);
     }
 }
