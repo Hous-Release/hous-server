@@ -13,7 +13,9 @@ public class CreateUserDto {
 
     private UserSocialType socialType;
 
-    public static CreateUserDto of(String socialId, UserSocialType socialType) {
-        return new CreateUserDto(socialId, socialType);
+    private String fcmToken;
+
+    public static CreateUserDto of(String socialId, UserSocialType socialType, String fcmToken) {
+        return new CreateUserDto(socialId, socialType, fcmToken);
     }
 }

@@ -22,7 +22,11 @@ public class LoginRequestDto {
     @NotBlank(message = "{auth.token.notBlank}")
     private String token;
 
+    @ApiModelProperty(value = "토큰 - fcmToken", example = "dfdafjdslkfjslfjslifsjvmdsklvdosijiofjamvsdlkvmiodsjfdiosmvsdjvosadjvosd")
+    @NotBlank(message = "{auth.fcmToken.notBlank}")
+    private String fcmToken;
+
     public LoginDto toServiceDto() {
-        return LoginDto.of(socialType, token);
+        return LoginDto.of(socialType, token, fcmToken);
     }
 }
