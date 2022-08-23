@@ -73,4 +73,8 @@ public class Onboarding extends AuditingTimeEntity {
                 .isChecked(false)
                 .build();
     }
+
+    public void addParticipate(Participate participate) {
+        this.participates.add(participate);
+    }
 }

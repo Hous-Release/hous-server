@@ -4,6 +4,7 @@ import hous.server.domain.common.AuditingTimeEntity;
 import hous.server.domain.rule.Rule;
 import hous.server.domain.todo.Todo;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -43,4 +44,28 @@ public class Room extends AuditingTimeEntity {
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Todo> todos = new ArrayList<>();
+
+    @Builder(access = AccessLevel.PRIVATE)
+    public Room(String name, String code, int participantsCnt, int rulesCnt, int todosCnt) {
+        this.name = name;
+        this.code = code;
+        this.participantsCnt = participantsCnt;
+        this.rulesCnt = rulesCnt;
+        this.todosCnt = todosCnt;
+    }
+
+    public static Room newInstance(String name, String code) {
+        return Room.builder()
+                .name(name)
+                .code(code)
+                .participantsCnt(0)
+                .rulesCnt(0)
+                .todosCnt(0)
+                .build();
+    }
+
+    public void addParticipate(Participate participate) {
+        this.participates.add(participate);
+        this.participantsCnt += 1;
+    }
 }
