@@ -26,6 +26,14 @@ public class User extends AuditingTimeEntity {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "onboarding_id", nullable = false)
+    private Onboarding onboarding;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "setting_id", nullable = false)
+    private Setting setting;
+
     private User(String socialId, UserSocialType socialType, String fcmToken) {
         this.socialInfo = SocialInfo.of(socialId, socialType);
         this.fcmToken = fcmToken;
