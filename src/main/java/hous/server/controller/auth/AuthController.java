@@ -41,7 +41,8 @@ public class AuthController {
             @ApiResponse(
                     code = 400,
                     message = "1. 유저의 socialType 를 입력해주세요.\n"
-                            + "2. access token 을 입력해주세요.",
+                            + "2. access token 을 입력해주세요.\n"
+                            + "3. fcm token 을 입력해주세요.",
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "유효하지 않은 토큰입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 409, message = "이미 해당 계정으로 회원가입하셨습니다.\n로그인 해주세요.", response = ErrorResponse.class),
