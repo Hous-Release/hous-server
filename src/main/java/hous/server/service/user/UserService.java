@@ -1,5 +1,7 @@
 package hous.server.service.user;
 
+import hous.server.domain.user.Onboarding;
+import hous.server.domain.user.Setting;
 import hous.server.domain.user.User;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.user.dto.request.CreateUserDto;
@@ -17,7 +19,7 @@ public class UserService {
     @Transactional
     public Long registerUser(CreateUserDto request) {
         UserServiceUtils.validateNotExistsUser(userRepository, request.getSocialId(), request.getSocialType());
-        User user = userRepository.save(User.newInstance(request.getSocialId(), request.getSocialType(), request.getFcmToken()));
+        User user = userRepository.save(User.newInstance(request.getSocialId(), request.getSocialType(), request.getFcmToken(), Onboarding.newInstance(), Setting.newInstance()));
         return user.getId();
     }
 }
