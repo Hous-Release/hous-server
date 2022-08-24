@@ -30,7 +30,7 @@ public class RoomController {
     private final RoomService roomService;
 
     @ApiOperation(
-            value = "방 만들기/입장 페이지 - 방을 만듭니다.",
+            value = "[인증] 방 만들기/입장 페이지 - 방을 만듭니다.",
             notes = "방 이름을 8글자 이내로 설정하고 방 생성을 요청합니다.\n" +
                     "방이 생성되면 방의 id 와 초대코드를 전달합니다."
     )
@@ -42,6 +42,7 @@ public class RoomController {
                             + "2. 방 이름을 8 글자 이내로 입력해주세요.",
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+            @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 409, message = "이미 참가중인 방이 있습니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })

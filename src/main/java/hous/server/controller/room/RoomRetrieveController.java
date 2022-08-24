@@ -24,7 +24,7 @@ public class RoomRetrieveController {
     private final RoomRetrieveService roomRetrieveService;
 
     @ApiOperation(
-            value = "방 만들기/입장 페이지 - 참가중인 방을 조회합니다.",
+            value = "[인증] 방 만들기/입장 페이지 - 참가중인 방을 조회합니다.",
             notes = "참가중인 방이 있다면 방의 id 를 전달합니다.\n" +
                     "참가중인 방이 없다면 null 을 전달합니다."
     )
