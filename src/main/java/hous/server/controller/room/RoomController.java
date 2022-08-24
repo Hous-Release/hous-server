@@ -32,8 +32,8 @@ public class RoomController {
             @ApiResponse(code = 201, message = "방 생성 성공입니다."),
             @ApiResponse(
                     code = 400,
-                    message = "1. 방 이름을 입력해주세요.\n"
-                            + "2. 방 이름을 8 글자 이내로 입력해주세요.",
+                    message = "1. 방 이름을 입력해주세요. (name)\n"
+                            + "2. 방 이름을 8 글자 이내로 입력해주세요. (name)",
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
