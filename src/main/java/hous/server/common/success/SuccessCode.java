@@ -21,6 +21,7 @@ public enum SuccessCode {
     REISSUE_TOKEN_SUCCESS(OK, "토큰 갱신 성공입니다."),
 
     GET_ROOM_SUCCESS(OK, "참가중인 방 조회 성공입니다."),
+    JOIN_ROOM_SUCCESS(OK, "방 참여 성공입니다."),
 
     /**
      * 201 CREATED

@@ -8,14 +8,14 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
-public class CreateRoomResponse {
+public class RoomInfoResponse {
 
     private Long roomId;
 
     private String roomCode;
 
-    public static CreateRoomResponse of(Room room) {
-        return CreateRoomResponse.builder()
+    public static RoomInfoResponse of(Room room) {
+        return RoomInfoResponse.builder()
                 .roomId(room.getId())
                 .roomCode(room.getCode())
                 .build();

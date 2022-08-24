@@ -8,7 +8,7 @@ import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.User;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.room.dto.request.CreateRoomRequestDto;
-import hous.server.service.room.dto.response.CreateRoomResponse;
+import hous.server.service.room.dto.response.RoomInfoResponse;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class RoomService {
     private final ParticipateRepository participateRepository;
 
     @Transactional
-    public CreateRoomResponse createRoom(CreateRoomRequestDto request, Long userId) {
+    public RoomInfoResponse createRoom(CreateRoomRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Onboarding onboarding = user.getOnboarding();
         RoomServiceUtils.validateNotExistsParticipate(participateRepository, onboarding);
@@ -32,6 +32,18 @@ public class RoomService {
         Participate participate = participateRepository.save(Participate.newInstance(onboarding, room));
         onboarding.addParticipate(participate);
         room.addParticipate(participate);
-        return CreateRoomResponse.of(room);
+        return RoomInfoResponse.of(room);
+    }
+
+    @Transactional
+    public RoomInfoResponse joinRoom(Long roomId, Long userId) {
+        User user = UserServiceUtils.findUserById(userRepository, userId);
+        Onboarding onboarding = user.getOnboarding();
+        RoomServiceUtils.validateNotExistsParticipate(participateRepository, onboarding);
+        Room room = RoomServiceUtils.findRoomById(roomRepository, roomId);
+        Participate participate = participateRepository.save(Participate.newInstance(onboarding, room));
+        onboarding.addParticipate(participate);
+        room.addParticipate(participate);
+        return RoomInfoResponse.of(room);
     }
 }
