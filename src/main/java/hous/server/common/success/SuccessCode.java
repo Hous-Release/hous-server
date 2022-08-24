@@ -20,6 +20,8 @@ public enum SuccessCode {
     LOGIN_SUCCESS(OK, "로그인 성공입니다."),
     REISSUE_TOKEN_SUCCESS(OK, "토큰 갱신 성공입니다."),
 
+    GET_ROOM_SUCCESS(OK, "참가중인 방 조회 성공입니다."),
+
     /**
      * 201 CREATED
      */
