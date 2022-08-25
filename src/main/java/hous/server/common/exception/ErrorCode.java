@@ -40,6 +40,7 @@ public enum ErrorCode {
     NOT_FOUND_USER_EXCEPTION(NOT_FOUND, "탈퇴했거나 존재하지 않는 유저입니다."),
     NOT_FOUND_REFRESH_TOKEN_EXCEPTION(NOT_FOUND, "만료된 리프레시 토큰입니다."),
     NOT_FOUND_ONBOARDING_EXCEPTION(NOT_FOUND, "유저의 온보딩 정보가 존재하지 않습니다."),
+    NOT_FOUND_ROOM_EXCEPTION(NOT_FOUND, "존재하지 않는 방입니다."),
 
     /**
      * 405 Method Not Allowed
@@ -56,6 +57,7 @@ public enum ErrorCode {
      */
     CONFLICT_EXCEPTION(CONFLICT, "이미 존재합니다."),
     CONFLICT_USER_EXCEPTION(CONFLICT, "이미 해당 계정으로 회원가입하셨습니다.\n로그인 해주세요."),
+    CONFLICT_JOINED_ROOM_EXCEPTION(CONFLICT, "이미 참가중인 방이 있습니다."),
 
     /**
      * 415 Unsupported Media Type

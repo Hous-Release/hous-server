@@ -75,10 +75,14 @@ public class Onboarding extends AuditingTimeEntity {
                 .isChecked(false)
                 .build();
     }
-
+    
     public void setOnboarding(String nickname, LocalDate birthday) {
         this.nickname = nickname;
         this.birthday = birthday;
         this.isChecked = true;
+    }
+
+    public void addParticipate(Participate participate) {
+        this.participates.add(participate);
     }
 }
