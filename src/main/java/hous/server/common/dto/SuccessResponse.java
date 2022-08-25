@@ -1,6 +1,5 @@
 package hous.server.common.dto;
 
-import feign.Response;
 import hous.server.common.success.SuccessCode;
 import lombok.*;
 import org.springframework.http.ResponseEntity;
@@ -9,15 +8,15 @@ import org.springframework.http.ResponseEntity;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class SuccessResponse {
+public class SuccessResponse<T> {
 
     private int status;
     private boolean success;
     private String message;
-    private Object data;
+    private T data;
 
-    public static ResponseEntity<SuccessResponse> success(SuccessCode successCode, Object data) {
-        return ResponseEntity.status(successCode.getStatus())
+    public static <T> ResponseEntity<T> success(SuccessCode successCode, T data) {
+        return (ResponseEntity<T>) ResponseEntity.status(successCode.getStatus())
                 .body(new SuccessResponse(successCode.getStatus(), true, successCode.getMessage(), data));
     }
 }
