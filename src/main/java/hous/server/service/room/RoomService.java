@@ -16,14 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class RoomService {
 
     private final UserRepository userRepository;
     private final RoomRepository roomRepository;
     private final ParticipateRepository participateRepository;
 
-    @Transactional
     public RoomInfoResponse createRoom(CreateRoomRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Onboarding onboarding = user.getOnboarding();
@@ -35,7 +34,6 @@ public class RoomService {
         return RoomInfoResponse.of(room);
     }
 
-    @Transactional
     public RoomInfoResponse joinRoom(Long roomId, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Onboarding onboarding = user.getOnboarding();

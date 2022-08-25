@@ -13,20 +13,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
     private final OnboardingRepository onboardingRepository;
 
-    @Transactional
     public Long registerUser(CreateUserDto request) {
         UserServiceUtils.validateNotExistsUser(userRepository, request.getSocialId(), request.getSocialType());
         User user = userRepository.save(User.newInstance(request.getSocialId(), request.getSocialType(), request.getFcmToken(), Onboarding.newInstance(), Setting.newInstance()));
         return user.getId();
     }
 
-    @Transactional
     public void setOnboardingInfo(SetOnboardingInfoRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Onboarding onboarding = user.getOnboarding();
