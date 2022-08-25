@@ -31,6 +31,5 @@ public class UserService {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Onboarding onboarding = user.getOnboarding();
         onboarding.setOnboarding(request.getNickname(), request.getBirthday());
-        onboardingRepository.save(onboarding);
     }
 }
