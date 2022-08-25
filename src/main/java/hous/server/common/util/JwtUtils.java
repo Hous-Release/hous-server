@@ -1,7 +1,7 @@
 package hous.server.common.util;
 
 import hous.server.config.security.JwtConstants;
-import hous.server.service.auth.dto.response.TokenResponseDto;
+import hous.server.service.auth.dto.response.TokenResponse;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -35,7 +35,7 @@ public class JwtUtils {
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public TokenResponseDto createTokenInfo(Long userId) {
+    public TokenResponse createTokenInfo(Long userId) {
 
         long now = (new Date()).getTime();
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
@@ -57,7 +57,7 @@ public class JwtUtils {
         redisTemplate.opsForValue()
                 .set("RT:" + userId, refreshToken, REFRESH_TOKEN_EXPIRE_TIME, TimeUnit.MILLISECONDS);
 
-        return TokenResponseDto.of(accessToken, refreshToken);
+        return TokenResponse.of(accessToken, refreshToken);
     }
 
     public boolean validateToken(String token) {

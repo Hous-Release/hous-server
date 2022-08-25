@@ -3,7 +3,7 @@ package hous.server.service.auth;
 import hous.server.common.exception.UnAuthorizedException;
 import hous.server.common.util.JwtUtils;
 import hous.server.service.auth.dto.request.TokenRequestDto;
-import hous.server.service.auth.dto.response.TokenResponseDto;
+import hous.server.service.auth.dto.response.TokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -20,12 +20,12 @@ public class CreateTokenService {
     private final RedisTemplate redisTemplate;
 
     @Transactional
-    public TokenResponseDto createTokenInfo(Long userId) {
+    public TokenResponse createTokenInfo(Long userId) {
         return jwtProvider.createTokenInfo(userId);
     }
 
     @Transactional
-    public TokenResponseDto reissueToken(TokenRequestDto request) {
+    public TokenResponse reissueToken(TokenRequestDto request) {
         if (!jwtProvider.validateToken(request.getRefreshToken())) {
             throw new UnAuthorizedException(String.format("주어진 리프레시 토큰 (%s) 이 유효하지 않습니다.", request.getRefreshToken()));
         }
