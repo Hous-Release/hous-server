@@ -1,5 +1,6 @@
 package hous.server.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import hous.server.domain.badge.Badge;
 import hous.server.domain.badge.Represent;
 import hous.server.domain.common.AuditingTimeEntity;
@@ -11,7 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,8 @@ public class Onboarding extends AuditingTimeEntity {
     private String nickname;
 
     @Column
-    private LocalDateTime birthday;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private LocalDate birthday;
 
     @Column(length = 30)
     private String introduction;
@@ -58,7 +60,7 @@ public class Onboarding extends AuditingTimeEntity {
     private final List<Badge> badges = new ArrayList<>();
 
     @Builder(access = AccessLevel.PRIVATE)
-    public Onboarding(String nickname, LocalDateTime birthday, String introduction, boolean isChecked, Personality personality, Represent represent, TestScore testScore) {
+    public Onboarding(String nickname, LocalDate birthday, String introduction, boolean isChecked, Personality personality, Represent represent, TestScore testScore) {
         this.nickname = nickname;
         this.birthday = birthday;
         this.introduction = introduction;
@@ -72,5 +74,11 @@ public class Onboarding extends AuditingTimeEntity {
         return Onboarding.builder()
                 .isChecked(false)
                 .build();
+    }
+
+    public void setOnboarding(String nickname, LocalDate birthday) {
+        this.nickname = nickname;
+        this.birthday = birthday;
+        this.isChecked = true;
     }
 }
