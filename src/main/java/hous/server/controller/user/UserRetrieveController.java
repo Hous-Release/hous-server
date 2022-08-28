@@ -6,6 +6,7 @@ import hous.server.common.success.SuccessCode;
 import hous.server.config.interceptor.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.service.user.UserRetrieveService;
+import hous.server.service.user.dto.response.CheckOnboardingInfoResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -36,7 +37,7 @@ public class UserRetrieveController {
     })
     @Auth
     @GetMapping("/onboarding/check")
-    public ResponseEntity<SuccessResponse> checkMyOnboardingInfo(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<CheckOnboardingInfoResponse> checkMyOnboardingInfo(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.CHECK_ONBOARDING_SUCCESS, userRetrieveService.checkMyOnboardingInfo(userId));
     }
 }

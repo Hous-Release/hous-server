@@ -6,6 +6,7 @@ import hous.server.common.success.SuccessCode;
 import hous.server.config.interceptor.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.service.room.RoomRetrieveService;
+import hous.server.service.room.dto.response.GetRoomResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -36,7 +37,7 @@ public class RoomRetrieveController {
     })
     @Auth
     @GetMapping("/v1/room")
-    public ResponseEntity<SuccessResponse> getRoom(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<GetRoomResponse> getRoom(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_ROOM_SUCCESS, roomRetrieveService.getRoom(userId));
     }
 }

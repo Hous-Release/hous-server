@@ -7,6 +7,7 @@ import hous.server.config.interceptor.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.service.room.RoomService;
 import hous.server.service.room.dto.request.CreateRoomRequestDto;
+import hous.server.service.room.dto.response.RoomInfoResponse;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import javax.validation.Valid;
 
 @Api(tags = "Room")
 @RestController
+@RequestMapping("/v1/room")
 @RequiredArgsConstructor
 public class RoomController {
 
@@ -42,8 +44,8 @@ public class RoomController {
     })
     @Auth
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/v1/room")
-    public ResponseEntity<SuccessResponse> createRoom(@Valid @RequestBody CreateRoomRequestDto request, @ApiIgnore @UserId Long userId) {
+    @PostMapping("")
+    public ResponseEntity<RoomInfoResponse> createRoom(@Valid @RequestBody CreateRoomRequestDto request, @ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.CREATE_ROOM_SUCCESS, roomService.createRoom(request, userId));
     }
 
@@ -64,10 +66,10 @@ public class RoomController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
-    @PostMapping("/v1/room/{roomId}/join")
-    public ResponseEntity<SuccessResponse> joinRoom(@ApiParam(name = "roomId", value = "참가할 room 의 id", required = true, example = "1")
-                                                    @PathVariable Long roomId,
-                                                    @ApiIgnore @UserId Long userId) {
+    @PostMapping("/{roomId}/join")
+    public ResponseEntity<RoomInfoResponse> joinRoom(@ApiParam(name = "roomId", value = "참가할 room 의 id", required = true, example = "1")
+                                                     @PathVariable Long roomId,
+                                                     @ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.JOIN_ROOM_SUCCESS, roomService.joinRoom(roomId, userId));
     }
 }

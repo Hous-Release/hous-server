@@ -7,13 +7,13 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
-public class TokenResponseDto {
+public class TokenResponse {
 
     private String accessToken;
     private String refreshToken;
 
-    public static TokenResponseDto of(String accessToken, String refreshToken) {
-        return TokenResponseDto.builder()
+    public static TokenResponse of(String accessToken, String refreshToken) {
+        return TokenResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
