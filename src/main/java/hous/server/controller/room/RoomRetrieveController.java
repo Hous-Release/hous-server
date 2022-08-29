@@ -12,13 +12,15 @@ import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 @Api(tags = "Room")
-@RequiredArgsConstructor
 @RestController
+@RequestMapping("/v1/room")
+@RequiredArgsConstructor
 public class RoomRetrieveController {
 
     private final RoomRetrieveService roomRetrieveService;
@@ -35,7 +37,7 @@ public class RoomRetrieveController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
-    @GetMapping("/v1/room")
+    @GetMapping
     public ResponseEntity<GetRoomResponse> getRoom(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_ROOM_SUCCESS, roomRetrieveService.getRoom(userId));
     }
@@ -51,7 +53,7 @@ public class RoomRetrieveController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
-    @GetMapping("/v1/room/info")
+    @GetMapping("/info")
     public ResponseEntity<GetRoomInfoResponse> getRoomInfo(@ApiParam(name = "code", value = "참가하려는 방 코드", required = true, example = "PNO6VN6A")
                                                            @RequestParam String code) {
         return SuccessResponse.success(SuccessCode.GET_ROOM_INFO_SUCCESS, roomRetrieveService.getRoomInfo(code));
