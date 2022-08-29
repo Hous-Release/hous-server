@@ -3,6 +3,7 @@ package hous.server.domain.room;
 import hous.server.domain.common.AuditingTimeEntity;
 import hous.server.domain.rule.Rule;
 import hous.server.domain.todo.Todo;
+import hous.server.domain.user.Onboarding;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +21,10 @@ public class Room extends AuditingTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "onboarding_id", nullable = false)
+    private Onboarding owner;
 
     @Column(nullable = false, length = 30)
     private String name;
@@ -46,7 +51,8 @@ public class Room extends AuditingTimeEntity {
     private final List<Todo> todos = new ArrayList<>();
 
     @Builder(access = AccessLevel.PRIVATE)
-    public Room(String name, String code, int participantsCnt, int rulesCnt, int todosCnt) {
+    public Room(Onboarding owner, String name, String code, int participantsCnt, int rulesCnt, int todosCnt) {
+        this.owner = owner;
         this.name = name;
         this.code = code;
         this.participantsCnt = participantsCnt;
@@ -54,8 +60,9 @@ public class Room extends AuditingTimeEntity {
         this.todosCnt = todosCnt;
     }
 
-    public static Room newInstance(String name, String code) {
+    public static Room newInstance(Onboarding owner, String name, String code) {
         return Room.builder()
+                .owner(owner)
                 .name(name)
                 .code(code)
                 .participantsCnt(0)

@@ -27,7 +27,7 @@ public class RoomService {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Onboarding onboarding = user.getOnboarding();
         RoomServiceUtils.validateNotExistsParticipate(participateRepository, onboarding);
-        Room room = roomRepository.save(Room.newInstance(request.getName(), RoomServiceUtils.createUniqueRoomCode(roomRepository)));
+        Room room = roomRepository.save(Room.newInstance(onboarding, request.getName(), RoomServiceUtils.createUniqueRoomCode(roomRepository)));
         Participate participate = participateRepository.save(Participate.newInstance(onboarding, room));
         onboarding.addParticipate(participate);
         room.addParticipate(participate);
