@@ -39,7 +39,7 @@ public class Onboarding extends AuditingTimeEntity {
     private boolean isChecked;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "personality_id")
+    @JoinColumn(name = "personality_id", nullable = false)
     private Personality personality;
 
     @OneToOne(mappedBy = "onboarding", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -70,12 +70,13 @@ public class Onboarding extends AuditingTimeEntity {
         this.testScore = testScore;
     }
 
-    public static Onboarding newInstance() {
+    public static Onboarding newInstance(Personality personality) {
         return Onboarding.builder()
                 .isChecked(false)
+                .personality(personality)
                 .build();
     }
-    
+
     public void setOnboarding(String nickname, LocalDate birthday) {
         this.nickname = nickname;
         this.birthday = birthday;

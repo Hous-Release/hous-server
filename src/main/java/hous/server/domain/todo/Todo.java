@@ -3,6 +3,7 @@ package hous.server.domain.todo;
 import hous.server.domain.common.AuditingTimeEntity;
 import hous.server.domain.room.Room;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,4 +32,23 @@ public class Todo extends AuditingTimeEntity {
 
     @OneToMany(mappedBy = "todo", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Take> takes = new ArrayList<>();
+
+    @Builder(access = AccessLevel.PRIVATE)
+    public Todo(Room room, String name, boolean isPushNotification) {
+        this.room = room;
+        this.name = name;
+        this.isPushNotification = isPushNotification;
+    }
+
+    public static Todo newInstance(Room room, String name, boolean isPushNotification) {
+        return Todo.builder()
+                .room(room)
+                .name(name)
+                .isPushNotification(isPushNotification)
+                .build();
+    }
+
+    public void addTake(Take take) {
+        this.takes.add(take);
+    }
 }

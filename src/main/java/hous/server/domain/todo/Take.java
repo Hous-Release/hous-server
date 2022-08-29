@@ -3,6 +3,7 @@ package hous.server.domain.todo;
 import hous.server.domain.common.AuditingTimeEntity;
 import hous.server.domain.user.Onboarding;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,4 +30,21 @@ public class Take extends AuditingTimeEntity {
 
     @OneToMany(mappedBy = "take", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Redo> redos = new ArrayList<>();
+
+    @Builder(access = AccessLevel.PRIVATE)
+    public Take(Todo todo, Onboarding onboarding) {
+        this.todo = todo;
+        this.onboarding = onboarding;
+    }
+
+    public static Take newInstance(Todo todo, Onboarding onboarding) {
+        return Take.builder()
+                .todo(todo)
+                .onboarding(onboarding)
+                .build();
+    }
+
+    public void addRedo(Redo redo) {
+        this.redos.add(redo);
+    }
 }
