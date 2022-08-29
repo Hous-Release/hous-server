@@ -1,8 +1,11 @@
 package hous.server.service.room;
 
 import hous.server.domain.room.Participate;
+import hous.server.domain.room.Room;
+import hous.server.domain.room.repository.RoomRepository;
 import hous.server.domain.user.User;
 import hous.server.domain.user.repository.UserRepository;
+import hous.server.service.room.dto.response.GetRoomInfoResponse;
 import hous.server.service.room.dto.response.GetRoomResponse;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RoomRetrieveService {
 
     private final UserRepository userRepository;
+    private final RoomRepository roomRepository;
 
     public GetRoomResponse getRoom(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
@@ -24,5 +28,10 @@ public class RoomRetrieveService {
             Participate participate = user.getOnboarding().getParticipates().get(0);
             return GetRoomResponse.of(participate.getRoom());
         }
+    }
+
+    public GetRoomInfoResponse getRoomInfo(String code) {
+        Room room = roomRepository.findRoomByCode(code);
+        return GetRoomInfoResponse.of(room);
     }
 }

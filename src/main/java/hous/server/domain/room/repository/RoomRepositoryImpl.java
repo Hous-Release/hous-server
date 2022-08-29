@@ -26,4 +26,12 @@ public class RoomRepositoryImpl implements RoomRepositoryCustom {
                 .where(room.id.eq(id))
                 .fetchOne();
     }
+
+    @Override
+    public Room findRoomByCode(String code) {
+        return queryFactory
+                .selectFrom(room)
+                .where(room.code.eq(code))
+                .fetchOne();
+    }
 }
