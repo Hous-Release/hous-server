@@ -1,12 +1,10 @@
 package hous.server.common.success;
 
-import static hous.server.common.success.SuccessStatusCode.CREATED;
-import static hous.server.common.success.SuccessStatusCode.NO_CONTENT;
-import static hous.server.common.success.SuccessStatusCode.OK;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import static hous.server.common.success.SuccessStatusCode.*;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -24,6 +22,7 @@ public enum SuccessCode {
 
     // 방
     GET_ROOM_SUCCESS(OK, "참가중인 방 조회 성공입니다."),
+    GET_ROOM_INFO_SUCCESS(OK, "참가하려는 방 정보 조회 성공입니다."),
     JOIN_ROOM_SUCCESS(OK, "방 참여 성공입니다."),
 
     /**
