@@ -2,6 +2,7 @@ package hous.server.domain.todo;
 
 import hous.server.domain.common.AuditingTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,4 +29,17 @@ public class Redo extends AuditingTimeEntity {
 
     @OneToMany(mappedBy = "redo", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Done> dones = new ArrayList<>();
+
+    @Builder(access = AccessLevel.PRIVATE)
+    public Redo(Take take, DayOfWeek dayOfWeek) {
+        this.take = take;
+        this.dayOfWeek = dayOfWeek;
+    }
+
+    public static Redo newInstance(Take take, DayOfWeek dayOfWeek) {
+        return Redo.builder()
+                .take(take)
+                .dayOfWeek(dayOfWeek)
+                .build();
+    }
 }
