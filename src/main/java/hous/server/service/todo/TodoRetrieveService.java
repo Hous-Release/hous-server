@@ -5,6 +5,7 @@ import hous.server.domain.room.Room;
 import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.User;
 import hous.server.domain.user.repository.UserRepository;
+import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.todo.dto.response.GetUsersInfoResponse;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +24,7 @@ public class TodoRetrieveService {
 
     public GetUsersInfoResponse getUsersInfo(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
-        Participate participate = user.getOnboarding().getParticipates().get(0);
-        Room room = participate.getRoom();
+        Room room = RoomServiceUtils.findParticipatingRoom(user);
         List<Participate> participates = room.getParticipates();
         List<Onboarding> onboardings = participates.stream()
                 .map(Participate::getOnboarding)
