@@ -6,6 +6,7 @@ import hous.server.common.success.SuccessCode;
 import hous.server.config.interceptor.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.service.todo.TodoRetrieveService;
+import hous.server.service.todo.dto.response.GetTodoMainResponse;
 import hous.server.service.todo.dto.response.GetUsersInfoResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,5 +45,25 @@ public class TodoRetrieveController {
     @GetMapping("/todo")
     public ResponseEntity<GetUsersInfoResponse> getUsersInfo(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_USERS_INFO_SUCCESS, todoRetrieveService.getUsersInfo(userId));
+    }
+
+    @ApiOperation(
+            value = "[인증] todo 메인 페이지 - todo 메인 페이지에 필요한 정보를 조회합니다.",
+            notes = "오늘 날짜, todo 진행률, my todo, our todo 를 조회합니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "todo 메인 페이지 조회 성공입니다."),
+            @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+            @ApiResponse(
+                    code = 404,
+                    message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
+                            + "2. 참가중인 방이 존재하지 않습니다.",
+                    response = ErrorResponse.class),
+            @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+    })
+    @Auth
+    @GetMapping("/todos")
+    public ResponseEntity<GetTodoMainResponse> getTodoMain(@ApiIgnore @UserId Long userId) {
+        return SuccessResponse.success(SuccessCode.GET_TODO_MAIN_SUCCESS, todoRetrieveService.getTodoMain(userId));
     }
 }

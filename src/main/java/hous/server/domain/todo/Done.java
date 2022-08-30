@@ -22,6 +22,6 @@ public class Done extends AuditingTimeEntity {
     private Onboarding onboarding;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "redo_id")
-    private Redo redo;
+    @JoinColumn(name = "todo_id")
+    private Todo todo;
 }
