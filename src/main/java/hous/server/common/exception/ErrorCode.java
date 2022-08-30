@@ -34,6 +34,7 @@ public enum ErrorCode {
     FORBIDDEN_FILE_NAME_EXCEPTION(BAD_REQUEST, "허용되지 않은 파일 이름입니다."),
     FORBIDDEN_PARTICIPATE_COUNT_EXCEPTION(FORBIDDEN, "방 참가자는 16명을 초과할 수 없습니다."),
     FORBIDDEN_TODO_COUNT_EXCEPTION(FORBIDDEN, "todo 는 60개를 초과할 수 없습니다."),
+    FORBIDDEN_RULE_COUNT_EXCEPTION(FORBIDDEN, "rule 은 30개를 초과할 수 없습니다."),
 
     /**
      * 404 Not Found
