@@ -21,7 +21,7 @@ import javax.validation.Valid;
 
 @Api(tags = "Todo")
 @RestController
-@RequestMapping("/v1/todo")
+@RequestMapping("/v1")
 @RequiredArgsConstructor
 public class TodoController {
 
@@ -52,7 +52,7 @@ public class TodoController {
     })
     @Auth
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PostMapping
+    @PostMapping("/todo")
     public ResponseEntity<SuccessResponse> createTodo(@Valid @RequestBody CreateTodoRequestDto request, @ApiIgnore @UserId Long userId) {
         todoService.createTodo(request, userId);
         return SuccessResponse.success(SuccessCode.NO_CONTENT_SUCCESS, null);

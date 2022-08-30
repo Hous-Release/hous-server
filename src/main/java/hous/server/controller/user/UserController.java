@@ -22,7 +22,7 @@ import javax.validation.Valid;
 @Api(tags = "User")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/v1/user")
+@RequestMapping("/v1")
 public class UserController {
 
     private final UserService userService;
@@ -45,7 +45,7 @@ public class UserController {
     })
     @Auth
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PostMapping("/onboarding")
+    @PostMapping("/user/onboarding")
     public ResponseEntity<SuccessResponse> setOnboardingInfo(
             @Valid @RequestBody SetOnboardingInfoRequestDto request, @ApiIgnore @UserId Long userId) {
         userService.setOnboardingInfo(request, userId);

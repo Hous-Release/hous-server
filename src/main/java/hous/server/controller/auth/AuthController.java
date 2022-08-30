@@ -25,7 +25,7 @@ import javax.validation.Valid;
 
 @Api(tags = "Auth")
 @RestController
-@RequestMapping("/v1/auth")
+@RequestMapping("/v1")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -50,7 +50,7 @@ public class AuthController {
             @ApiResponse(code = 409, message = "이미 해당 계정으로 회원가입하셨습니다.\n로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequestDto request) {
         AuthService authService = authServiceProvider.getAuthService(request.getSocialType());
         Long userId = authService.login(request.toServiceDto());
@@ -74,7 +74,7 @@ public class AuthController {
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
-    @PostMapping("/refresh")
+    @PostMapping("/auth/refresh")
     public ResponseEntity<TokenResponse> reissue(@Valid @RequestBody TokenRequestDto request) {
         return SuccessResponse.success(SuccessCode.REISSUE_TOKEN_SUCCESS, createTokenService.reissueToken(request));
     }
