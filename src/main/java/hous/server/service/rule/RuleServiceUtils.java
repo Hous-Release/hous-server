@@ -30,8 +30,8 @@ public class RuleServiceUtils {
         }
     }
 
-    public static Rule findRuleById(RuleRepository ruleRepository, Long ruleId, Room room) {
-        Rule rule = ruleRepository.findRoomById(ruleId, room);
+    public static Rule findRuleByIdAndRoom(RuleRepository ruleRepository, Long ruleId, Room room) {
+        Rule rule = ruleRepository.findRuleByIdAndRoom(ruleId, room);
         if (rule == null) {
             throw new NotFoundException(String.format("존재하지 않는 규칙 (%s) 입니다", ruleId), NOT_FOUND_RULE_EXCEPTION);
         }

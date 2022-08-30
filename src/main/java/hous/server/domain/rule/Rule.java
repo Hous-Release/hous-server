@@ -36,7 +36,7 @@ public class Rule extends AuditingTimeEntity {
                 .build();
     }
 
-    public void updateRule(UpdateRuleRequestDto request) {
+    public void updateRuleName(UpdateRuleRequestDto request) {
         this.name = request.getName();
     }
 }

@@ -35,8 +35,8 @@ public class RuleService {
     public void updateRule(UpdateRuleRequestDto request, Long ruleId, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
-        Rule rule = RuleServiceUtils.findRuleById(ruleRepository, ruleId, room);
-        rule.updateRule(request);
+        Rule rule = RuleServiceUtils.findRuleByIdAndRoom(ruleRepository, ruleId, room);
+        rule.updateRuleName(request);
     }
 
 }

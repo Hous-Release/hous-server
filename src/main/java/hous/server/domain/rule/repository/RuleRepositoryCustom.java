@@ -7,5 +7,5 @@ public interface RuleRepositoryCustom {
 
     Rule findLastRuleByRoom(Room room);
 
-    Rule findRoomById(Long ruleId, Room room);
+    Rule findRuleByIdAndRoom(Long ruleId, Room room);
 }
