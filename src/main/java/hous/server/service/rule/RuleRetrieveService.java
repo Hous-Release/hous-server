@@ -20,7 +20,6 @@ import java.util.List;
 public class RuleRetrieveService {
 
     private final UserRepository userRepository;
-    private final RuleRepository ruleRepository;
 
     public List<RuleInfoResponse> getRulesInfo(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);

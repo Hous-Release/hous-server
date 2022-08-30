@@ -14,7 +14,7 @@ public class RuleRepositoryImpl implements RuleRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Rule findLastRuleByRoomId(Room room) {
+    public Rule findLastRuleByRoom(Room room) {
         return queryFactory
                 .selectFrom(rule)
                 .where(rule.room.eq(room))
