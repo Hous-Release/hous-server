@@ -33,6 +33,9 @@ public class Todo extends AuditingTimeEntity {
     @OneToMany(mappedBy = "todo", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Take> takes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "todo", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Done> dones = new ArrayList<>();
+
     @Builder(access = AccessLevel.PRIVATE)
     public Todo(Room room, String name, boolean isPushNotification) {
         this.room = room;

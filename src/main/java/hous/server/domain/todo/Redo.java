@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Entity
@@ -26,9 +24,6 @@ public class Redo extends AuditingTimeEntity {
     @Column(nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     private DayOfWeek dayOfWeek;
-
-    @OneToMany(mappedBy = "redo", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Done> dones = new ArrayList<>();
 
     @Builder(access = AccessLevel.PRIVATE)
     public Redo(Take take, DayOfWeek dayOfWeek) {
