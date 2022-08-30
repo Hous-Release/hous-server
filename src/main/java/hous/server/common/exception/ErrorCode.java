@@ -32,6 +32,7 @@ public enum ErrorCode {
     FORBIDDEN_EXCEPTION(FORBIDDEN, "허용하지 않는 요청입니다."),
     FORBIDDEN_FILE_TYPE_EXCEPTION(BAD_REQUEST, "허용되지 않은 파일 형식입니다."),
     FORBIDDEN_FILE_NAME_EXCEPTION(BAD_REQUEST, "허용되지 않은 파일 이름입니다."),
+    FORBIDDEN_TODO_COUNT_EXCEPTION(FORBIDDEN, "todo 는 60개를 초과할 수 없습니다."),
 
     /**
      * 404 Not Found
