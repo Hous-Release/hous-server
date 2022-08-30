@@ -3,6 +3,7 @@ package hous.server.service.rule.dto.response;
 import hous.server.domain.rule.Rule;
 import lombok.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +29,8 @@ public class RuleInfoResponse {
     }
 
     public static List<RuleInfoResponse> of(List<Rule> rules) {
-        return rules.stream().map(RuleInfoResponse::of).collect(Collectors.toList());
+        return rules.stream()
+                .sorted(Comparator.comparing(Rule::getIdx))
+                .map(RuleInfoResponse::of).collect(Collectors.toList());
     }
 }
