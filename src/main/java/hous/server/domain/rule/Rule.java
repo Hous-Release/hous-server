@@ -2,6 +2,7 @@ package hous.server.domain.rule;
 
 import hous.server.domain.common.AuditingTimeEntity;
 import hous.server.domain.room.Room;
+import hous.server.service.rule.dto.request.UpdateRuleRequestDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -33,5 +34,9 @@ public class Rule extends AuditingTimeEntity {
                 .name(name)
                 .idx(idx)
                 .build();
+    }
+
+    public void updateRuleName(UpdateRuleRequestDto request) {
+        this.name = request.getName();
     }
 }

@@ -45,6 +45,7 @@ public enum ErrorCode {
     NOT_FOUND_ONBOARDING_EXCEPTION(NOT_FOUND, "유저의 온보딩 정보가 존재하지 않습니다."),
     NOT_FOUND_ROOM_EXCEPTION(NOT_FOUND, "존재하지 않는 방입니다."),
     NOT_FOUND_PARTICIPATE_EXCEPTION(NOT_FOUND, "참가중인 방이 존재하지 않습니다."),
+    NOT_FOUND_RULE_EXCEPTION(NOT_FOUND, "존재하지 않는 규칙입니다."),
 
     /**
      * 405 Method Not Allowed

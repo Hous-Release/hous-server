@@ -14,11 +14,19 @@ public class RuleRepositoryImpl implements RuleRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Rule findLastRuleByRoomId(Room room) {
+    public Rule findLastRuleByRoom(Room room) {
         return queryFactory
                 .selectFrom(rule)
                 .where(rule.room.eq(room))
                 .orderBy(rule.idx.desc())
                 .fetchFirst();
+    }
+
+    @Override
+    public Rule findRuleByIdAndRoom(Long ruleId, Room room) {
+        return queryFactory
+                .selectFrom(rule)
+                .where(rule.id.eq(ruleId), rule.room.eq(room))
+                .fetchOne();
     }
 }
