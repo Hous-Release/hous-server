@@ -35,6 +35,9 @@ public enum SuccessCode {
     // 방
     CREATE_ROOM_SUCCESS(CREATED, "방 생성 성공입니다."),
 
+    // 규칙
+    CREATE_RULE_SUCCESS(CREATED, "규칙 생성 성공입니다."),
+
     /**
      * 202 ACCEPTED
      */

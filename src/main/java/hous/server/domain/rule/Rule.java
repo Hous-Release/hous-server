@@ -2,15 +2,15 @@ package hous.server.domain.rule;
 
 import hous.server.domain.common.AuditingTimeEntity;
 import hous.server.domain.room.Room;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder(access = AccessLevel.PRIVATE)
 public class Rule extends AuditingTimeEntity {
 
     @Id
@@ -26,4 +26,12 @@ public class Rule extends AuditingTimeEntity {
 
     @Column(nullable = false)
     private int idx;
+
+    public static Rule newInstance(Room room, String name, int idx) {
+        return Rule.builder()
+                .room(room)
+                .name(name)
+                .idx(idx)
+                .build();
+    }
 }
