@@ -1,5 +1,6 @@
 package hous.server.service.todo.dto.response;
 
+import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.user.Onboarding;
 import lombok.*;
 
@@ -22,7 +23,7 @@ public class GetUsersInfoResponse {
     @Builder(access = AccessLevel.PRIVATE)
     private static class UserInfo {
         private Long onboardingId;
-        private String color;
+        private PersonalityColor color;
         private String nickname;
     }
 
@@ -31,7 +32,7 @@ public class GetUsersInfoResponse {
                 .users(onboardings.stream()
                         .map(onboarding -> UserInfo.builder()
                                 .onboardingId(onboarding.getId())
-                                .color(onboarding.getPersonality().getColor().toString())
+                                .color(onboarding.getPersonality().getColor())
                                 .nickname(onboarding.getNickname())
                                 .build())
                         .collect(Collectors.toList()))
