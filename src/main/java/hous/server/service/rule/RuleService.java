@@ -1,13 +1,13 @@
 package hous.server.service.rule;
 
 import hous.server.domain.room.Room;
-import hous.server.domain.room.repository.RoomRepository;
 import hous.server.domain.rule.Rule;
 import hous.server.domain.rule.repository.RuleRepository;
 import hous.server.domain.user.User;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.rule.dto.request.CreateRuleRequestDto;
+import hous.server.service.rule.dto.request.UpdateRuleRequestDto;
 import hous.server.service.rule.dto.response.RuleInfoResponse;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
@@ -31,4 +31,12 @@ public class RuleService {
         room.addRule(rule);
         return RuleInfoResponse.of(rule);
     }
+
+    public void updateRule(UpdateRuleRequestDto request, Long ruleId, Long userId) {
+        User user = UserServiceUtils.findUserById(userRepository, userId);
+        Room room = RoomServiceUtils.findParticipatingRoom(user);
+        Rule rule = RuleServiceUtils.findRuleById(ruleRepository, ruleId, room);
+        rule.updateRule(request);
+    }
+
 }

@@ -21,4 +21,12 @@ public class RuleRepositoryImpl implements RuleRepositoryCustom {
                 .orderBy(rule.idx.desc())
                 .fetchFirst();
     }
+
+    @Override
+    public Rule findRoomById(Long ruleId, Room room) {
+        return queryFactory
+                .selectFrom(rule)
+                .where(rule.id.eq(ruleId).and(rule.room.eq(room)))
+                .fetchOne();
+    }
 }

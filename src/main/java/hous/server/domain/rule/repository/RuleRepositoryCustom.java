@@ -6,4 +6,6 @@ import hous.server.domain.rule.Rule;
 public interface RuleRepositoryCustom {
 
     Rule findLastRuleByRoom(Room room);
+
+    Rule findRoomById(Long ruleId, Room room);
 }

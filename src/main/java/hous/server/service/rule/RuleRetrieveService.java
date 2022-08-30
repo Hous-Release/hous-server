@@ -2,7 +2,6 @@ package hous.server.service.rule;
 
 import hous.server.domain.room.Room;
 import hous.server.domain.rule.Rule;
-import hous.server.domain.rule.repository.RuleRepository;
 import hous.server.domain.user.User;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.room.RoomServiceUtils;
