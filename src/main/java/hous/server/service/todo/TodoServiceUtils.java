@@ -1,9 +1,11 @@
 package hous.server.service.todo;
 
 import hous.server.common.exception.ForbiddenException;
+import hous.server.common.exception.NotFoundException;
 import hous.server.common.util.DateUtils;
 import hous.server.domain.room.Room;
 import hous.server.domain.todo.Todo;
+import hous.server.domain.todo.repository.TodoRepository;
 import hous.server.domain.user.Onboarding;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -13,9 +15,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static hous.server.common.exception.ErrorCode.FORBIDDEN_TODO_COUNT_EXCEPTION;
+import static hous.server.common.exception.ErrorCode.NOT_FOUND_TODO_EXCEPTION;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TodoServiceUtils {
+
+    public static Todo findTodoById(TodoRepository todoRepository, Long todoId) {
+        Todo todo = todoRepository.findTodoById(todoId);
+        if (todo == null) {
+            throw new NotFoundException(String.format("존재하지 않는 todo (%s) 입니다", todoId), NOT_FOUND_TODO_EXCEPTION);
+        }
+        return todo;
+    }
 
     public static void validateTodoCounts(Room room) {
         if (room.getTodosCnt() >= 60) {

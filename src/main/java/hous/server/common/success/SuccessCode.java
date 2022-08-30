@@ -27,6 +27,7 @@ public enum SuccessCode {
 
     // to-do
     GET_USERS_INFO_SUCCESS(OK, "담당자 목록 조회 성공입니다."),
+    GET_TODO_INFO_SUCCESS(OK, "todo 정보 조회 성공입니다."),
     GET_TODO_MAIN_SUCCESS(OK, "todo 메인 페이지 조회 성공입니다."),
 
     // rule

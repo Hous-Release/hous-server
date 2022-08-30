@@ -5,14 +5,12 @@ import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
 import hous.server.domain.todo.Todo;
 import hous.server.domain.todo.repository.DoneRepository;
+import hous.server.domain.todo.repository.TodoRepository;
 import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.User;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.room.RoomServiceUtils;
-import hous.server.service.todo.dto.response.GetTodoMainResponse;
-import hous.server.service.todo.dto.response.GetUsersInfoResponse;
-import hous.server.service.todo.dto.response.MyTodoInfo;
-import hous.server.service.todo.dto.response.OurTodoInfo;
+import hous.server.service.todo.dto.response.*;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,6 +28,7 @@ import java.util.stream.Collectors;
 public class TodoRetrieveService {
 
     private final UserRepository userRepository;
+    private final TodoRepository todoRepository;
     private final DoneRepository doneRepository;
 
     public GetUsersInfoResponse getUsersInfo(Long userId) {
@@ -67,5 +66,17 @@ public class TodoRetrieveService {
                                 .collect(Collectors.toList())))
                 .collect(Collectors.toList());
         return GetTodoMainResponse.of(now, todayMyTodos, todayOurTodos);
+    }
+
+    public TodoInfoResponse getTodoInfo(Long todoId, Long userId) {
+        User user = UserServiceUtils.findUserById(userRepository, userId);
+        Room room = RoomServiceUtils.findParticipatingRoom(user);
+        Todo todo = TodoServiceUtils.findTodoById(todoRepository, todoId);
+        List<Participate> participates = room.getParticipates();
+        List<Onboarding> onboardings = participates.stream()
+                .map(Participate::getOnboarding)
+                .sorted(Comparator.comparing(onboarding -> onboarding.getTestScore().getCreatedAt()))
+                .collect(Collectors.toList());
+        return TodoInfoResponse.of(todo, onboardings);
     }
 }
