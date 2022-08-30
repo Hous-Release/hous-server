@@ -34,4 +34,5 @@ public class RoomRepositoryImpl implements RoomRepositoryCustom {
                 .where(room.code.eq(code))
                 .fetchOne();
     }
+
 }

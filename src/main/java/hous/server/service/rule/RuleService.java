@@ -1,6 +1,7 @@
 package hous.server.service.rule;
 
 import hous.server.domain.room.Room;
+import hous.server.domain.room.repository.RoomRepository;
 import hous.server.domain.rule.Rule;
 import hous.server.domain.rule.repository.RuleRepository;
 import hous.server.domain.user.User;
@@ -24,9 +25,10 @@ public class RuleService {
     public RuleInfoResponse createRule(CreateRuleRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
-        RuleServiceUtils.validateRuleCounts(ruleRepository, room.getId());
-        int ruleIdx = RuleServiceUtils.findRuleIdxByRoomId(ruleRepository, room.getId());
+        RuleServiceUtils.validateRuleCounts(room);
+        int ruleIdx = RuleServiceUtils.findRuleIdxByRoomId(ruleRepository, room);
         Rule rule = ruleRepository.save(Rule.newInstance(room, request.getName(), ruleIdx + 1));
+        room.addRule(rule);
         return RuleInfoResponse.of(rule);
     }
 }

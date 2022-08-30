@@ -30,10 +30,10 @@ public class RuleController {
 
     @ApiOperation(
             value = "[인증] 규칙 페이지 - 방의 규칙을 생성합니다.",
-            notes = "성공시 status code = 201, response body로 해당 규칙의 idx와 규칙 내용을 보냅니다."
+            notes = "성공시 status code = 204, 빈 response body로 보냅니다."
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "규칙 생성을 성공입니다."),
+            @ApiResponse(code = 204, message = ""),
             @ApiResponse(
                     code = 400,
                     message = "1. 규칙 내용을 입력해주세요. (name)\n"
@@ -52,7 +52,8 @@ public class RuleController {
     @PostMapping("/rule")
     public ResponseEntity<RuleInfoResponse> createRule(@Valid @RequestBody CreateRuleRequestDto request,
                                                        @ApiIgnore @UserId Long userId) {
-        return SuccessResponse.success(SuccessCode.CREATE_RULE_SUCCESS, ruleService.createRule(request, userId));
+        ruleService.createRule(request, userId);
+        return SuccessResponse.success(SuccessCode.NO_CONTENT_SUCCESS, null);
     }
 
 }
