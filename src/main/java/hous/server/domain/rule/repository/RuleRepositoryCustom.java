@@ -7,4 +7,3 @@ public interface RuleRepositoryCustom {
 
     Rule findLastRuleByRoomId(Room room);
 }
-

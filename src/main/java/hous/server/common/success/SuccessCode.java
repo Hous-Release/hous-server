@@ -28,6 +28,9 @@ public enum SuccessCode {
     // to-do
     GET_USERS_INFO_SUCCESS(OK, "담당자 목록 조회 성공입니다."),
 
+    // rule
+    GET_RULE_INFO_SUCCESS(OK, "규칙 조회 성공입니다."),
+
     /**
      * 201 CREATED
      */

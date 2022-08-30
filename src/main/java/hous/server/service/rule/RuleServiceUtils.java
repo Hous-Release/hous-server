@@ -14,7 +14,6 @@ import static hous.server.common.exception.ErrorCode.FORBIDDEN_RULE_COUNT_EXCEPT
 @Service
 @Transactional
 public class RuleServiceUtils {
-
     public static int findRuleIdxByRoomId(RuleRepository ruleRepository, Room room) {
         Rule rule = ruleRepository.findLastRuleByRoomId(room);
         if (rule == null) {
