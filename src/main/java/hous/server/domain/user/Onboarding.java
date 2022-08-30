@@ -35,8 +35,20 @@ public class Onboarding extends AuditingTimeEntity {
     @Column(length = 30)
     private String introduction;
 
+    @Column(length = 30)
+    private String mbti;
+
+    @Column(length = 30)
+    private String job;
+
+    @Column(nullable = false)
+    private boolean isSmoke;
+
     @Column(nullable = false)
     private boolean isChecked;
+
+    @Column(nullable = false)
+    private boolean isPublic;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "personality_id", nullable = false)
@@ -51,9 +63,6 @@ public class Onboarding extends AuditingTimeEntity {
 
     @OneToMany(mappedBy = "onboarding", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Participate> participates = new ArrayList<>();
-
-    @OneToMany(mappedBy = "onboarding", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Tag> tags = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "badge_id")
