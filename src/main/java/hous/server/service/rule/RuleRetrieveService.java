@@ -25,7 +25,7 @@ public class RuleRetrieveService {
     public List<RuleInfoResponse> getRulesInfo(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
-        List<Rule> rules = ruleRepository.findRulesByRoomId(room.getId());
+        List<Rule> rules = room.getRules();
         return RuleInfoResponse.of(rules);
     }
 }
