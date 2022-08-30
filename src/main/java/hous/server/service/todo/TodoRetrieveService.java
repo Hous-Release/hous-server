@@ -1,7 +1,9 @@
 package hous.server.service.todo;
 
+import hous.server.domain.common.AuditingTimeEntity;
 import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
+import hous.server.domain.todo.Todo;
 import hous.server.domain.todo.repository.DoneRepository;
 import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.User;
@@ -9,6 +11,8 @@ import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.todo.dto.response.GetTodoMainResponse;
 import hous.server.service.todo.dto.response.GetUsersInfoResponse;
+import hous.server.service.todo.dto.response.MyTodoInfo;
+import hous.server.service.todo.dto.response.OurTodoInfo;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,6 +46,26 @@ public class TodoRetrieveService {
     public GetTodoMainResponse getTodoMain(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
-        return GetTodoMainResponse.of(user.getOnboarding(), LocalDate.now(ZoneId.of("Asia/Seoul")), room.getTodos(), doneRepository);
+        LocalDate now = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        List<Todo> todos = room.getTodos();
+        List<Todo> todayOurTodosList = TodoServiceUtils.filterTodayOurTodos(now, todos);
+        List<Todo> todayMyTodosList = TodoServiceUtils.filterTodayMyTodos(now, user.getOnboarding(), todos);
+        List<MyTodoInfo> todayMyTodos = todayMyTodosList.stream()
+                .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
+                .map(todo -> MyTodoInfo.of(
+                        todo.getId(),
+                        todo.getName(),
+                        doneRepository.findTodayMyTodoCheckStatus(now, user.getOnboarding(), todo)))
+                .collect(Collectors.toList());
+        List<OurTodoInfo> todayOurTodos = todayOurTodosList.stream()
+                .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
+                .map(todo -> OurTodoInfo.of(
+                        todo.getName(),
+                        doneRepository.findTodayOurTodoStatus(now, todo),
+                        todo.getTakes().stream()
+                                .map(take -> take.getOnboarding().getNickname())
+                                .collect(Collectors.toList())))
+                .collect(Collectors.toList());
+        return GetTodoMainResponse.of(now, todayMyTodos, todayOurTodos);
     }
 }

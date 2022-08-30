@@ -40,7 +40,7 @@ public class DoneRepositoryImpl implements DoneRepositoryCustom {
                 .filter(lastDone -> lastDone != null && DateUtils.isSameDate(lastDone.getCreatedAt(), now))
                 .count();
         if (doneCnt == 0) return OurTodoStatus.EMPTY;
-        else if (doneCnt == takes.size()) return OurTodoStatus.CHECK;
+        else if (doneCnt == takes.size()) return OurTodoStatus.FULL_CHECK;
         else return OurTodoStatus.FULL;
     }
 }
