@@ -57,6 +57,7 @@ public class RoomController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "방 참여 성공입니다."),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+            @ApiResponse(code = 403, message = "방 참가자는 16명을 초과할 수 없습니다.", response = ErrorResponse.class),
             @ApiResponse(
                     code = 404,
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
