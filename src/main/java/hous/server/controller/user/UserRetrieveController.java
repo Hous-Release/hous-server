@@ -21,7 +21,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(tags = "User")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/v1/user")
+@RequestMapping("/v1")
 public class UserRetrieveController {
 
     private final UserRetrieveService userRetrieveService;
@@ -36,7 +36,7 @@ public class UserRetrieveController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
-    @GetMapping("/onboarding/check")
+    @GetMapping("/user/onboarding/check")
     public ResponseEntity<CheckOnboardingInfoResponse> checkMyOnboardingInfo(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.CHECK_ONBOARDING_SUCCESS, userRetrieveService.checkMyOnboardingInfo(userId));
     }

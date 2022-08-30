@@ -32,6 +32,7 @@ public class TodoService {
     public void createTodo(CreateTodoRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
+        TodoServiceUtils.validateTodoCounts(todoRepository, room);
         Todo todo = todoRepository.save(Todo.newInstance(room, request.getName(), request.isPushNotification()));
         request.getTodoUsers().forEach(todoUser -> {
             Onboarding onboarding = onboardingRepository.findOnboardingById(todoUser.getOnboardingId());

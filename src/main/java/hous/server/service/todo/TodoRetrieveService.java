@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +29,7 @@ public class TodoRetrieveService {
         List<Participate> participates = room.getParticipates();
         List<Onboarding> onboardings = participates.stream()
                 .map(Participate::getOnboarding)
+                .sorted(Comparator.comparing(onboarding -> onboarding.getTestScore().getCreatedAt()))
                 .collect(Collectors.toList());
         return GetUsersInfoResponse.of(onboardings);
     }

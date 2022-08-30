@@ -19,7 +19,7 @@ import javax.validation.Valid;
 
 @Api(tags = "Room")
 @RestController
-@RequestMapping("/v1/room")
+@RequestMapping("/v1")
 @RequiredArgsConstructor
 public class RoomController {
 
@@ -44,7 +44,7 @@ public class RoomController {
     })
     @Auth
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("")
+    @PostMapping("/room")
     public ResponseEntity<RoomInfoResponse> createRoom(@Valid @RequestBody CreateRoomRequestDto request, @ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.CREATE_ROOM_SUCCESS, roomService.createRoom(request, userId));
     }
@@ -57,6 +57,7 @@ public class RoomController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "방 참여 성공입니다."),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+            @ApiResponse(code = 403, message = "방 참가자는 16명을 초과할 수 없습니다.", response = ErrorResponse.class),
             @ApiResponse(
                     code = 404,
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
@@ -66,7 +67,7 @@ public class RoomController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
-    @PostMapping("/{roomId}/join")
+    @PostMapping("/room/{roomId}/join")
     public ResponseEntity<RoomInfoResponse> joinRoom(@ApiParam(name = "roomId", value = "참가할 room 의 id", required = true, example = "1")
                                                      @PathVariable Long roomId,
                                                      @ApiIgnore @UserId Long userId) {

@@ -19,7 +19,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Api(tags = "Room")
 @RestController
-@RequestMapping("/v1/room")
+@RequestMapping("/v1")
 @RequiredArgsConstructor
 public class RoomRetrieveController {
 
@@ -37,7 +37,7 @@ public class RoomRetrieveController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
-    @GetMapping
+    @GetMapping("/room")
     public ResponseEntity<GetRoomResponse> getRoom(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_ROOM_SUCCESS, roomRetrieveService.getRoom(userId));
     }
@@ -53,7 +53,7 @@ public class RoomRetrieveController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
-    @GetMapping("/info")
+    @GetMapping("/room/info")
     public ResponseEntity<GetRoomInfoResponse> getRoomInfo(@ApiParam(name = "code", value = "참가하려는 방 코드", required = true, example = "PNO6VN6A")
                                                            @RequestParam String code) {
         return SuccessResponse.success(SuccessCode.GET_ROOM_INFO_SUCCESS, roomRetrieveService.getRoomInfo(code));

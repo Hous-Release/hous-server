@@ -20,7 +20,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Api(tags = "Todo")
 @RestController
-@RequestMapping("/v1/todo")
+@RequestMapping("/v1")
 @RequiredArgsConstructor
 public class TodoRetrieveController {
 
@@ -41,7 +41,7 @@ public class TodoRetrieveController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
-    @GetMapping
+    @GetMapping("/todo")
     public ResponseEntity<GetUsersInfoResponse> getUsersInfo(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_USERS_INFO_SUCCESS, todoRetrieveService.getUsersInfo(userId));
     }

@@ -1,6 +1,7 @@
 package hous.server.service.room;
 
 import hous.server.common.exception.ConflictException;
+import hous.server.common.exception.ForbiddenException;
 import hous.server.common.exception.NotFoundException;
 import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
@@ -22,6 +23,12 @@ public class RoomServiceUtils {
     public static void validateNotExistsParticipate(ParticipateRepository participateRepository, Onboarding onboarding) {
         if (participateRepository.existsByOnboarding(onboarding)) {
             throw new ConflictException(String.format("이미 참가중인 방이 있는 유저 (%s) 입니다.", onboarding.getId()), CONFLICT_JOINED_ROOM_EXCEPTION);
+        }
+    }
+
+    public static void validateParticipateCounts(ParticipateRepository participateRepository, Room room) {
+        if (participateRepository.findCountsByRoom(room) >= 16) {
+            throw new ForbiddenException(String.format("방 (%s) 의 참가자 는 16명을 초과할 수 없습니다.", room.getId()), FORBIDDEN_PARTICIPATE_COUNT_EXCEPTION);
         }
     }
 
