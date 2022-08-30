@@ -9,6 +9,7 @@ import hous.server.service.todo.TodoRetrieveService;
 import hous.server.service.todo.dto.response.GetTodoMainResponse;
 import hous.server.service.todo.dto.response.GetUsersInfoResponse;
 import hous.server.service.todo.dto.response.TodoInfoResponse;
+import hous.server.service.todo.dto.response.TodoSummaryInfoResponse;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -87,5 +88,27 @@ public class TodoRetrieveController {
                                                         @PathVariable Long todoId,
                                                         @ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_TODO_INFO_SUCCESS, todoRetrieveService.getTodoInfo(todoId, userId));
+    }
+
+    @ApiOperation(
+            value = "[인증] todo 전체 페이지 - 저장된 todo 요약 정보를 조회합니다.",
+            notes = "저장된 전체 담당자, 전체 담당 요일을 조회합니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "todo 요약 정보 조회 성공입니다."),
+            @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+            @ApiResponse(
+                    code = 404,
+                    message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
+                            + "2. 존재하지 않는 todo 입니다.",
+                    response = ErrorResponse.class),
+            @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+    })
+    @Auth
+    @GetMapping("/todo/{todoId}/summary")
+    public ResponseEntity<TodoSummaryInfoResponse> getTodoSummaryInfo(@ApiParam(name = "todoId", value = "조회할 todo 의 id", required = true, example = "1")
+                                                                      @PathVariable Long todoId,
+                                                                      @ApiIgnore @UserId Long userId) {
+        return SuccessResponse.success(SuccessCode.GET_TODO_SUMMARY_INFO_SUCCESS, todoRetrieveService.getTodoSummaryInfo(todoId, userId));
     }
 }

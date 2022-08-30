@@ -79,4 +79,10 @@ public class TodoRetrieveService {
                 .collect(Collectors.toList());
         return TodoInfoResponse.of(todo, onboardings);
     }
+
+    public TodoSummaryInfoResponse getTodoSummaryInfo(Long todoId, Long userId) {
+        User user = UserServiceUtils.findUserById(userRepository, userId);
+        Todo todo = TodoServiceUtils.findTodoById(todoRepository, todoId);
+        return TodoSummaryInfoResponse.of(todo, user.getOnboarding());
+    }
 }

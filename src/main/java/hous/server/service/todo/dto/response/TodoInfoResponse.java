@@ -47,7 +47,7 @@ public class TodoInfoResponse {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Builder(access = AccessLevel.PRIVATE)
-    public static class TodoUser {
+    private static class TodoUser {
         private Long onboardingId;
         private PersonalityColor color;
         private String nickname;
