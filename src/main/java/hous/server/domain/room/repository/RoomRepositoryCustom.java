@@ -9,4 +9,5 @@ public interface RoomRepositoryCustom {
     Room findRoomById(Long id);
 
     Room findRoomByCode(String code);
+
 }

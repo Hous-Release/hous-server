@@ -29,12 +29,18 @@ public enum SuccessCode {
     GET_USERS_INFO_SUCCESS(OK, "담당자 목록 조회 성공입니다."),
     GET_TODO_MAIN_SUCCESS(OK, "todo 메인 페이지 조회 성공입니다."),
 
+    // rule
+    GET_RULE_INFO_SUCCESS(OK, "규칙 조회 성공입니다."),
+
     /**
      * 201 CREATED
      */
 
     // 방
     CREATE_ROOM_SUCCESS(CREATED, "방 생성 성공입니다."),
+
+    // 규칙
+    CREATE_RULE_SUCCESS(CREATED, "규칙 생성 성공입니다."),
 
     /**
      * 202 ACCEPTED
