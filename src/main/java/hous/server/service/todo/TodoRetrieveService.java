@@ -31,7 +31,7 @@ public class TodoRetrieveService {
     private final TodoRepository todoRepository;
     private final DoneRepository doneRepository;
 
-    public GetUsersInfoResponse getUsersInfo(Long userId) {
+    public UserPersonalityInfoResponse getUsersInfo(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         List<Participate> participates = room.getParticipates();
@@ -39,10 +39,10 @@ public class TodoRetrieveService {
                 .map(Participate::getOnboarding)
                 .sorted(Comparator.comparing(onboarding -> onboarding.getTestScore().getCreatedAt()))
                 .collect(Collectors.toList());
-        return GetUsersInfoResponse.of(onboardings);
+        return UserPersonalityInfoResponse.of(onboardings);
     }
 
-    public GetTodoMainResponse getTodoMain(Long userId) {
+    public TodoMainResponse getTodoMain(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         LocalDate now = LocalDate.now(ZoneId.of("Asia/Seoul"));
@@ -65,7 +65,7 @@ public class TodoRetrieveService {
                                 .map(take -> take.getOnboarding().getNickname())
                                 .collect(Collectors.toList())))
                 .collect(Collectors.toList());
-        return GetTodoMainResponse.of(now, todayMyTodos, todayOurTodos);
+        return TodoMainResponse.of(now, todayMyTodos, todayOurTodos);
     }
 
     public TodoInfoResponse getTodoInfo(Long todoId, Long userId) {
@@ -77,12 +77,14 @@ public class TodoRetrieveService {
                 .map(Participate::getOnboarding)
                 .sorted(Comparator.comparing(onboarding -> onboarding.getTestScore().getCreatedAt()))
                 .collect(Collectors.toList());
-        return TodoInfoResponse.of(todo, onboardings);
+        List<UserPersonalityInfo> userPersonalityInfos = TodoServiceUtils.toUserPersonalityInfoList(todo);
+        return TodoInfoResponse.of(todo, userPersonalityInfos, onboardings);
     }
 
     public TodoSummaryInfoResponse getTodoSummaryInfo(Long todoId, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Todo todo = TodoServiceUtils.findTodoById(todoRepository, todoId);
-        return TodoSummaryInfoResponse.of(todo, user.getOnboarding());
+        List<UserPersonalityInfo> userPersonalityInfos = TodoServiceUtils.toUserPersonalityInfoList(todo);
+        return TodoSummaryInfoResponse.of(todo, userPersonalityInfos, user.getOnboarding());
     }
 }

@@ -6,10 +6,10 @@ import hous.server.common.success.SuccessCode;
 import hous.server.config.interceptor.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.service.todo.TodoRetrieveService;
-import hous.server.service.todo.dto.response.GetTodoMainResponse;
-import hous.server.service.todo.dto.response.GetUsersInfoResponse;
 import hous.server.service.todo.dto.response.TodoInfoResponse;
+import hous.server.service.todo.dto.response.TodoMainResponse;
 import hous.server.service.todo.dto.response.TodoSummaryInfoResponse;
+import hous.server.service.todo.dto.response.UserPersonalityInfoResponse;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +43,7 @@ public class TodoRetrieveController {
     })
     @Auth
     @GetMapping("/todo")
-    public ResponseEntity<GetUsersInfoResponse> getUsersInfo(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<UserPersonalityInfoResponse> getUsersInfo(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_USERS_INFO_SUCCESS, todoRetrieveService.getUsersInfo(userId));
     }
 
@@ -63,7 +63,7 @@ public class TodoRetrieveController {
     })
     @Auth
     @GetMapping("/todos")
-    public ResponseEntity<GetTodoMainResponse> getTodoMain(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<TodoMainResponse> getTodoMain(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_TODO_MAIN_SUCCESS, todoRetrieveService.getTodoMain(userId));
     }
 

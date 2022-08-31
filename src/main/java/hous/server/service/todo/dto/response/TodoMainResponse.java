@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
-public class GetTodoMainResponse {
+public class TodoMainResponse {
 
     private String date;
     private String dayOfWeek;
@@ -23,9 +23,9 @@ public class GetTodoMainResponse {
     private List<MyTodoInfo> myTodos;
     private List<OurTodoInfo> ourTodos;
 
-    public static GetTodoMainResponse of(LocalDate now, List<MyTodoInfo> myTodos, List<OurTodoInfo> ourTodos) {
+    public static TodoMainResponse of(LocalDate now, List<MyTodoInfo> myTodos, List<OurTodoInfo> ourTodos) {
         int doneOurTodosCnt = (int) ourTodos.stream().filter(ourTodo -> ourTodo.getStatus() == OurTodoStatus.FULL_CHECK).count();
-        return GetTodoMainResponse.builder()
+        return TodoMainResponse.builder()
                 .date(DateUtils.nowMonthAndDay(now))
                 .dayOfWeek(DateUtils.nowDayOfWeek(now))
                 .progress(MathUtils.percent(doneOurTodosCnt, ourTodos.size()))
