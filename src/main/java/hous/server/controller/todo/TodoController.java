@@ -2,7 +2,6 @@ package hous.server.controller.todo;
 
 import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
-import hous.server.common.success.SuccessCode;
 import hous.server.config.interceptor.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.service.todo.TodoService;
@@ -53,8 +52,8 @@ public class TodoController {
     @Auth
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/todo")
-    public ResponseEntity<SuccessResponse> createTodo(@Valid @RequestBody CreateTodoRequestDto request, @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<String> createTodo(@Valid @RequestBody CreateTodoRequestDto request, @ApiIgnore @UserId Long userId) {
         todoService.createTodo(request, userId);
-        return SuccessResponse.success(SuccessCode.NO_CONTENT_SUCCESS, null);
+        return SuccessResponse.NO_CONTENT;
     }
 }

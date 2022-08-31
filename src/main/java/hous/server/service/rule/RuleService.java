@@ -8,7 +8,6 @@ import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.rule.dto.request.CreateRuleRequestDto;
 import hous.server.service.rule.dto.request.UpdateRuleRequestDto;
-import hous.server.service.rule.dto.response.RuleInfoResponse;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,14 +21,13 @@ public class RuleService {
     private final UserRepository userRepository;
     private final RuleRepository ruleRepository;
 
-    public RuleInfoResponse createRule(CreateRuleRequestDto request, Long userId) {
+    public void createRule(CreateRuleRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         RuleServiceUtils.validateRuleCounts(room);
         int ruleIdx = RuleServiceUtils.findRuleIdxByRoomId(ruleRepository, room);
         Rule rule = ruleRepository.save(Rule.newInstance(room, request.getName(), ruleIdx + 1));
         room.addRule(rule);
-        return RuleInfoResponse.of(rule);
     }
 
     public void updateRule(UpdateRuleRequestDto request, Long ruleId, Long userId) {

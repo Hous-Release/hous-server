@@ -2,7 +2,6 @@ package hous.server.controller.user;
 
 import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
-import hous.server.common.success.SuccessCode;
 import hous.server.config.interceptor.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.service.user.UserService;
@@ -47,10 +46,9 @@ public class UserController {
     @Auth
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/user/onboarding")
-    public ResponseEntity<SuccessResponse> setOnboardingInfo(
+    public ResponseEntity<String> setOnboardingInfo(
             @Valid @RequestBody SetOnboardingInfoRequestDto request, @ApiIgnore @UserId Long userId) {
         userService.setOnboardingInfo(request, userId);
-        return SuccessResponse.success(SuccessCode.NO_CONTENT_SUCCESS, null);
+        return SuccessResponse.NO_CONTENT;
     }
-
 }
