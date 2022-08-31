@@ -47,12 +47,12 @@ public class TodoServiceUtils {
                 .collect(Collectors.toList());
     }
 
-    public static List<Todo> filterTodayOurTodos(LocalDate now, List<Todo> todos) {
+    public static List<Todo> filterTodayOurTodos(LocalDate today, List<Todo> todos) {
         List<Todo> todayOurTodosList = new ArrayList<>();
         todos.forEach(todo -> {
             todo.getTakes().forEach(take -> {
                 take.getRedos().forEach(redo -> {
-                    if (redo.getDayOfWeek().toString().equals(DateUtils.nowDayOfWeek(now))) {
+                    if (redo.getDayOfWeek().toString().equals(DateUtils.nowDayOfWeek(today))) {
                         todayOurTodosList.add(todo);
                     }
                 });
@@ -61,9 +61,9 @@ public class TodoServiceUtils {
         return todayOurTodosList;
     }
 
-    public static List<Todo> filterTodayMyTodos(LocalDate now, Onboarding me, List<Todo> todos) {
+    public static List<Todo> filterTodayMyTodos(LocalDate today, Onboarding me, List<Todo> todos) {
         List<Todo> todayMyTodosList = new ArrayList<>();
-        List<Todo> todayOurTodosList = filterTodayOurTodos(now, todos);
+        List<Todo> todayOurTodosList = filterTodayOurTodos(today, todos);
         todayOurTodosList.forEach(todo -> {
             todo.getTakes().forEach(take -> {
                 if (take.getOnboarding().getId().equals(me.getId())) {

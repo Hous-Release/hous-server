@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 public interface DoneRepositoryCustom {
 
-    boolean findTodayTodoCheckStatus(LocalDate now, Onboarding onboarding, Todo todo);
+    boolean findTodayTodoCheckStatus(LocalDate today, Onboarding onboarding, Todo todo);
 
-    OurTodoStatus findTodayOurTodoStatus(LocalDate now, Todo todo);
+    OurTodoStatus findTodayOurTodoStatus(LocalDate today, Todo todo);
 }

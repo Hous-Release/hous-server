@@ -20,7 +20,7 @@ public class DoneRepositoryImpl implements DoneRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public boolean findTodayTodoCheckStatus(LocalDate now, Onboarding onboarding, Todo todo) {
+    public boolean findTodayTodoCheckStatus(LocalDate today, Onboarding onboarding, Todo todo) {
         Done lastDone = queryFactory.selectFrom(done)
                 .where(
                         done.onboarding.eq(onboarding),
@@ -29,11 +29,11 @@ public class DoneRepositoryImpl implements DoneRepositoryCustom {
                 .orderBy(done.createdAt.desc())
                 .fetchFirst();
         if (lastDone == null) return false;
-        return DateUtils.isSameDate(lastDone.getCreatedAt(), now);
+        return DateUtils.isSameDate(lastDone.getCreatedAt(), today);
     }
 
     @Override
-    public OurTodoStatus findTodayOurTodoStatus(LocalDate now, Todo todo) {
+    public OurTodoStatus findTodayOurTodoStatus(LocalDate today, Todo todo) {
         List<Take> takes = todo.getTakes();
         int doneCnt = (int) takes.stream()
                 .map(take -> queryFactory.selectFrom(done)
@@ -43,7 +43,7 @@ public class DoneRepositoryImpl implements DoneRepositoryCustom {
                         )
                         .orderBy(done.createdAt.desc())
                         .fetchFirst())
-                .filter(lastDone -> lastDone != null && DateUtils.isSameDate(lastDone.getCreatedAt(), now))
+                .filter(lastDone -> lastDone != null && DateUtils.isSameDate(lastDone.getCreatedAt(), today))
                 .count();
         if (doneCnt == 0) return OurTodoStatus.EMPTY;
         else if (doneCnt == takes.size()) return OurTodoStatus.FULL_CHECK;
