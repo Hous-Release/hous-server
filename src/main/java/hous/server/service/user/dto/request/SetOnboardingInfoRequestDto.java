@@ -1,6 +1,7 @@
 package hous.server.service.user.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,4 +27,13 @@ public class SetOnboardingInfoRequestDto {
     @NotNull(message = "{onboarding.birthday.notNull}")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate birthday;
+
+    @ApiModelProperty(value = "생년월일 공개 여부", example = "true")
+    @NotNull(message = "{onboarding.isPublic.notNull}")
+    private boolean isPublic;
+
+    @JsonProperty("isPublic")
+    public boolean isPublic() {
+        return isPublic;
+    }
 }
