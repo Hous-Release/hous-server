@@ -12,7 +12,7 @@ import hous.server.domain.user.User;
 import hous.server.domain.user.repository.OnboardingRepository;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.room.RoomServiceUtils;
-import hous.server.service.todo.dto.request.CreateTodoRequestDto;
+import hous.server.service.todo.dto.request.UpdateTodoRequestDto;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class TodoService {
     private final TakeRepository takeRepository;
     private final RedoRepository redoRepository;
 
-    public void createTodo(CreateTodoRequestDto request, Long userId) {
+    public void createTodo(UpdateTodoRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         TodoServiceUtils.validateTodoCounts(room);
