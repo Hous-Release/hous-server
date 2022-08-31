@@ -4,6 +4,7 @@ import hous.server.domain.room.Room;
 import hous.server.domain.todo.Redo;
 import hous.server.domain.todo.Take;
 import hous.server.domain.todo.Todo;
+import hous.server.domain.todo.repository.DoneRepository;
 import hous.server.domain.todo.repository.RedoRepository;
 import hous.server.domain.todo.repository.TakeRepository;
 import hous.server.domain.todo.repository.TodoRepository;
@@ -31,6 +32,7 @@ public class TodoService {
     private final TodoRepository todoRepository;
     private final TakeRepository takeRepository;
     private final RedoRepository redoRepository;
+    private final DoneRepository doneRepository;
 
     public void createTodo(UpdateTodoRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
@@ -66,5 +68,17 @@ public class TodoService {
             takes.add(take);
         });
         todo.updateTodo(request.getName(), request.isPushNotification(), takes);
+    }
+
+    public void deleteTodo(Long todoId) {
+        Todo todo = TodoServiceUtils.findTodoById(todoRepository, todoId);
+        Room room = todo.getRoom();
+        todo.getTakes().forEach(take -> {
+            redoRepository.deleteAll(take.getRedos());
+            takeRepository.delete(take);
+        });
+        doneRepository.deleteAll(todo.getDones());
+        room.deleteTodo(todo);
+        todoRepository.delete(todo);
     }
 }

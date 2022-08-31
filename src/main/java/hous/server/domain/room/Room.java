@@ -75,7 +75,7 @@ public class Room extends AuditingTimeEntity {
         this.participates.add(participate);
         this.participantsCnt += 1;
     }
-    
+
     public void addRule(Rule rule) {
         this.rules.add(rule);
         this.rulesCnt += 1;
@@ -84,5 +84,10 @@ public class Room extends AuditingTimeEntity {
     public void addTodo(Todo todo) {
         this.todos.add(todo);
         this.todosCnt += 1;
+    }
+
+    public void deleteTodo(Todo todo) {
+        this.todos.remove(todo);
+        this.todosCnt -= 1;
     }
 }
