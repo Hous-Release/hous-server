@@ -22,7 +22,10 @@ public class DoneRepositoryImpl implements DoneRepositoryCustom {
     @Override
     public boolean findTodayMyTodoCheckStatus(LocalDate now, Onboarding me, Todo todo) {
         Done lastDone = queryFactory.selectFrom(done)
-                .where(done.onboarding.eq(me))
+                .where(
+                        done.onboarding.eq(me),
+                        done.todo.eq(todo)
+                )
                 .orderBy(done.createdAt.desc())
                 .fetchFirst();
         if (lastDone == null) return false;
@@ -34,7 +37,10 @@ public class DoneRepositoryImpl implements DoneRepositoryCustom {
         List<Take> takes = todo.getTakes();
         int doneCnt = (int) takes.stream()
                 .map(take -> queryFactory.selectFrom(done)
-                        .where(done.onboarding.eq(take.getOnboarding()))
+                        .where(
+                                done.onboarding.eq(take.getOnboarding()),
+                                done.todo.eq(todo)
+                        )
                         .orderBy(done.createdAt.desc())
                         .fetchFirst())
                 .filter(lastDone -> lastDone != null && DateUtils.isSameDate(lastDone.getCreatedAt(), now))
