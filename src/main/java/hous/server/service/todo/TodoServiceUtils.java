@@ -2,9 +2,11 @@ package hous.server.service.todo;
 
 import hous.server.common.exception.ForbiddenException;
 import hous.server.common.exception.NotFoundException;
+import hous.server.common.exception.ValidationException;
 import hous.server.common.util.DateUtils;
 import hous.server.domain.room.Room;
 import hous.server.domain.todo.Todo;
+import hous.server.domain.todo.repository.DoneRepository;
 import hous.server.domain.todo.repository.TodoRepository;
 import hous.server.domain.user.Onboarding;
 import hous.server.service.todo.dto.response.UserPersonalityInfo;
@@ -17,8 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static hous.server.common.exception.ErrorCode.FORBIDDEN_TODO_COUNT_EXCEPTION;
-import static hous.server.common.exception.ErrorCode.NOT_FOUND_TODO_EXCEPTION;
+import static hous.server.common.exception.ErrorCode.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TodoServiceUtils {
@@ -34,6 +35,12 @@ public class TodoServiceUtils {
     public static void validateTodoCounts(Room room) {
         if (room.getTodosCnt() >= 60) {
             throw new ForbiddenException(String.format("방 (%s) 의 todo 는 60개를 초과할 수 없습니다.", room.getId()), FORBIDDEN_TODO_COUNT_EXCEPTION);
+        }
+    }
+
+    public static void validateTodoStatus(DoneRepository doneRepository, boolean status, Onboarding onboarding, Todo todo) {
+        if (status == doneRepository.findTodayTodoCheckStatus(DateUtils.today(), onboarding, todo)) {
+            throw new ValidationException(String.format("(%s) 유저의 todo (%s) 상태는 이미 (%s) 입니다.", onboarding.getId(), todo.getId(), status), VALIDATION_TODO_STATUS_EXCEPTION);
         }
     }
 

@@ -49,4 +49,17 @@ public class DoneRepositoryImpl implements DoneRepositoryCustom {
         else if (doneCnt == takes.size()) return OurTodoStatus.FULL_CHECK;
         else return OurTodoStatus.FULL;
     }
+
+    @Override
+    public Done findTodayDoneByOnboardingAndTodo(LocalDate today, Onboarding onboarding, Todo todo) {
+        Done lastDone = queryFactory.selectFrom(done)
+                .where(
+                        done.onboarding.eq(onboarding),
+                        done.todo.eq(todo)
+                )
+                .orderBy(done.createdAt.desc())
+                .fetchFirst();
+        if (DateUtils.isSameDate(lastDone.getCreatedAt(), today)) return lastDone;
+        return null;
+    }
 }
