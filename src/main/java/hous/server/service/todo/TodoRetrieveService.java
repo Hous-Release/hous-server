@@ -54,7 +54,7 @@ public class TodoRetrieveService {
                 .map(todo -> MyTodoInfo.of(
                         todo.getId(),
                         todo.getName(),
-                        doneRepository.findTodayMyTodoCheckStatus(now, user.getOnboarding(), todo)))
+                        doneRepository.findTodayTodoCheckStatus(now, user.getOnboarding(), todo)))
                 .collect(Collectors.toList());
         List<OurTodoInfo> todayOurTodos = todayOurTodosList.stream()
                 .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))

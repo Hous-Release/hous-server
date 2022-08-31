@@ -20,10 +20,10 @@ public class DoneRepositoryImpl implements DoneRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public boolean findTodayMyTodoCheckStatus(LocalDate now, Onboarding me, Todo todo) {
+    public boolean findTodayTodoCheckStatus(LocalDate now, Onboarding onboarding, Todo todo) {
         Done lastDone = queryFactory.selectFrom(done)
                 .where(
-                        done.onboarding.eq(me),
+                        done.onboarding.eq(onboarding),
                         done.todo.eq(todo)
                 )
                 .orderBy(done.createdAt.desc())
