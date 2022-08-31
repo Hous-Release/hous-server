@@ -37,7 +37,8 @@ public class UserController {
                     code = 400,
                     message = "1. 닉네임을 입력해주세요. (nickname)\n"
                             + "2. 닉네임은 최대 5글자까지 가능합니다. (nickname)\n"
-                            + "3. 생년월일을 입력해주세요. (birthday)",
+                            + "3. 생년월일을 입력해주세요. (birthday)\n"
+                            + "4. 생년월일을 공개 여부를 체크해주세요. (isPublic)",
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
