@@ -18,6 +18,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -44,5 +47,24 @@ public class TodoService {
             todo.addTake(take);
         });
         room.addTodo(todo);
+    }
+
+    public void updateTodo(Long todoId, UpdateTodoRequestDto request) {
+        Todo todo = TodoServiceUtils.findTodoById(todoRepository, todoId);
+        todo.getTakes().forEach(take -> {
+            redoRepository.deleteAll(take.getRedos());
+            takeRepository.delete(take);
+        });
+        List<Take> takes = new ArrayList<>();
+        request.getTodoUsers().forEach(todoUser -> {
+            Onboarding onboarding = onboardingRepository.findOnboardingById(todoUser.getOnboardingId());
+            Take take = takeRepository.save(Take.newInstance(todo, onboarding));
+            todoUser.getDayOfWeeks().forEach(dayOfWeek -> {
+                Redo redo = redoRepository.save(Redo.newInstance(take, dayOfWeek));
+                take.addRedo(redo);
+            });
+            takes.add(take);
+        });
+        todo.updateTodo(request.getName(), request.isPushNotification(), takes);
     }
 }
