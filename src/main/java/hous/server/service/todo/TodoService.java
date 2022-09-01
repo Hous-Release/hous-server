@@ -16,7 +16,7 @@ import hous.server.domain.user.repository.OnboardingRepository;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.todo.dto.request.CheckTodoRequestDto;
-import hous.server.service.todo.dto.request.UpdateTodoRequestDto;
+import hous.server.service.todo.dto.request.TodoInfoRequestDto;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,7 +37,7 @@ public class TodoService {
     private final RedoRepository redoRepository;
     private final DoneRepository doneRepository;
 
-    public void createTodo(UpdateTodoRequestDto request, Long userId) {
+    public void createTodo(TodoInfoRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         TodoServiceUtils.validateTodoCounts(room);
@@ -54,7 +54,7 @@ public class TodoService {
         room.addTodo(todo);
     }
 
-    public void updateTodo(Long todoId, UpdateTodoRequestDto request) {
+    public void updateTodo(Long todoId, TodoInfoRequestDto request) {
         Todo todo = TodoServiceUtils.findTodoById(todoRepository, todoId);
         todo.getTakes().forEach(take -> {
             redoRepository.deleteAll(take.getRedos());

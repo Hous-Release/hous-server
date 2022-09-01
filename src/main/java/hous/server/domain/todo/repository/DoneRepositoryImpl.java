@@ -59,7 +59,6 @@ public class DoneRepositoryImpl implements DoneRepositoryCustom {
                 )
                 .orderBy(done.createdAt.desc())
                 .fetchFirst();
-        if (DateUtils.isSameDate(lastDone.getCreatedAt(), today)) return lastDone;
-        return null;
+        return DateUtils.isSameDate(lastDone.getCreatedAt(), today) ? lastDone : null;
     }
 }

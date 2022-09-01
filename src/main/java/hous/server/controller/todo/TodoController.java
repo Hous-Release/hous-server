@@ -6,7 +6,7 @@ import hous.server.config.interceptor.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.service.todo.TodoService;
 import hous.server.service.todo.dto.request.CheckTodoRequestDto;
-import hous.server.service.todo.dto.request.UpdateTodoRequestDto;
+import hous.server.service.todo.dto.request.TodoInfoRequestDto;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -50,7 +50,7 @@ public class TodoController {
     @Auth
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/todo")
-    public ResponseEntity<String> createTodo(@Valid @RequestBody UpdateTodoRequestDto request, @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<String> createTodo(@Valid @RequestBody TodoInfoRequestDto request, @ApiIgnore @UserId Long userId) {
         todoService.createTodo(request, userId);
         return SuccessResponse.NO_CONTENT;
     }
@@ -78,7 +78,7 @@ public class TodoController {
     @PutMapping("/todo/{todoId}")
     public ResponseEntity<String> updateTodo(@ApiParam(name = "todoId", value = "수정할 todo 의 id", required = true, example = "1")
                                              @PathVariable Long todoId,
-                                             @Valid @RequestBody UpdateTodoRequestDto request) {
+                                             @Valid @RequestBody TodoInfoRequestDto request) {
         todoService.updateTodo(todoId, request);
         return SuccessResponse.NO_CONTENT;
     }
