@@ -5,15 +5,12 @@ import hous.server.common.exception.NotFoundException;
 import hous.server.domain.room.Room;
 import hous.server.domain.rule.Rule;
 import hous.server.domain.rule.repository.RuleRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import static hous.server.common.exception.ErrorCode.*;
 
-@RequiredArgsConstructor
-@Service
-@Transactional
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RuleServiceUtils {
     public static int findRuleIdxByRoomId(RuleRepository ruleRepository, Room room) {
         Rule rule = ruleRepository.findLastRuleByRoom(room);
@@ -37,9 +34,9 @@ public class RuleServiceUtils {
         return rule;
     }
 
-    public static void validateReqeustRuleCounts(Room room, int requstRuleCounts) {
-        if (room.getRulesCnt() != requstRuleCounts) {
-            throw new ForbiddenException(String.format("방 (%s) 의 rule 는 (%s) 개가 아닙니다.", room.getId(), requstRuleCounts),
+    public static void validateRequestRuleCounts(Room room, int requestRuleCnt) {
+        if (room.getRulesCnt() != requestRuleCnt) {
+            throw new ForbiddenException(String.format("방 (%s) 의 rule 는 (%s) 개가 아닙니다.", room.getId(), requestRuleCnt),
                     FORBIDDEN_REQUEST_RULE_COUNT_EXCEPTION);
         }
     }

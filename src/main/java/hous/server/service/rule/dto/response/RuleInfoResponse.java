@@ -16,14 +16,11 @@ public class RuleInfoResponse {
 
     private Long id;
 
-    private int index;
-
     private String name;
 
     public static RuleInfoResponse of(Rule rule) {
         return RuleInfoResponse.builder()
                 .id(rule.getId())
-                .index(rule.getIdx())
                 .name(rule.getName())
                 .build();
     }
