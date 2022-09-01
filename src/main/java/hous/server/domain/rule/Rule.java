@@ -40,7 +40,7 @@ public class Rule extends AuditingTimeEntity {
         this.name = request.getName();
     }
 
-    public void setRule(int ruleIdx) {
+    public void updateRuleIndex(int ruleIdx) {
         this.idx = ruleIdx;
     }
 

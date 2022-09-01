@@ -39,7 +39,7 @@ public class RuleServiceUtils {
 
     public static void validateReqeustRuleCounts(Room room, int requstRuleCounts) {
         if (room.getRulesCnt() != requstRuleCounts) {
-            throw new NotFoundException(String.format("방 (%s) 의 rule 는 (%s) 개가 아닙니다.", room.getId(), requstRuleCounts),
+            throw new ForbiddenException(String.format("방 (%s) 의 rule 는 (%s) 개가 아닙니다.", room.getId(), requstRuleCounts),
                     FORBIDDEN_REQUEST_RULE_COUNT_EXCEPTION);
         }
     }

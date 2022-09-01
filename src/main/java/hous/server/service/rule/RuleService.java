@@ -45,7 +45,7 @@ public class RuleService {
         for (int idx = 0; idx < request.getUpdateRuleIds().size(); idx++) {
             Long ruleId = request.getUpdateRuleIds().get(idx);
             Rule rule = RuleServiceUtils.findRuleByIdAndRoom(ruleRepository, ruleId, room);
-            rule.setRule(idx);
+            rule.updateRuleIndex(idx);
         }
     }
 }

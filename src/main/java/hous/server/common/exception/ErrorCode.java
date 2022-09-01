@@ -36,7 +36,7 @@ public enum ErrorCode {
     FORBIDDEN_PARTICIPATE_COUNT_EXCEPTION(FORBIDDEN, "방 참가자는 16명을 초과할 수 없습니다."),
     FORBIDDEN_TODO_COUNT_EXCEPTION(FORBIDDEN, "todo 는 60개를 초과할 수 없습니다."),
     FORBIDDEN_RULE_COUNT_EXCEPTION(FORBIDDEN, "rule 은 30개를 초과할 수 없습니다."),
-    FORBIDDEN_REQUEST_RULE_COUNT_EXCEPTION(FORBIDDEN, "요청한 rule의 개수와 방의 rule의 수가 맞지 않습니다."),
+    FORBIDDEN_REQUEST_RULE_COUNT_EXCEPTION(FORBIDDEN, "요청한 rule 의 개수와 방의 rule 의 수가 맞지 않습니다."),
 
     /**
      * 404 Not Found

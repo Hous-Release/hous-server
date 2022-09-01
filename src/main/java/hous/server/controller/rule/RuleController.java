@@ -93,9 +93,7 @@ public class RuleController {
             @ApiResponse(code = 204, message = ""),
             @ApiResponse(
                     code = 400,
-                    message = "1. 크기가 1에서 2147483647 사이여야 합니다 (updateRules)\n"
-                            + "2. 규칙 id를 입력해주세요. (id)\n"
-                            + "3. 규칙 변경 위치를 입력해주세요 (index)",
+                    message = "규칙 id 리스트는 방 내 모든 규칙 수와 같습니다. (updateRuleIds)",
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(
@@ -109,8 +107,8 @@ public class RuleController {
     @Auth
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/rules")
-    public ResponseEntity<String> updateSortByRule(@Valid @RequestBody UpdateSortByRuleRequestDto request,
-                                                   @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<String> updateSortByRules(@Valid @RequestBody UpdateSortByRuleRequestDto request,
+                                                    @ApiIgnore @UserId Long userId) {
         ruleService.updateSortByRule(request, userId);
         return SuccessResponse.NO_CONTENT;
     }

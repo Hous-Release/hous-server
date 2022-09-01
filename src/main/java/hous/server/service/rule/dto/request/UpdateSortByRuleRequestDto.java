@@ -15,6 +15,6 @@ import java.util.List;
 public class UpdateSortByRuleRequestDto {
 
     @ApiModelProperty(value = "규칙 id 배열", example = "[12, 13, 14, ...]")
-    @Size(min = 1)
+    @Size(min = 1, message = "{rule.list.min}")
     List<Long> updateRuleIds;
 }
