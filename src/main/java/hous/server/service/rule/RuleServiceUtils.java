@@ -9,8 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static hous.server.common.exception.ErrorCode.FORBIDDEN_RULE_COUNT_EXCEPTION;
-import static hous.server.common.exception.ErrorCode.NOT_FOUND_RULE_EXCEPTION;
+import static hous.server.common.exception.ErrorCode.*;
 
 @RequiredArgsConstructor
 @Service
@@ -19,7 +18,7 @@ public class RuleServiceUtils {
     public static int findRuleIdxByRoomId(RuleRepository ruleRepository, Room room) {
         Rule rule = ruleRepository.findLastRuleByRoom(room);
         if (rule == null) {
-            return 0;
+            return -1;
         }
         return rule.getIdx();
     }
@@ -37,4 +36,12 @@ public class RuleServiceUtils {
         }
         return rule;
     }
+
+    public static void validateReqeustRuleCounts(Room room, int requstRuleCounts) {
+        if (room.getRulesCnt() != requstRuleCounts) {
+            throw new NotFoundException(String.format("방 (%s) 의 rule 는 (%s) 개가 아닙니다.", room.getId(), requstRuleCounts),
+                    FORBIDDEN_REQUEST_RULE_COUNT_EXCEPTION);
+        }
+    }
+
 }

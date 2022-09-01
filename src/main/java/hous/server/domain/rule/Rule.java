@@ -39,4 +39,9 @@ public class Rule extends AuditingTimeEntity {
     public void updateRuleName(UpdateRuleRequestDto request) {
         this.name = request.getName();
     }
+
+    public void setRule(int ruleIdx) {
+        this.idx = ruleIdx;
+    }
+
 }

@@ -8,6 +8,7 @@ import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.rule.dto.request.CreateRuleRequestDto;
 import hous.server.service.rule.dto.request.UpdateRuleRequestDto;
+import hous.server.service.rule.dto.request.UpdateSortByRuleRequestDto;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,4 +38,14 @@ public class RuleService {
         rule.updateRuleName(request);
     }
 
+    public void updateSortByRule(UpdateSortByRuleRequestDto request, Long userId) {
+        User user = UserServiceUtils.findUserById(userRepository, userId);
+        Room room = RoomServiceUtils.findParticipatingRoom(user);
+        RuleServiceUtils.validateReqeustRuleCounts(room, request.getUpdateRuleIds().size());
+        for (int idx = 0; idx < request.getUpdateRuleIds().size(); idx++) {
+            Long ruleId = request.getUpdateRuleIds().get(idx);
+            Rule rule = RuleServiceUtils.findRuleByIdAndRoom(ruleRepository, ruleId, room);
+            rule.setRule(idx);
+        }
+    }
 }
