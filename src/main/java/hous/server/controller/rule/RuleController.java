@@ -91,10 +91,7 @@ public class RuleController {
     )
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = ""),
-            @ApiResponse(
-                    code = 400,
-                    message = "규칙 id 리스트는 빈 값을 보낼 수 없습니다. (rulesIdList)",
-                    response = ErrorResponse.class),
+            @ApiResponse(code = 400, message = "규칙 id 리스트는 빈 값을 보낼 수 없습니다. (rulesIdList)", response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(
                     code = 404,
@@ -120,10 +117,7 @@ public class RuleController {
     )
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = ""),
-            @ApiResponse(
-                    code = 400,
-                    message = "규칙 id 리스트는 빈 값을 보낼 수 없습니다. (rulesIdList)",
-                    response = ErrorResponse.class),
+            @ApiResponse(code = 400, message = "규칙 id 리스트는 빈 값을 보낼 수 없습니다. (rulesIdList)", response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(
                     code = 404,
