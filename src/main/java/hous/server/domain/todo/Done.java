@@ -2,15 +2,15 @@ package hous.server.domain.todo;
 
 import hous.server.domain.common.AuditingTimeEntity;
 import hous.server.domain.user.Onboarding;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder(access = AccessLevel.PRIVATE)
 public class Done extends AuditingTimeEntity {
 
     @Id
@@ -24,4 +24,11 @@ public class Done extends AuditingTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "todo_id")
     private Todo todo;
+
+    public static Done newInstance(Onboarding onboarding, Todo todo) {
+        return Done.builder()
+                .onboarding(onboarding)
+                .todo(todo)
+                .build();
+    }
 }

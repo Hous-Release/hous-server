@@ -2,9 +2,11 @@ package hous.server.service.todo;
 
 import hous.server.common.exception.ForbiddenException;
 import hous.server.common.exception.NotFoundException;
+import hous.server.common.exception.ValidationException;
 import hous.server.common.util.DateUtils;
 import hous.server.domain.room.Room;
 import hous.server.domain.todo.Todo;
+import hous.server.domain.todo.repository.DoneRepository;
 import hous.server.domain.todo.repository.TodoRepository;
 import hous.server.domain.user.Onboarding;
 import hous.server.service.todo.dto.response.UserPersonalityInfo;
@@ -17,8 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static hous.server.common.exception.ErrorCode.FORBIDDEN_TODO_COUNT_EXCEPTION;
-import static hous.server.common.exception.ErrorCode.NOT_FOUND_TODO_EXCEPTION;
+import static hous.server.common.exception.ErrorCode.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TodoServiceUtils {
@@ -37,6 +38,12 @@ public class TodoServiceUtils {
         }
     }
 
+    public static void validateTodoStatus(DoneRepository doneRepository, boolean status, Onboarding onboarding, Todo todo) {
+        if (status == doneRepository.findTodayTodoCheckStatus(DateUtils.today(), onboarding, todo)) {
+            throw new ValidationException(String.format("(%s) 유저의 todo (%s) 상태는 이미 (%s) 입니다.", onboarding.getId(), todo.getId(), status), VALIDATION_TODO_STATUS_EXCEPTION);
+        }
+    }
+
     public static List<UserPersonalityInfo> toUserPersonalityInfoList(Todo todo) {
         return todo.getTakes().stream()
                 .sorted(Comparator.comparing(take -> take.getOnboarding().getTestScore().getCreatedAt()))
@@ -47,12 +54,12 @@ public class TodoServiceUtils {
                 .collect(Collectors.toList());
     }
 
-    public static List<Todo> filterTodayOurTodos(LocalDate now, List<Todo> todos) {
+    public static List<Todo> filterTodayOurTodos(LocalDate today, List<Todo> todos) {
         List<Todo> todayOurTodosList = new ArrayList<>();
         todos.forEach(todo -> {
             todo.getTakes().forEach(take -> {
                 take.getRedos().forEach(redo -> {
-                    if (redo.getDayOfWeek().toString().equals(DateUtils.nowDayOfWeek(now))) {
+                    if (redo.getDayOfWeek().toString().equals(DateUtils.nowDayOfWeek(today))) {
                         todayOurTodosList.add(todo);
                     }
                 });
@@ -61,9 +68,9 @@ public class TodoServiceUtils {
         return todayOurTodosList;
     }
 
-    public static List<Todo> filterTodayMyTodos(LocalDate now, Onboarding me, List<Todo> todos) {
+    public static List<Todo> filterTodayMyTodos(LocalDate today, Onboarding me, List<Todo> todos) {
         List<Todo> todayMyTodosList = new ArrayList<>();
-        List<Todo> todayOurTodosList = filterTodayOurTodos(now, todos);
+        List<Todo> todayOurTodosList = filterTodayOurTodos(today, todos);
         todayOurTodosList.forEach(todo -> {
             todo.getTakes().forEach(take -> {
                 if (take.getOnboarding().getId().equals(me.getId())) {

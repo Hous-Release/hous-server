@@ -61,4 +61,12 @@ public class Todo extends AuditingTimeEntity {
     public void addTake(Take take) {
         this.takes.add(take);
     }
+
+    public void addDone(Done done) {
+        this.dones.add(done);
+    }
+
+    public void deleteDone(Done done) {
+        this.dones.remove(done);
+    }
 }

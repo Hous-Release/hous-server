@@ -1,6 +1,8 @@
 package hous.server.service.todo;
 
+import hous.server.common.util.DateUtils;
 import hous.server.domain.room.Room;
+import hous.server.domain.todo.Done;
 import hous.server.domain.todo.Redo;
 import hous.server.domain.todo.Take;
 import hous.server.domain.todo.Todo;
@@ -13,7 +15,8 @@ import hous.server.domain.user.User;
 import hous.server.domain.user.repository.OnboardingRepository;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.room.RoomServiceUtils;
-import hous.server.service.todo.dto.request.UpdateTodoRequestDto;
+import hous.server.service.todo.dto.request.CheckTodoRequestDto;
+import hous.server.service.todo.dto.request.TodoInfoRequestDto;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +37,7 @@ public class TodoService {
     private final RedoRepository redoRepository;
     private final DoneRepository doneRepository;
 
-    public void createTodo(UpdateTodoRequestDto request, Long userId) {
+    public void createTodo(TodoInfoRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         TodoServiceUtils.validateTodoCounts(room);
@@ -51,7 +54,7 @@ public class TodoService {
         room.addTodo(todo);
     }
 
-    public void updateTodo(Long todoId, UpdateTodoRequestDto request) {
+    public void updateTodo(Long todoId, TodoInfoRequestDto request) {
         Todo todo = TodoServiceUtils.findTodoById(todoRepository, todoId);
         todo.getTakes().forEach(take -> {
             redoRepository.deleteAll(take.getRedos());
@@ -68,6 +71,23 @@ public class TodoService {
             takes.add(take);
         });
         todo.updateTodo(request.getName(), request.isPushNotification(), takes);
+    }
+
+    public void checkTodo(Long todoId, CheckTodoRequestDto request, Long userId) {
+        User user = UserServiceUtils.findUserById(userRepository, userId);
+        Todo todo = TodoServiceUtils.findTodoById(todoRepository, todoId);
+        Onboarding onboarding = user.getOnboarding();
+        TodoServiceUtils.validateTodoStatus(doneRepository, request.isStatus(), onboarding, todo);
+        if (request.isStatus()) {
+            Done done = doneRepository.save(Done.newInstance(onboarding, todo));
+            todo.addDone(done);
+        } else {
+            Done done = doneRepository.findTodayDoneByOnboardingAndTodo(DateUtils.today(), onboarding, todo);
+            if (done != null) {
+                todo.deleteDone(done);
+                doneRepository.delete(done);
+            }
+        }
     }
 
     public void deleteTodo(Long todoId) {

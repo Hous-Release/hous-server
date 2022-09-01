@@ -5,10 +5,15 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DateUtils {
+
+    public static LocalDate today() {
+        return LocalDate.now(ZoneId.of("Asia/Seoul"));
+    }
 
     public static String nowMonthAndDay(LocalDate now) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd");

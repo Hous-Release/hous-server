@@ -20,20 +20,20 @@ public class DoneRepositoryImpl implements DoneRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public boolean findTodayMyTodoCheckStatus(LocalDate now, Onboarding me, Todo todo) {
+    public boolean findTodayTodoCheckStatus(LocalDate today, Onboarding onboarding, Todo todo) {
         Done lastDone = queryFactory.selectFrom(done)
                 .where(
-                        done.onboarding.eq(me),
+                        done.onboarding.eq(onboarding),
                         done.todo.eq(todo)
                 )
                 .orderBy(done.createdAt.desc())
                 .fetchFirst();
         if (lastDone == null) return false;
-        return DateUtils.isSameDate(lastDone.getCreatedAt(), now);
+        return DateUtils.isSameDate(lastDone.getCreatedAt(), today);
     }
 
     @Override
-    public OurTodoStatus findTodayOurTodoStatus(LocalDate now, Todo todo) {
+    public OurTodoStatus findTodayOurTodoStatus(LocalDate today, Todo todo) {
         List<Take> takes = todo.getTakes();
         int doneCnt = (int) takes.stream()
                 .map(take -> queryFactory.selectFrom(done)
@@ -43,10 +43,22 @@ public class DoneRepositoryImpl implements DoneRepositoryCustom {
                         )
                         .orderBy(done.createdAt.desc())
                         .fetchFirst())
-                .filter(lastDone -> lastDone != null && DateUtils.isSameDate(lastDone.getCreatedAt(), now))
+                .filter(lastDone -> lastDone != null && DateUtils.isSameDate(lastDone.getCreatedAt(), today))
                 .count();
         if (doneCnt == 0) return OurTodoStatus.EMPTY;
         else if (doneCnt == takes.size()) return OurTodoStatus.FULL_CHECK;
         else return OurTodoStatus.FULL;
+    }
+
+    @Override
+    public Done findTodayDoneByOnboardingAndTodo(LocalDate today, Onboarding onboarding, Todo todo) {
+        Done lastDone = queryFactory.selectFrom(done)
+                .where(
+                        done.onboarding.eq(onboarding),
+                        done.todo.eq(todo)
+                )
+                .orderBy(done.createdAt.desc())
+                .fetchFirst();
+        return DateUtils.isSameDate(lastDone.getCreatedAt(), today) ? lastDone : null;
     }
 }
