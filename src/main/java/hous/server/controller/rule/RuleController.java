@@ -2,13 +2,11 @@ package hous.server.controller.rule;
 
 import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
-import hous.server.common.success.SuccessCode;
 import hous.server.config.interceptor.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.service.rule.RuleService;
 import hous.server.service.rule.dto.request.CreateRuleRequestDto;
 import hous.server.service.rule.dto.request.UpdateRuleRequestDto;
-import hous.server.service.rule.dto.response.RuleInfoResponse;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -48,10 +46,10 @@ public class RuleController {
     @Auth
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/rule")
-    public ResponseEntity<RuleInfoResponse> createRule(@Valid @RequestBody CreateRuleRequestDto request,
-                                                       @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<String> createRule(@Valid @RequestBody CreateRuleRequestDto request,
+                                             @ApiIgnore @UserId Long userId) {
         ruleService.createRule(request, userId);
-        return SuccessResponse.success(SuccessCode.NO_CONTENT_SUCCESS, null);
+        return SuccessResponse.NO_CONTENT;
     }
 
     @ApiOperation(
@@ -77,12 +75,11 @@ public class RuleController {
     @Auth
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/rule/{ruleId}")
-    public ResponseEntity<RuleInfoResponse> UpdateRule(@ApiParam(name = "ruleId", value = "수정할 rule 의 id", required = true, example = "1")
-                                                       @PathVariable Long ruleId,
-                                                       @Valid @RequestBody UpdateRuleRequestDto request,
-                                                       @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<String> UpdateRule(@ApiParam(name = "ruleId", value = "수정할 rule 의 id", required = true, example = "1")
+                                             @PathVariable Long ruleId,
+                                             @Valid @RequestBody UpdateRuleRequestDto request,
+                                             @ApiIgnore @UserId Long userId) {
         ruleService.updateRule(request, ruleId, userId);
-        return SuccessResponse.success(SuccessCode.NO_CONTENT_SUCCESS, null);
+        return SuccessResponse.NO_CONTENT;
     }
-
 }

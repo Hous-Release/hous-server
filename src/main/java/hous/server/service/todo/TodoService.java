@@ -4,6 +4,7 @@ import hous.server.domain.room.Room;
 import hous.server.domain.todo.Redo;
 import hous.server.domain.todo.Take;
 import hous.server.domain.todo.Todo;
+import hous.server.domain.todo.repository.DoneRepository;
 import hous.server.domain.todo.repository.RedoRepository;
 import hous.server.domain.todo.repository.TakeRepository;
 import hous.server.domain.todo.repository.TodoRepository;
@@ -12,11 +13,14 @@ import hous.server.domain.user.User;
 import hous.server.domain.user.repository.OnboardingRepository;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.room.RoomServiceUtils;
-import hous.server.service.todo.dto.request.CreateTodoRequestDto;
+import hous.server.service.todo.dto.request.UpdateTodoRequestDto;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -28,8 +32,9 @@ public class TodoService {
     private final TodoRepository todoRepository;
     private final TakeRepository takeRepository;
     private final RedoRepository redoRepository;
+    private final DoneRepository doneRepository;
 
-    public void createTodo(CreateTodoRequestDto request, Long userId) {
+    public void createTodo(UpdateTodoRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         TodoServiceUtils.validateTodoCounts(room);
@@ -44,5 +49,36 @@ public class TodoService {
             todo.addTake(take);
         });
         room.addTodo(todo);
+    }
+
+    public void updateTodo(Long todoId, UpdateTodoRequestDto request) {
+        Todo todo = TodoServiceUtils.findTodoById(todoRepository, todoId);
+        todo.getTakes().forEach(take -> {
+            redoRepository.deleteAll(take.getRedos());
+            takeRepository.delete(take);
+        });
+        List<Take> takes = new ArrayList<>();
+        request.getTodoUsers().forEach(todoUser -> {
+            Onboarding onboarding = onboardingRepository.findOnboardingById(todoUser.getOnboardingId());
+            Take take = takeRepository.save(Take.newInstance(todo, onboarding));
+            todoUser.getDayOfWeeks().forEach(dayOfWeek -> {
+                Redo redo = redoRepository.save(Redo.newInstance(take, dayOfWeek));
+                take.addRedo(redo);
+            });
+            takes.add(take);
+        });
+        todo.updateTodo(request.getName(), request.isPushNotification(), takes);
+    }
+
+    public void deleteTodo(Long todoId) {
+        Todo todo = TodoServiceUtils.findTodoById(todoRepository, todoId);
+        Room room = todo.getRoom();
+        todo.getTakes().forEach(take -> {
+            redoRepository.deleteAll(take.getRedos());
+            takeRepository.delete(take);
+        });
+        doneRepository.deleteAll(todo.getDones());
+        room.deleteTodo(todo);
+        todoRepository.delete(todo);
     }
 }

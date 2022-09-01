@@ -17,7 +17,7 @@ import java.util.List;
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CreateTodoRequestDto {
+public class UpdateTodoRequestDto {
 
     @ApiModelProperty(value = "todo 이름", example = "청소기 돌리기")
     @NotBlank(message = "{todo.name.notBlank}")

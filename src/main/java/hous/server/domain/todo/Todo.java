@@ -51,6 +51,13 @@ public class Todo extends AuditingTimeEntity {
                 .build();
     }
 
+    public void updateTodo(String name, boolean isPushNotification, List<Take> takes) {
+        this.name = name;
+        this.isPushNotification = isPushNotification;
+        this.takes.clear();
+        this.takes.addAll(takes);
+    }
+
     public void addTake(Take take) {
         this.takes.add(take);
     }
