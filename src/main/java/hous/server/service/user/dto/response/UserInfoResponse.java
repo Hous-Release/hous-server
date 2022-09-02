@@ -1,5 +1,6 @@
 package hous.server.service.user.dto.response;
 
+import hous.server.common.util.DateUtils;
 import hous.server.common.util.MathUtils;
 import hous.server.domain.badge.Represent;
 import hous.server.domain.personality.PersonalityColor;
@@ -18,7 +19,7 @@ public class UserInfoResponse {
 
     private String nickname;
 
-    private int age;
+    private String age;
 
     private boolean birthdayPublic;
 
@@ -36,22 +37,24 @@ public class UserInfoResponse {
 
     private String representBadge;
 
+    private String representBadgeImage;
+
 
     public static UserInfoResponse of(Onboarding onboarding, Represent represent) {
-        String representBadgeImageUrl = represent != null ? represent.getBadge().getImageUrl() : null;
         return UserInfoResponse.builder()
                 .personalityColor(onboarding.getPersonality().getColor())
                 .nickname(onboarding.getNickname())
                 .birthdayPublic(onboarding.isPublic())
-                .age(MathUtils.getAge(onboarding.getBirthday()))
-                .birthday(onboarding.isPublic() ? onboarding.getBirthday().toString() : null)
+                .age(MathUtils.getAge(onboarding.getBirthday()) + "세")
+                .birthday(onboarding.isPublic() ? DateUtils.parseMonthAndDay(onboarding.getBirthday()) : null)
                 .mbti(onboarding.getMbti())
                 .job(onboarding.getJob())
                 .isSmoke(onboarding.isSmoke())
                 .mbti(onboarding.getMbti())
                 .introduction(onboarding.getIntroduction())
                 .testScore(onboarding.getTestScore())
-                .representBadge(representBadgeImageUrl)
+                .representBadge(represent != null ? represent.getBadge().getName() : null)
+                .representBadgeImage(represent != null ? represent.getBadge().getImageUrl() : null)
                 .build();
     }
 }

@@ -15,7 +15,7 @@ public class DateUtils {
         return LocalDate.now(ZoneId.of("Asia/Seoul"));
     }
 
-    public static String nowMonthAndDay(LocalDate now) {
+    public static String parseMonthAndDay(LocalDate now) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd");
         return now.format(formatter);
     }
@@ -28,4 +28,5 @@ public class DateUtils {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return localDateTime.format(formatter).equals(localDate.format(formatter));
     }
+
 }

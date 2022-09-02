@@ -26,7 +26,7 @@ public class TodoMainResponse {
     public static TodoMainResponse of(LocalDate today, List<MyTodoInfo> myTodos, List<OurTodoInfo> ourTodos) {
         int doneOurTodosCnt = (int) ourTodos.stream().filter(ourTodo -> ourTodo.getStatus() == OurTodoStatus.FULL_CHECK).count();
         return TodoMainResponse.builder()
-                .date(DateUtils.nowMonthAndDay(today))
+                .date(DateUtils.parseMonthAndDay(today))
                 .dayOfWeek(DateUtils.nowDayOfWeek(today))
                 .progress(MathUtils.percent(doneOurTodosCnt, ourTodos.size()))
                 .myTodosCnt(myTodos.size())
