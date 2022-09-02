@@ -5,7 +5,6 @@ import hous.server.domain.todo.Todo;
 import hous.server.domain.user.Onboarding;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,7 +18,7 @@ public class TodoSummaryInfoResponse {
 
     private String name;
     private List<UserPersonalityInfo> selectedUsers;
-    private List<DayOfWeek> dayOfWeeks;
+    private String dayOfWeeks;
 
     public static TodoSummaryInfoResponse of(Todo todo, List<UserPersonalityInfo> userPersonalityInfos, Onboarding me) {
         Set<DayOfWeek> dayOfWeekSet = new HashSet<>();
@@ -27,7 +26,7 @@ public class TodoSummaryInfoResponse {
         return TodoSummaryInfoResponse.builder()
                 .name(todo.getName())
                 .selectedUsers(UserPersonalityInfo.sortMeFirst(userPersonalityInfos, me))
-                .dayOfWeeks(new ArrayList<>(dayOfWeekSet))
+                .dayOfWeeks(DayOfWeek.toString(dayOfWeekSet))
                 .build();
     }
 }
