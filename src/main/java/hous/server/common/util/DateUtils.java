@@ -15,9 +15,9 @@ public class DateUtils {
         return LocalDate.now(ZoneId.of("Asia/Seoul"));
     }
 
-    public static String nowMonthAndDay(LocalDate now) {
+    public static String parseMonthAndDay(LocalDate date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd");
-        return now.format(formatter);
+        return date.format(formatter);
     }
 
     public static String nowDayOfWeek(LocalDate now) {
@@ -28,4 +28,5 @@ public class DateUtils {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return localDateTime.format(formatter).equals(localDate.format(formatter));
     }
+
 }
