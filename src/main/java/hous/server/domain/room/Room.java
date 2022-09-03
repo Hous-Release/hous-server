@@ -71,6 +71,10 @@ public class Room extends AuditingTimeEntity {
                 .build();
     }
 
+    public void updateRoomName(String name) {
+        this.name = name;
+    }
+
     public void addParticipate(Participate participate) {
         this.participates.add(participate);
         this.participantsCnt += 1;
