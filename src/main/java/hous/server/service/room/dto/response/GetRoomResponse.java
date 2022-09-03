@@ -13,6 +13,7 @@ public class GetRoomResponse {
 
     private boolean isJoiningRoom;
     private Long roomId;
+    private String roomCode;
 
     @JsonProperty("isJoiningRoom")
     public boolean isJoiningRoom() {
@@ -24,11 +25,13 @@ public class GetRoomResponse {
             return GetRoomResponse.builder()
                     .isJoiningRoom(false)
                     .roomId(null)
+                    .roomCode(null)
                     .build();
         } else {
             return GetRoomResponse.builder()
                     .isJoiningRoom(true)
                     .roomId(room.getId())
+                    .roomCode(room.getCode())
                     .build();
         }
     }
