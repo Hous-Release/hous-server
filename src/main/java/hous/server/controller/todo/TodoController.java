@@ -36,7 +36,8 @@ public class TodoController {
                     message = "1. todo 이름을 입력해주세요. (name)\n"
                             + "2. todo 이름을 15 글자 이내로 입력해주세요. (name)\n"
                             + "3. 담당자 목록은 빈 배열일 수 없습니다. (todoUsers)\n"
-                            + "4. 담당 요일 목록은 빈 배열일 수 없습니다. (todoUsers[0].dayOfWeeks)",
+                            + "4. 담당 요일 목록은 빈 배열일 수 없습니다. (todoUsers[0].dayOfWeeks)\n"
+                            + "5. todo 의 푸쉬 알림 여부를 입력해주세요. (isPushNotification)",
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 403, message = "todo 는 60개를 초과할 수 없습니다.", response = ErrorResponse.class),
@@ -67,7 +68,8 @@ public class TodoController {
                     message = "1. todo 이름을 입력해주세요. (name)\n"
                             + "2. todo 이름을 15 글자 이내로 입력해주세요. (name)\n"
                             + "3. 담당자 목록은 빈 배열일 수 없습니다. (todoUsers)\n"
-                            + "4. 담당 요일 목록은 빈 배열일 수 없습니다. (todoUsers[0].dayOfWeeks)",
+                            + "4. 담당 요일 목록은 빈 배열일 수 없습니다. (todoUsers[0].dayOfWeeks)\n"
+                            + "5. todo 의 푸쉬 알림 여부를 입력해주세요. (isPushNotification)",
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "존재하지 않는 todo 입니다.", response = ErrorResponse.class),

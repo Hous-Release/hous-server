@@ -15,5 +15,9 @@ public class CheckTodoRequestDto {
 
     @ApiModelProperty(value = "요청할 체크 상태", example = "true")
     @NotNull(message = "{todo.status.notNull}")
-    private boolean status;
+    private Boolean status;
+
+    public Boolean isStatus() {
+        return status;
+    }
 }
