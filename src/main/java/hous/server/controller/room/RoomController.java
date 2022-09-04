@@ -6,7 +6,7 @@ import hous.server.common.success.SuccessCode;
 import hous.server.config.interceptor.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.service.room.RoomService;
-import hous.server.service.room.dto.request.CreateRoomRequestDto;
+import hous.server.service.room.dto.request.SetRoomNameRequestDto;
 import hous.server.service.room.dto.response.RoomInfoResponse;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +45,7 @@ public class RoomController {
     @Auth
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/room")
-    public ResponseEntity<RoomInfoResponse> createRoom(@Valid @RequestBody CreateRoomRequestDto request, @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<RoomInfoResponse> createRoom(@Valid @RequestBody SetRoomNameRequestDto request, @ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.CREATE_ROOM_SUCCESS, roomService.createRoom(request, userId));
     }
 
@@ -72,5 +72,33 @@ public class RoomController {
                                                      @PathVariable Long roomId,
                                                      @ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.JOIN_ROOM_SUCCESS, roomService.joinRoom(roomId, userId));
+    }
+
+    @ApiOperation(
+            value = "[인증] Hous- 페이지 - 방 별명을 수정합니다.",
+            notes = "방 별명을 8글자 이내로 설정하여 수정을 요청합니다.\n" +
+                    "성공시 status code = 204, 빈 response body를 보냅니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = ""),
+            @ApiResponse(
+                    code = 400,
+                    message = "1. 방 이름을 입력해주세요. (name)\n"
+                            + "2. 방 이름을 8 글자 이내로 입력해주세요. (name)",
+                    response = ErrorResponse.class),
+            @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+            @ApiResponse(
+                    code = 404,
+                    message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
+                            + "2. 참가중인 방이 존재하지 않습니다.",
+                    response = ErrorResponse.class),
+            @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+    })
+    @Auth
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/room/name")
+    public ResponseEntity<String> updateRoomName(@Valid @RequestBody SetRoomNameRequestDto request, @ApiIgnore @UserId Long userId) {
+        roomService.updateRoomName(request, userId);
+        return SuccessResponse.NO_CONTENT;
     }
 }

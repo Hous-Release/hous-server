@@ -7,7 +7,7 @@ import hous.server.domain.room.repository.RoomRepository;
 import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.User;
 import hous.server.domain.user.repository.UserRepository;
-import hous.server.service.room.dto.request.CreateRoomRequestDto;
+import hous.server.service.room.dto.request.SetRoomNameRequestDto;
 import hous.server.service.room.dto.response.RoomInfoResponse;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final ParticipateRepository participateRepository;
 
-    public RoomInfoResponse createRoom(CreateRoomRequestDto request, Long userId) {
+    public RoomInfoResponse createRoom(SetRoomNameRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Onboarding onboarding = user.getOnboarding();
         RoomServiceUtils.validateNotExistsParticipate(participateRepository, onboarding);
@@ -44,5 +44,11 @@ public class RoomService {
         onboarding.addParticipate(participate);
         room.addParticipate(participate);
         return RoomInfoResponse.of(room);
+    }
+
+    public void updateRoomName(SetRoomNameRequestDto request, Long userId) {
+        User user = UserServiceUtils.findUserById(userRepository, userId);
+        Room room = RoomServiceUtils.findParticipatingRoom(user);
+        room.updateRoomName(request.getName());
     }
 }

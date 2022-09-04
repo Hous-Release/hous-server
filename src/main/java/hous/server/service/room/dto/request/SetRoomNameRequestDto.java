@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CreateRoomRequestDto {
+public class SetRoomNameRequestDto {
 
     @ApiModelProperty(value = "방 이름", example = "러블리더블리")
     @NotBlank(message = "{room.name.notBlank}")
