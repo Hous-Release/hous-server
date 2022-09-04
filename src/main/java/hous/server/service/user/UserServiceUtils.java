@@ -2,14 +2,14 @@ package hous.server.service.user;
 
 import hous.server.common.exception.ConflictException;
 import hous.server.common.exception.NotFoundException;
+import hous.server.common.exception.ValidationException;
 import hous.server.domain.user.User;
 import hous.server.domain.user.UserSocialType;
 import hous.server.domain.user.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import static hous.server.common.exception.ErrorCode.CONFLICT_USER_EXCEPTION;
-import static hous.server.common.exception.ErrorCode.NOT_FOUND_USER_EXCEPTION;
+import static hous.server.common.exception.ErrorCode.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserServiceUtils {
@@ -30,5 +30,12 @@ public class UserServiceUtils {
             throw new NotFoundException(String.format("존재하지 않는 유저 (%s) 입니다", userId), NOT_FOUND_USER_EXCEPTION);
         }
         return user;
+    }
+
+    public static void validatePushNotificationStatus(boolean state, boolean requestState) {
+        if (state == requestState) {
+            throw new ValidationException(String.format("(%s) 유저의 푸쉬 알림 여부 상태는 이미 (%s) 입니다.", state, requestState),
+                    VALIDATION_STATUS_EXCEPTION);
+        }
     }
 }

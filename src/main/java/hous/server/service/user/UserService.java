@@ -42,4 +42,13 @@ public class UserService {
         Onboarding onboarding = user.getOnboarding();
         onboarding.setUserInfo(request);
     }
+
+    public void updateUserPushState(boolean state, Long userId) {
+        User user = UserServiceUtils.findUserById(userRepository, userId);
+        RoomServiceUtils.findParticipatingRoom(user);
+        Setting setting = user.getSetting();
+        UserServiceUtils.validatePushNotificationStatus(setting.isPushNotification(), state);
+        setting.setPushNotification(state);
+    }
+
 }

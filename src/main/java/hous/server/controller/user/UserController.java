@@ -7,10 +7,7 @@ import hous.server.config.resolver.UserId;
 import hous.server.service.user.UserService;
 import hous.server.service.user.dto.request.SetOnboardingInfoRequestDto;
 import hous.server.service.user.dto.request.UpdateUserInfoRequestDto;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -88,6 +85,30 @@ public class UserController {
     public ResponseEntity<String> updateUserInfo(
             @Valid @RequestBody UpdateUserInfoRequestDto request, @ApiIgnore @UserId Long userId) {
         userService.updateUserInfo(request, userId);
+        return SuccessResponse.NO_CONTENT;
+    }
+
+    @ApiOperation(
+            value = "[인증] 마이 페이지(프로필 뷰) - 나의 푸쉬 알림 설정 정보를 수정합니다.",
+            notes = "푸쉬 알림 설정 여부를 설정합니다. 성공시 status code = 204, 빈 response body를 보냅니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = ""),
+            @ApiResponse(
+                    code = 400, message = "자기소개는 40 글자 이내로 입력해주세요. (introduction)", response = ErrorResponse.class),
+            @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+            @ApiResponse(code = 404,
+                    message = "1. 탈퇴했거나 존재하지 않는 유저입니다. \n"
+                            + "2. 존재하지 않는 방입니다.",
+                    response = ErrorResponse.class),
+            @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+    })
+    @Auth
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/user/push/{state}")
+    public ResponseEntity<String> updateUserInfo(@ApiParam(name = "state", value = "푸쉬 알림 여부", required = false, example = "1")
+                                                 @PathVariable boolean state, @ApiIgnore @UserId Long userId) {
+        userService.updateUserPushState(state, userId);
         return SuccessResponse.NO_CONTENT;
     }
 }
