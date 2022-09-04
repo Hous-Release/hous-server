@@ -41,9 +41,6 @@ public class Onboarding extends AuditingTimeEntity {
     private String job;
 
     @Column(nullable = false)
-    private boolean isSmoke;
-
-    @Column(nullable = false)
     private boolean isChecked;
 
     @Column(nullable = false)

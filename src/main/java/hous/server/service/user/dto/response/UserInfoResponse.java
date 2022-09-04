@@ -29,8 +29,6 @@ public class UserInfoResponse {
 
     private String job;
 
-    private boolean isSmoke;
-
     private String introduction;
 
     private TestScoreResponse testScore;
@@ -76,7 +74,6 @@ public class UserInfoResponse {
                 .birthday(onboarding.isPublic() ? DateUtils.parseMonthAndDay(onboarding.getBirthday()) : null)
                 .mbti(onboarding.getMbti())
                 .job(onboarding.getJob())
-                .isSmoke(onboarding.isSmoke())
                 .mbti(onboarding.getMbti())
                 .introduction(onboarding.getIntroduction())
                 .testScore(TestScoreResponse.of(onboarding.getTestScore()))
