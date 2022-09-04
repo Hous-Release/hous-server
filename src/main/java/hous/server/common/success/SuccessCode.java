@@ -35,7 +35,8 @@ public enum SuccessCode {
     GET_RULE_INFO_SUCCESS(OK, "규칙 조회 성공입니다."),
 
     // profile
-    GET_PROFILE_INFO_SUCCESS(OK, "나의 프로필 정보 조회 성공입니다."),
+    GET_MY_PROFILE_INFO_SUCCESS(OK, "나의 프로필 정보 조회 성공입니다."),
+    GET_HOMIE_PROFILE_INFO_SUCCESS(OK, "호미 프로필 정보 조회 성공입니다."),
 
     /**
      * 201 CREATED

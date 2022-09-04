@@ -13,6 +13,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 import static hous.server.common.exception.ErrorCode.*;
@@ -46,6 +47,13 @@ public class RoomServiceUtils {
             throw new NotFoundException(String.format("유저 (%s) 는 참가중인 방이 존재하지 않습니다.", user.getId()), NOT_FOUND_PARTICIPATE_EXCEPTION);
         }
         return participates.get(0).getRoom();
+    }
+
+    public static void checkParticipatingRoom(Room userRoom, Room homieRoom) {
+        if (!Objects.equals(userRoom.getId(), homieRoom.getId())) {
+            throw new ForbiddenException(String.format("같은 방에 참가하고 있지 않습니다. (요청 사용자 방 id: %s, 호미 방 id: %s)",
+                    userRoom.getId(), homieRoom.getId()), FORBIDDEN_ROOM_PARTICIPATE_EXCEPTION);
+        }
     }
 
     private static boolean isNotUniqueRoomCode(RoomRepository roomRepository, String code) {

@@ -11,6 +11,7 @@ import lombok.ToString;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -24,8 +25,9 @@ public class TodoInfoRequestDto {
     @Size(max = 15, message = "{todo.name.max}")
     private String name;
 
-    @ApiModelProperty(value = "알림 여부")
-    private boolean isPushNotification;
+    @ApiModelProperty(value = "알림 여부", example = "true")
+    @NotNull(message = "{todo.isPushNotification.notNull}")
+    private Boolean isPushNotification;
 
     @ApiModelProperty(value = "담당자 목록")
     @NotEmpty(message = "{todo.todoUsers.notEmpty}")
@@ -45,7 +47,7 @@ public class TodoInfoRequestDto {
     }
 
     @JsonProperty("isPushNotification")
-    public boolean isPushNotification() {
+    public Boolean isPushNotification() {
         return isPushNotification;
     }
 }
