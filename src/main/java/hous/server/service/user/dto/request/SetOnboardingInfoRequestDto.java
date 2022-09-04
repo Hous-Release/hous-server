@@ -30,10 +30,6 @@ public class SetOnboardingInfoRequestDto {
 
     @ApiModelProperty(value = "생년월일 공개 여부", example = "true")
     @NotNull(message = "{onboarding.isPublic.notNull}")
-    private boolean isPublic;
-
     @JsonProperty("isPublic")
-    public boolean isPublic() {
-        return isPublic;
-    }
+    private boolean isPublic;
 }

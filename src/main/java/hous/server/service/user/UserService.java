@@ -31,6 +31,7 @@ public class UserService {
     public void setOnboardingInfo(SetOnboardingInfoRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Onboarding onboarding = user.getOnboarding();
+        System.out.println(request.isPublic());
         onboarding.setOnboarding(request.getNickname(), request.getBirthday(), request.isPublic());
     }
 }
