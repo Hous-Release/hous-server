@@ -6,6 +6,7 @@ import hous.server.domain.badge.Represent;
 import hous.server.domain.common.AuditingTimeEntity;
 import hous.server.domain.personality.Personality;
 import hous.server.domain.room.Participate;
+import hous.server.service.user.dto.request.UpdateUserInfoRequestDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -80,5 +81,14 @@ public class Onboarding extends AuditingTimeEntity {
 
     public void addParticipate(Participate participate) {
         this.participates.add(participate);
+    }
+
+    public void setUserInfo(UpdateUserInfoRequestDto request) {
+        this.nickname = request.getNickname();
+        this.isPublic = request.isPublic();
+        this.birthday = request.getBirthday();
+        this.mbti = request.getMbti();
+        this.job = request.getJob();
+        this.introduction = request.getIntroduction();
     }
 }
