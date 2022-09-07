@@ -41,7 +41,7 @@ public enum DayOfWeek implements EnumModel {
                 .collect(Collectors.joining(", "));
     }
 
-    public static String fromIndex(int index) {
+    public static String getValueByIndex(int index) {
         switch (index) {
             case 1:
                 return MONDAY.getValue();

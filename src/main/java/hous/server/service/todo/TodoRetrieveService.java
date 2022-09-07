@@ -107,7 +107,7 @@ public class TodoRetrieveService {
         // List<TodoAllDayResponse> response dto 형태로 가공
         List<TodoAllDayResponse> allDayTodosList = new ArrayList<>();
         for (int i = 1; i < 8; i++) {
-            String dayOfWeek = DayOfWeek.fromIndex(i);
+            String dayOfWeek = DayOfWeek.getValueByIndex(i);
             List<MyTodo> myTodoInfos = allDayMyTodosList[i].stream()
                     .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
                     .map(todo -> MyTodo.of(
