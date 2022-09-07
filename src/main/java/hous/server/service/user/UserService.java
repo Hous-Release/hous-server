@@ -23,7 +23,6 @@ public class UserService {
     private final PersonalityRepository personalityRepository;
 
     public Long registerUser(CreateUserDto request) {
-        System.out.println(personalityRepository.findPersonalityByColor(PersonalityColor.GRAY));
         UserServiceUtils.validateNotExistsUser(userRepository, request.getSocialId(), request.getSocialType());
         User user = userRepository.save(User.newInstance(request.getSocialId(), request.getSocialType(), request.getFcmToken(),
                 Onboarding.newInstance(personalityRepository.findPersonalityByColor(PersonalityColor.GRAY)), Setting.newInstance()));
