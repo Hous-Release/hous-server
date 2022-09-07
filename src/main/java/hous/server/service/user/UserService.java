@@ -41,4 +41,14 @@ public class UserService {
         Onboarding onboarding = user.getOnboarding();
         onboarding.setUserInfo(request);
     }
+
+    // TODO 푸쉬알림 설정뷰 확정나면 수정하기
+    public void updateUserPushState(boolean state, Long userId) {
+        User user = UserServiceUtils.findUserById(userRepository, userId);
+        RoomServiceUtils.findParticipatingRoom(user);
+        Setting setting = user.getSetting();
+        UserServiceUtils.validatePushNotificationStatus(setting.isPushNotification(), state);
+        setting.setPushNotification(state);
+    }
+
 }

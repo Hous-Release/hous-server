@@ -40,7 +40,7 @@ public class TodoServiceUtils {
 
     public static void validateTodoStatus(DoneRepository doneRepository, boolean status, Onboarding onboarding, Todo todo) {
         if (status == doneRepository.findTodayTodoCheckStatus(DateUtils.today(), onboarding, todo)) {
-            throw new ValidationException(String.format("(%s) 유저의 todo (%s) 상태는 이미 (%s) 입니다.", onboarding.getId(), todo.getId(), status), VALIDATION_TODO_STATUS_EXCEPTION);
+            throw new ValidationException(String.format("(%s) 유저의 todo (%s) 상태는 이미 (%s) 입니다.", onboarding.getId(), todo.getId(), status), VALIDATION_STATUS_EXCEPTION);
         }
     }
 

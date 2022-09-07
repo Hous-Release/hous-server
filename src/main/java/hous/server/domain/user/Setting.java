@@ -30,4 +30,8 @@ public class Setting extends AuditingTimeEntity {
                 .isPushNotification(true)
                 .build();
     }
+
+    public void setPushNotification(boolean isPushNotification) {
+        this.isPushNotification = isPushNotification;
+    }
 }
