@@ -105,9 +105,9 @@ public class UserController {
     })
     @Auth
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PutMapping("/user/push/{state}")
-    public ResponseEntity<String> updateUserInfo(@ApiParam(name = "state", value = "푸쉬 알림 여부", required = false, example = "1")
-                                                 @PathVariable boolean state, @ApiIgnore @UserId Long userId) {
+    @PutMapping("/user/push")
+    public ResponseEntity<String> updateUserInfo(@ApiParam(name = "state", value = "푸쉬 알림 여부", required = true, example = "true")
+                                                 @RequestParam boolean state, @ApiIgnore @UserId Long userId) {
         userService.updateUserPushState(state, userId);
         return SuccessResponse.NO_CONTENT;
     }
