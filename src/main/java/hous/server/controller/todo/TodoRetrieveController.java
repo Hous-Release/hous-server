@@ -112,7 +112,7 @@ public class TodoRetrieveController {
     }
 
     @ApiOperation(
-            value = "[인증] todo 전체 보기 페이지 - 저장된 todo 요약 정보를 조회합니다.",
+            value = "[인증] todo 전체 보기 페이지 - 요일별 todo를 조회합니다.",
             notes = "모든 요일의 todo별 나의 todo와 방의 todo를 조회합니다."
     )
     @ApiResponses(value = {
@@ -121,14 +121,14 @@ public class TodoRetrieveController {
             @ApiResponse(
                     code = 404,
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
-                            + "2. 존재하지 않는 todo 입니다.",
+                            + "2. 존재하지 않는 todo 입니다.\n"
+                            + "3. 참가중인 방이 존재하지 않습니다.",
                     response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
     @GetMapping("/todos/day")
     public ResponseEntity<List<TodoAllDayResponse>> getTodoAllDayInfo(@ApiIgnore @UserId Long userId) {
-        todoRetrieveService.getTodoAllDayInfo(userId);
         return SuccessResponse.success(SuccessCode.GET_TODO_ALL_DAY_SUCCESS, todoRetrieveService.getTodoAllDayInfo(userId));
     }
 }
