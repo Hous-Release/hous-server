@@ -25,6 +25,9 @@ public enum SuccessCode {
     GET_ROOM_INFO_SUCCESS(OK, "참가하려는 방 정보 조회 성공입니다."),
     JOIN_ROOM_SUCCESS(OK, "방 참여 성공입니다."),
 
+    // 홈
+    GET_HOME_INFO_SUCCESS(OK, "홈 화면 정보 조회 성공입니다."),
+
     // to-do
     GET_USERS_INFO_SUCCESS(OK, "담당자 목록 조회 성공입니다."),
     GET_TODO_INFO_SUCCESS(OK, "todo 정보 조회 성공입니다."),
