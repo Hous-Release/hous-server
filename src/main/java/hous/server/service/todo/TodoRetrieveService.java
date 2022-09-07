@@ -4,6 +4,7 @@ import hous.server.common.util.DateUtils;
 import hous.server.domain.common.AuditingTimeEntity;
 import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
+import hous.server.domain.todo.DayOfWeek;
 import hous.server.domain.todo.Todo;
 import hous.server.domain.todo.repository.DoneRepository;
 import hous.server.domain.todo.repository.TodoRepository;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -83,8 +85,45 @@ public class TodoRetrieveService {
 
     public TodoSummaryInfoResponse getTodoSummaryInfo(Long todoId, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
+        RoomServiceUtils.findParticipatingRoom(user);
         Todo todo = TodoServiceUtils.findTodoById(todoRepository, todoId);
         List<UserPersonalityInfo> userPersonalityInfos = TodoServiceUtils.toUserPersonalityInfoList(todo);
         return TodoSummaryInfoResponse.of(todo, userPersonalityInfos, user.getOnboarding());
+    }
+
+    public List<TodoAllDayResponse> getTodoAllDayInfo(Long userId) {
+        User user = UserServiceUtils.findUserById(userRepository, userId);
+        Room room = RoomServiceUtils.findParticipatingRoom(user);
+        List<Todo> todos = room.getTodos();
+
+        // 이 방의 모든 요일의 todo list 조회
+        List<Todo> ourTodosList = TodoServiceUtils.filterAllDaysOurTodos(todos);
+        List<Todo> myTodosList = TodoServiceUtils.filterAllDaysMyTodos(todos, user.getOnboarding());
+
+        // 요일별(index) todo list 형태로 가공
+        List<Todo>[] allDayOurTodosList = TodoServiceUtils.mapByDayOfWeekToList(ourTodosList);
+        List<Todo>[] allDayMyTodosList = TodoServiceUtils.mapByDayOfWeekToList(myTodosList);
+
+        // List<TodoAllDayResponse> response dto 형태로 가공
+        List<TodoAllDayResponse> allDayTodosList = new ArrayList<>();
+        for (int i = 1; i < 8; i++) {
+            String dayOfWeek = DayOfWeek.fromIndex(i);
+            List<MyTodo> myTodoInfos = allDayMyTodosList[i].stream()
+                    .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
+                    .map(todo -> MyTodo.of(
+                            todo.getId(),
+                            todo.getName()))
+                    .collect(Collectors.toList());
+            List<OurTodo> ourTodoInfos = allDayOurTodosList[i].stream()
+                    .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
+                    .map(todo -> OurTodo.of(
+                            todo.getName(),
+                            todo.getTakes().stream()
+                                    .map(take -> take.getOnboarding().getNickname())
+                                    .collect(Collectors.toList())))
+                    .collect(Collectors.toList());
+            allDayTodosList.add(TodoAllDayResponse.of(dayOfWeek, myTodoInfos, ourTodoInfos));
+        }
+        return allDayTodosList;
     }
 }

@@ -30,6 +30,7 @@ public enum SuccessCode {
     GET_TODO_INFO_SUCCESS(OK, "todo 정보 조회 성공입니다."),
     GET_TODO_SUMMARY_INFO_SUCCESS(OK, "todo 요약 정보 조회 성공입니다."),
     GET_TODO_MAIN_SUCCESS(OK, "todo 메인 페이지 조회 성공입니다."),
+    GET_TODO_ALL_DAY_SUCCESS(OK, "todo 요일별 정보 조회 성공입니다."),
 
     // rule
     GET_RULE_INFO_SUCCESS(OK, "규칙 조회 성공입니다."),
