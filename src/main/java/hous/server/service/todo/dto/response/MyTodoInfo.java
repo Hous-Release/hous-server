@@ -5,18 +5,20 @@ import lombok.*;
 
 @ToString
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder(access = AccessLevel.PRIVATE)
-public class MyTodoInfo {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class MyTodoInfo extends MyTodo {
 
-    private Long todoId;
-    private String todoName;
     private boolean isChecked;
 
     @JsonProperty("isChecked")
     public boolean isChecked() {
         return isChecked;
+    }
+
+    @Builder(access = AccessLevel.PRIVATE)
+    public MyTodoInfo(Long todoId, String todoName, boolean isChecked) {
+        super(todoId, todoName);
+        this.isChecked = isChecked;
     }
 
     public static MyTodoInfo of(Long todoId, String todoName, boolean isChecked) {

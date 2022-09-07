@@ -40,4 +40,24 @@ public enum DayOfWeek implements EnumModel {
                 .map(DayOfWeek::getValue)
                 .collect(Collectors.joining(", "));
     }
+
+    public static String getValueByIndex(int index) {
+        switch (index) {
+            case 1:
+                return MONDAY.getValue();
+            case 2:
+                return TUESDAY.getValue();
+            case 3:
+                return WEDNESDAY.getValue();
+            case 4:
+                return THURSDAY.getValue();
+            case 5:
+                return FRIDAY.getValue();
+            case 6:
+                return SATURDAY.getValue();
+            case 7:
+                return SUNDAY.getValue();
+        }
+        return null;
+    }
 }

@@ -8,13 +8,15 @@ import java.util.List;
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder(access = AccessLevel.PRIVATE)
-public class OurTodoInfo {
+public class OurTodoInfo extends OurTodo {
 
-    private String todoName;
     private OurTodoStatus status;
-    private List<String> nicknames;
+
+    @Builder(access = AccessLevel.PRIVATE)
+    public OurTodoInfo(String todoName, List<String> nicknames, OurTodoStatus status) {
+        super(todoName, nicknames);
+        this.status = status;
+    }
 
     public static OurTodoInfo of(String todoName, OurTodoStatus status, List<String> nicknames) {
         return OurTodoInfo.builder()

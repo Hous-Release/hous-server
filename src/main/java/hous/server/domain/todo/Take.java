@@ -24,7 +24,7 @@ public class Take extends AuditingTimeEntity {
     @JoinColumn(name = "todo_id", nullable = false)
     private Todo todo;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "onboarding_id")
     private Onboarding onboarding;
 
