@@ -88,6 +88,7 @@ public class UserController {
         return SuccessResponse.NO_CONTENT;
     }
 
+    // TODO 푸쉬알림 설정뷰 확정나면 수정하기
     @ApiOperation(
             value = "[인증] 마이 페이지(프로필 뷰) - 나의 푸쉬 알림 설정 정보를 수정합니다.",
             notes = "푸쉬 알림 설정 여부를 설정합니다. 성공시 status code = 204, 빈 response body를 보냅니다."
