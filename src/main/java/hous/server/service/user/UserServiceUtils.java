@@ -3,7 +3,10 @@ package hous.server.service.user;
 import hous.server.common.exception.ConflictException;
 import hous.server.common.exception.NotFoundException;
 import hous.server.common.exception.ValidationException;
+import hous.server.domain.personality.Personality;
 import hous.server.domain.personality.PersonalityColor;
+import hous.server.domain.personality.repository.PersonalityRepository;
+import hous.server.domain.user.TestScore;
 import hous.server.domain.user.User;
 import hous.server.domain.user.UserSocialType;
 import hous.server.domain.user.repository.UserRepository;
@@ -45,4 +48,21 @@ public class UserServiceUtils {
             throw new NotFoundException("GRAY 에 대한 성향 정보는 존재하지 않습니다.", NOT_FOUND_PERSONALITY_COLOR_EXCEPTION);
         }
     }
+
+    public static Personality getPersonalityColorByTestScore(PersonalityRepository personalityRepository, TestScore testScore) {
+        int totalTestScore = testScore.getTotalTestScore();
+        if (totalTestScore >= 15 && totalTestScore <= 20) {
+            return personalityRepository.findPersonalityByColor(PersonalityColor.YELLOW);
+        } else if (totalTestScore >= 21 && totalTestScore <= 26) {
+            return personalityRepository.findPersonalityByColor(PersonalityColor.RED);
+        } else if (totalTestScore >= 27 && totalTestScore <= 33) {
+            return personalityRepository.findPersonalityByColor(PersonalityColor.BLUE);
+        } else if (totalTestScore >= 34 && totalTestScore <= 39) {
+            return personalityRepository.findPersonalityByColor(PersonalityColor.PURPLE);
+        } else if (totalTestScore >= 40 && totalTestScore <= 45) {
+            return personalityRepository.findPersonalityByColor(PersonalityColor.GREEN);
+        }
+        return null;
+    }
+
 }

@@ -1,5 +1,6 @@
 package hous.server.service.user;
 
+import hous.server.domain.personality.Personality;
 import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.personality.repository.PersonalityRepository;
 import hous.server.domain.user.Onboarding;
@@ -13,6 +14,7 @@ import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.user.dto.request.CreateUserDto;
 import hous.server.service.user.dto.request.SetOnboardingInfoRequestDto;
+import hous.server.service.user.dto.request.UpdateTestScoreRequestDto;
 import hous.server.service.user.dto.request.UpdateUserInfoRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -61,4 +63,13 @@ public class UserService {
         setting.setPushNotification(state);
     }
 
+    public void updateUserTestScore(UpdateTestScoreRequestDto request, Long userId) {
+        User user = UserServiceUtils.findUserById(userRepository, userId);
+        RoomServiceUtils.findParticipatingRoom(user);
+        Onboarding onboarding = user.getOnboarding();
+        TestScore testScore = onboarding.getTestScore();
+        testScore.updateScore(request.getLight(), request.getNoise(), request.getClean(), request.getSmell(), request.getIntroversion());
+        Personality personality = UserServiceUtils.getPersonalityColorByTestScore(personalityRepository, testScore);
+        onboarding.setPersonality(personality);
+    }
 }
