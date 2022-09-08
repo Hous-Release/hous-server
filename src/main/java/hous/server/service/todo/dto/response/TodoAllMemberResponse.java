@@ -1,7 +1,6 @@
 package hous.server.service.todo.dto.response;
 
 import hous.server.domain.personality.PersonalityColor;
-import hous.server.domain.user.Onboarding;
 import lombok.*;
 
 import java.util.List;
@@ -25,17 +24,5 @@ public class TodoAllMemberResponse {
                 .totalTodoCnt(totalTodoCnt)
                 .dayOfWeekTodos(dayOfWeekTodos)
                 .build();
-    }
-    
-    public static List<TodoAllMemberResponse> sortMeFirst(List<TodoAllMemberResponse> allMemberTodosList, Onboarding me) {
-        for (int i = 0; i < allMemberTodosList.size(); i++) {
-            if (allMemberTodosList.get(i).getUserName().equals(me.getNickname())) {
-                TodoAllMemberResponse todoInfo = allMemberTodosList.get(i);
-                allMemberTodosList.remove(i);
-                allMemberTodosList.add(0, todoInfo);
-                break;
-            }
-        }
-        return allMemberTodosList;
     }
 }
