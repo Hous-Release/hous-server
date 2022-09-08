@@ -77,14 +77,20 @@ public class TodoServiceUtils {
         return allDaysOurTodosList;
     }
 
-    public static List<Todo> filterAllDaysMyTodos(List<Todo> todos, Onboarding me) {
+    public static List<Todo> filterAllDaysUserTodos(List<Todo> todos, Onboarding onboarding) {
         List<Todo> myTodosList = new ArrayList<>();
         todos.forEach(todo -> todo.getTakes().forEach(take -> {
-            if (take.getOnboarding().getId().equals(me.getId())) {
+            if (take.getOnboarding().getId().equals(onboarding.getId())) {
                 myTodosList.add(todo);
             }
         }));
         return myTodosList;
+    }
+
+    public static List<Done> filterAllDaysMyDones(Onboarding me, List<Done> dones) {
+        return dones.stream()
+                .filter(done -> done.getOnboarding().getId().equals(me.getId()))
+                .collect(Collectors.toList());
     }
 
     public static List<Todo>[] mapByDayOfWeekToList(List<Todo> todos) {
@@ -110,23 +116,5 @@ public class TodoServiceUtils {
             });
         });
         return todayMyTodosList;
-    }
-
-    public static List<Todo> filterMyTodos(Onboarding me, List<Todo> todos) {
-        List<Todo> myTodos = new ArrayList<>();
-        todos.forEach(todo -> {
-            todo.getTakes().forEach(take -> {
-                if (take.getOnboarding().getId().equals(me.getId())) {
-                    myTodos.add(todo);
-                }
-            });
-        });
-        return myTodos;
-    }
-
-    public static List<Done> filterMyDones(Onboarding me, List<Done> dones) {
-        return dones.stream()
-                .filter(done -> done.getOnboarding().getId().equals(me.getId()))
-                .collect(Collectors.toList());
     }
 }

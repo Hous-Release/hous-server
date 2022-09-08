@@ -73,7 +73,7 @@ public class RoomService {
         Onboarding me = user.getOnboarding();
 
         List<Todo> todos = room.getTodos();
-        List<Todo> myTodos = TodoServiceUtils.filterMyTodos(me, todos);
+        List<Todo> myTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, me);
         myTodos.forEach(todo -> {
             // todo 담당자가 여러명이면 나의 담당 해제
             if (todo.getTakes().size() > 1) {
@@ -81,7 +81,7 @@ public class RoomService {
                         .filter(take -> take.getOnboarding().getId().equals(me.getId()))
                         .findFirst();
                 if (myTake.isPresent()) {
-                    List<Done> myDones = TodoServiceUtils.filterMyDones(me, todo.getDones());
+                    List<Done> myDones = TodoServiceUtils.filterAllDaysMyDones(me, todo.getDones());
                     takeRepository.delete(myTake.get());
                     myDones.forEach(todo::deleteDone);
                     doneRepository.deleteAll(myDones);

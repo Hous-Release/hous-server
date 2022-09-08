@@ -98,7 +98,7 @@ public class TodoRetrieveService {
 
         // 이 방의 모든 요일의 todo list 조회
         List<Todo> ourTodosList = TodoServiceUtils.filterAllDaysOurTodos(todos);
-        List<Todo> myTodosList = TodoServiceUtils.filterAllDaysMyTodos(todos, user.getOnboarding());
+        List<Todo> myTodosList = TodoServiceUtils.filterAllDaysUserTodos(todos, user.getOnboarding());
 
         // 요일별(index) todo list 형태로 가공
         List<Todo>[] allDayOurTodosList = TodoServiceUtils.mapByDayOfWeekToList(ourTodosList);
