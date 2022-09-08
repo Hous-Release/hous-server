@@ -29,7 +29,7 @@ public class Personality extends AuditingTimeEntity {
     @Column(nullable = false, length = 300)
     private String title;
 
-    @Column(nullable = false, length = 300)
+    @Column(nullable = false, length = 500)
     private String description;
 
     @Column(nullable = false, length = 300)

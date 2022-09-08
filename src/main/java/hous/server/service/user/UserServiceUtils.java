@@ -3,6 +3,7 @@ package hous.server.service.user;
 import hous.server.common.exception.ConflictException;
 import hous.server.common.exception.NotFoundException;
 import hous.server.common.exception.ValidationException;
+import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.user.User;
 import hous.server.domain.user.UserSocialType;
 import hous.server.domain.user.repository.UserRepository;
@@ -36,6 +37,12 @@ public class UserServiceUtils {
         if (state == requestState) {
             throw new ValidationException(String.format("(%s) 유저의 푸쉬 알림 여부 상태는 이미 (%s) 입니다.", state, requestState),
                     VALIDATION_STATUS_EXCEPTION);
+        }
+    }
+
+    public static void validatePersonalityColor(PersonalityColor color) {
+        if (color == PersonalityColor.GRAY) {
+            throw new NotFoundException("GRAY 에 대한 성향 정보는 존재하지 않습니다.", NOT_FOUND_PERSONALITY_COLOR_EXCEPTION);
         }
     }
 }
