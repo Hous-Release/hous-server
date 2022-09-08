@@ -49,7 +49,7 @@ public class UserRetrieveService {
         return getProfileInfoByUser(homie);
     }
 
-    public PersonalityInfoResponse getHomiePersonalityInfo(PersonalityColor color) {
+    public PersonalityInfoResponse getPersonalityInfo(PersonalityColor color) {
         UserServiceUtils.validatePersonalityColor(color);
         Personality personality = personalityRepository.findPersonalityByColor(color);
         return PersonalityInfoResponse.of(personality);
