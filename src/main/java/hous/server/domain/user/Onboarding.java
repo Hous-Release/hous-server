@@ -16,9 +16,9 @@ import java.util.List;
 
 @Getter
 @Entity
-@Builder(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 public class Onboarding extends AuditingTimeEntity {
 
     @Id
@@ -55,7 +55,7 @@ public class Onboarding extends AuditingTimeEntity {
     private Represent represent;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "test_score_id")
+    @JoinColumn(name = "test_score_id", nullable = false)
     private TestScore testScore;
 
     @OneToMany(mappedBy = "onboarding", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -65,10 +65,11 @@ public class Onboarding extends AuditingTimeEntity {
     @JoinColumn(name = "badge_id")
     private final List<Badge> badges = new ArrayList<>();
 
-    public static Onboarding newInstance(Personality personality) {
+    public static Onboarding newInstance(Personality personality, TestScore testScore) {
         return Onboarding.builder()
                 .isChecked(false)
                 .personality(personality)
+                .testScore(testScore)
                 .build();
     }
 
@@ -83,6 +84,10 @@ public class Onboarding extends AuditingTimeEntity {
         this.participates.add(participate);
     }
 
+    public void deleteParticipate(Participate participate) {
+        this.participates.remove(participate);
+    }
+
     public void setUserInfo(UpdateUserInfoRequestDto request) {
         this.nickname = request.getNickname();
         this.isPublic = request.isPublic();
@@ -90,5 +95,21 @@ public class Onboarding extends AuditingTimeEntity {
         this.mbti = request.getMbti();
         this.job = request.getJob();
         this.introduction = request.getIntroduction();
+    }
+
+    public void resetUserInfo() {
+        this.isPublic = false;
+        this.mbti = null;
+        this.job = null;
+        this.introduction = null;
+    }
+
+    public void resetBadge() {
+        this.represent = null;
+        this.badges.clear();
+    }
+
+    public void resetTestScore(TestScore testScore) {
+        this.testScore = testScore.resetScore(testScore);
     }
 }

@@ -39,7 +39,7 @@ public class TodoRetrieveService {
         List<Participate> participates = room.getParticipates();
         List<Onboarding> onboardings = participates.stream()
                 .map(Participate::getOnboarding)
-                .sorted(Comparator.comparing(onboarding -> onboarding.getTestScore().getCreatedAt()))
+                .sorted(Comparator.comparing(onboarding -> onboarding.getTestScore().getUpdatedAt()))
                 .collect(Collectors.toList());
         return UserPersonalityInfoResponse.of(onboardings);
     }
@@ -77,7 +77,7 @@ public class TodoRetrieveService {
         List<Participate> participates = room.getParticipates();
         List<Onboarding> onboardings = participates.stream()
                 .map(Participate::getOnboarding)
-                .sorted(Comparator.comparing(onboarding -> onboarding.getTestScore().getCreatedAt()))
+                .sorted(Comparator.comparing(onboarding -> onboarding.getTestScore().getUpdatedAt()))
                 .collect(Collectors.toList());
         List<UserPersonalityInfo> userPersonalityInfos = TodoServiceUtils.toUserPersonalityInfoList(todo);
         return TodoInfoResponse.of(todo, userPersonalityInfos, onboardings);
@@ -98,7 +98,7 @@ public class TodoRetrieveService {
 
         // 이 방의 모든 요일의 todo list 조회
         List<Todo> ourTodosList = TodoServiceUtils.filterAllDaysOurTodos(todos);
-        List<Todo> myTodosList = TodoServiceUtils.filterAllDaysMyTodos(todos, user.getOnboarding());
+        List<Todo> myTodosList = TodoServiceUtils.filterAllDaysUserTodos(todos, user.getOnboarding());
 
         // 요일별(index) todo list 형태로 가공
         List<Todo>[] allDayOurTodosList = TodoServiceUtils.mapByDayOfWeekToList(ourTodosList);

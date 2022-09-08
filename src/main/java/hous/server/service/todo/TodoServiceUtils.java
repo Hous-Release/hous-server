@@ -5,6 +5,7 @@ import hous.server.common.exception.NotFoundException;
 import hous.server.common.exception.ValidationException;
 import hous.server.common.util.DateUtils;
 import hous.server.domain.room.Room;
+import hous.server.domain.todo.Done;
 import hous.server.domain.todo.Todo;
 import hous.server.domain.todo.repository.DoneRepository;
 import hous.server.domain.todo.repository.TodoRepository;
@@ -46,7 +47,7 @@ public class TodoServiceUtils {
 
     public static List<UserPersonalityInfo> toUserPersonalityInfoList(Todo todo) {
         return todo.getTakes().stream()
-                .sorted(Comparator.comparing(take -> take.getOnboarding().getTestScore().getCreatedAt()))
+                .sorted(Comparator.comparing(take -> take.getOnboarding().getTestScore().getUpdatedAt()))
                 .map(take -> UserPersonalityInfo.of(
                         take.getOnboarding().getId(),
                         take.getOnboarding().getPersonality().getColor(),
@@ -76,14 +77,20 @@ public class TodoServiceUtils {
         return allDaysOurTodosList;
     }
 
-    public static List<Todo> filterAllDaysMyTodos(List<Todo> todos, Onboarding me) {
+    public static List<Todo> filterAllDaysUserTodos(List<Todo> todos, Onboarding onboarding) {
         List<Todo> myTodosList = new ArrayList<>();
         todos.forEach(todo -> todo.getTakes().forEach(take -> {
-            if (take.getOnboarding().getId().equals(me.getId())) {
+            if (take.getOnboarding().getId().equals(onboarding.getId())) {
                 myTodosList.add(todo);
             }
         }));
         return myTodosList;
+    }
+
+    public static List<Done> filterAllDaysMyDones(Onboarding me, List<Done> dones) {
+        return dones.stream()
+                .filter(done -> done.getOnboarding().getId().equals(me.getId()))
+                .collect(Collectors.toList());
     }
 
     public static List<Todo>[] mapByDayOfWeekToList(List<Todo> todos) {

@@ -1,15 +1,15 @@
 package hous.server.domain.user;
 
 import hous.server.domain.common.AuditingTimeEntity;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 public class User extends AuditingTimeEntity {
 
     @Id
@@ -34,15 +34,13 @@ public class User extends AuditingTimeEntity {
     @JoinColumn(name = "setting_id", nullable = false)
     private Setting setting;
 
-    private User(String socialId, UserSocialType socialType, String fcmToken, Onboarding onboarding, Setting setting) {
-        this.socialInfo = SocialInfo.of(socialId, socialType);
-        this.fcmToken = fcmToken;
-        this.status = UserStatus.ACTIVE;
-        this.onboarding = onboarding;
-        this.setting = setting;
-    }
-
     public static User newInstance(String socialId, UserSocialType socialType, String fcmToken, Onboarding onboarding, Setting setting) {
-        return new User(socialId, socialType, fcmToken, onboarding, setting);
+        return User.builder()
+                .socialInfo(SocialInfo.of(socialId, socialType))
+                .fcmToken(fcmToken)
+                .onboarding(onboarding)
+                .setting(setting)
+                .status(UserStatus.ACTIVE)
+                .build();
     }
 }

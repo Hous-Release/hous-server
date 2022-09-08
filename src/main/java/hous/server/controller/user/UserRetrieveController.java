@@ -76,20 +76,20 @@ public class UserRetrieveController {
     }
 
     @ApiOperation(
-            value = "[인증] 룸메이트 정보 페이지(Hous 뷰에서 호미 카드 클릭) - 룸메이트 성향 정보를 확인합니다.",
+            value = "[인증] 룸메이트 정보 페이지(Hous 뷰에서 호미 카드 클릭) - 성향 정보를 확인합니다.",
             notes = "color 쿼리에 조회할 성향 색깔을 담아서 요청을 보냅니다.\n" +
                     "GRAY 에 대한 정보는 존재하지 않기 때문에 404 에러를 전달합니다."
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "룸메이트 성향 정보 조회 성공입니다."),
+            @ApiResponse(code = 200, message = "성향 정보 조회 성공입니다."),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "GRAY 에 대한 성향 정보는 존재하지 않습니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
     @GetMapping("/user/personality")
-    public ResponseEntity<PersonalityInfoResponse> getHomiePersonalityInfo(@ApiParam(name = "color", value = "조회할 성향 색깔", required = true, example = "RED")
-                                                                           @RequestParam PersonalityColor color) {
-        return SuccessResponse.success(SuccessCode.GET_HOMIE_PERSONALITY_INFO_SUCCESS, userRetrieveService.getHomiePersonalityInfo(color));
+    public ResponseEntity<PersonalityInfoResponse> getPersonalityInfo(@ApiParam(name = "color", value = "조회할 성향 색깔", required = true, example = "RED")
+                                                                      @RequestParam PersonalityColor color) {
+        return SuccessResponse.success(SuccessCode.GET_PERSONALITY_INFO_SUCCESS, userRetrieveService.getPersonalityInfo(color));
     }
 }
