@@ -29,6 +29,12 @@ public class UserRetrieveService {
         return !onboarding.isChecked() ? CheckOnboardingInfoResponse.of(false) : CheckOnboardingInfoResponse.of(true);
     }
 
+    public UserInfoResponse getUserInfo(Long userId) {
+        User user = UserServiceUtils.findUserById(userRepository, userId);
+        RoomServiceUtils.findParticipatingRoom(user);
+        return getProfileInfoByUser(user);
+    }
+
     public UserInfoResponse getHomieInfo(Long homieId, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         User homie = UserServiceUtils.findUserById(userRepository, homieId);
@@ -36,12 +42,6 @@ public class UserRetrieveService {
         Room homieRoom = RoomServiceUtils.findParticipatingRoom(homie);
         RoomServiceUtils.checkParticipatingRoom(userRoom, homieRoom);
         return getProfileInfoByUser(homie);
-    }
-
-    public UserInfoResponse getUserInfo(Long userId) {
-        User user = UserServiceUtils.findUserById(userRepository, userId);
-        RoomServiceUtils.findParticipatingRoom(user);
-        return getProfileInfoByUser(user);
     }
 
     private UserInfoResponse getProfileInfoByUser(User user) {
