@@ -42,6 +42,9 @@ public enum SuccessCode {
     GET_MY_PROFILE_INFO_SUCCESS(OK, "나의 프로필 정보 조회 성공입니다."),
     GET_HOMIE_PROFILE_INFO_SUCCESS(OK, "호미 프로필 정보 조회 성공입니다."),
 
+    // 성향
+    GET_HOMIE_PERSONALITY_INFO_SUCCESS(OK, "호미 성향 정보 조회 성공입니다."),
+
     /**
      * 201 CREATED
      */

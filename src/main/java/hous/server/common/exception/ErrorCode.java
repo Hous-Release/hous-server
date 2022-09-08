@@ -50,6 +50,7 @@ public enum ErrorCode {
     NOT_FOUND_PARTICIPATE_EXCEPTION(NOT_FOUND, "참가중인 방이 존재하지 않습니다."),
     NOT_FOUND_RULE_EXCEPTION(NOT_FOUND, "존재하지 않는 규칙입니다."),
     NOT_FOUND_TODO_EXCEPTION(NOT_FOUND, "존재하지 않는 todo 입니다."),
+    NOT_FOUND_PERSONALITY_COLOR_EXCEPTION(NOT_FOUND, "GRAY 에 대한 성향 정보는 존재하지 않습니다."),
 
     /**
      * 405 Method Not Allowed
