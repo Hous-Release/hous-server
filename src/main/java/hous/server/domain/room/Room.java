@@ -4,10 +4,7 @@ import hous.server.domain.common.AuditingTimeEntity;
 import hous.server.domain.rule.Rule;
 import hous.server.domain.todo.Todo;
 import hous.server.domain.user.Onboarding;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,6 +13,8 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 public class Room extends AuditingTimeEntity {
 
     @Id
@@ -49,16 +48,6 @@ public class Room extends AuditingTimeEntity {
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Todo> todos = new ArrayList<>();
-
-    @Builder(access = AccessLevel.PRIVATE)
-    public Room(Onboarding owner, String name, String code, int participantsCnt, int rulesCnt, int todosCnt) {
-        this.owner = owner;
-        this.name = name;
-        this.code = code;
-        this.participantsCnt = participantsCnt;
-        this.rulesCnt = rulesCnt;
-        this.todosCnt = todosCnt;
-    }
 
     public static Room newInstance(Onboarding owner, String name, String code) {
         return Room.builder()

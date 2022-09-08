@@ -16,9 +16,9 @@ import java.util.List;
 
 @Getter
 @Entity
-@Builder(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 public class Onboarding extends AuditingTimeEntity {
 
     @Id
