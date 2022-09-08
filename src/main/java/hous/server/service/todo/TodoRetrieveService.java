@@ -2,6 +2,7 @@ package hous.server.service.todo;
 
 import hous.server.common.util.DateUtils;
 import hous.server.domain.common.AuditingTimeEntity;
+import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
 import hous.server.domain.todo.DayOfWeek;
@@ -51,22 +52,8 @@ public class TodoRetrieveService {
         List<Todo> todos = room.getTodos();
         List<Todo> todayOurTodosList = TodoServiceUtils.filterTodayOurTodos(today, todos);
         List<Todo> todayMyTodosList = TodoServiceUtils.filterTodayMyTodos(today, user.getOnboarding(), todos);
-        List<MyTodoInfo> todayMyTodos = todayMyTodosList.stream()
-                .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
-                .map(todo -> MyTodoInfo.of(
-                        todo.getId(),
-                        todo.getName(),
-                        doneRepository.findTodayTodoCheckStatus(today, user.getOnboarding(), todo)))
-                .collect(Collectors.toList());
-        List<OurTodoInfo> todayOurTodos = todayOurTodosList.stream()
-                .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
-                .map(todo -> OurTodoInfo.of(
-                        todo.getName(),
-                        doneRepository.findTodayOurTodoStatus(today, todo),
-                        todo.getTakes().stream()
-                                .map(take -> take.getOnboarding().getNickname())
-                                .collect(Collectors.toList())))
-                .collect(Collectors.toList());
+        List<MyTodoInfo> todayMyTodos = todayMyTodosList.stream().sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt)).map(todo -> MyTodoInfo.of(todo.getId(), todo.getName(), doneRepository.findTodayTodoCheckStatus(today, user.getOnboarding(), todo))).collect(Collectors.toList());
+        List<OurTodoInfo> todayOurTodos = todayOurTodosList.stream().sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt)).map(todo -> OurTodoInfo.of(todo.getName(), doneRepository.findTodayOurTodoStatus(today, todo), todo.getTakes().stream().map(take -> take.getOnboarding().getNickname()).collect(Collectors.toSet()))).collect(Collectors.toList());
         return TodoMainResponse.of(today, todayMyTodos, todayOurTodos);
     }
 
@@ -110,20 +97,54 @@ public class TodoRetrieveService {
             String dayOfWeek = DayOfWeek.getValueByIndex(i);
             List<MyTodo> myTodoInfos = allDayMyTodosList[i].stream()
                     .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
-                    .map(todo -> MyTodo.of(
-                            todo.getId(),
-                            todo.getName()))
+                    .map(todo -> MyTodo.of(todo.getId(), todo.getName()))
                     .collect(Collectors.toList());
             List<OurTodo> ourTodoInfos = allDayOurTodosList[i].stream()
                     .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
-                    .map(todo -> OurTodo.of(
-                            todo.getName(),
-                            todo.getTakes().stream()
-                                    .map(take -> take.getOnboarding().getNickname())
-                                    .collect(Collectors.toList())))
+                    .map(todo -> OurTodo.of(todo.getName(), todo.getTakes().stream()
+                            .map(take -> take.getOnboarding().getNickname()).collect(Collectors.toSet())))
                     .collect(Collectors.toList());
             allDayTodosList.add(TodoAllDayResponse.of(dayOfWeek, myTodoInfos, ourTodoInfos));
         }
         return allDayTodosList;
+    }
+
+    public List<TodoAllMemberResponse> getTodoAllMemberInfo(Long userId) {
+        User user = UserServiceUtils.findUserById(userRepository, userId);
+        Room room = RoomServiceUtils.findParticipatingRoom(user);
+        List<Todo> todos = room.getTodos();
+
+        List<TodoAllMemberResponse> allMemberTodos = new ArrayList<>();
+        List<TodoAllMemberResponse> otherMemberTodos = new ArrayList<>();
+
+        // 성향테스트 참여 순서로 정렬
+        room.getParticipates().stream().sorted(
+                Comparator.comparing(participate -> participate.getOnboarding().getTestScore().getUpdatedAt())
+        ).forEach(participate -> {
+            List<Todo> memberTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, participate.getOnboarding());
+
+            List<Todo>[] allDayMemberTodos = TodoServiceUtils.mapByDayOfWeekToList(memberTodos);
+
+            List<DayOfWeekTodo> dayOfWeekTodos = new ArrayList<>();
+            int totalTodoCnt = 0;
+            for (int i = 1; i < allDayMemberTodos.length; i++) {
+                String dayOfWeek = DayOfWeek.getValueByIndex(i);
+                List<String> thisDayTodosName = allDayMemberTodos[i].stream().map(Todo::getName).collect(Collectors.toList());
+                dayOfWeekTodos.add(DayOfWeekTodo.of(dayOfWeek, thisDayTodosName.size(), thisDayTodosName));
+                totalTodoCnt += thisDayTodosName.size();
+            }
+
+            String userName = participate.getOnboarding().getNickname();
+            PersonalityColor color = participate.getOnboarding().getPersonality().getColor();
+
+            if (user.getOnboarding().equals(participate.getOnboarding())) {
+                allMemberTodos.add(TodoAllMemberResponse.of(userName, color, totalTodoCnt, dayOfWeekTodos));
+            } else {
+                otherMemberTodos.add(TodoAllMemberResponse.of(userName, color, totalTodoCnt, dayOfWeekTodos));
+            }
+        });
+        allMemberTodos.addAll(otherMemberTodos);
+
+        return allMemberTodos;
     }
 }
