@@ -84,6 +84,10 @@ public class Onboarding extends AuditingTimeEntity {
         this.participates.add(participate);
     }
 
+    public void deleteParticipate(Participate participate) {
+        this.participates.remove(participate);
+    }
+
     public void setUserInfo(UpdateUserInfoRequestDto request) {
         this.nickname = request.getNickname();
         this.isPublic = request.isPublic();
@@ -91,5 +95,21 @@ public class Onboarding extends AuditingTimeEntity {
         this.mbti = request.getMbti();
         this.job = request.getJob();
         this.introduction = request.getIntroduction();
+    }
+
+    public void resetUserInfo() {
+        this.isPublic = false;
+        this.mbti = null;
+        this.job = null;
+        this.introduction = null;
+    }
+
+    public void resetBadge() {
+        this.represent = null;
+        this.badges.clear();
+    }
+
+    public void resetTestScore(TestScore testScore) {
+        this.testScore = testScore.resetScore(testScore);
     }
 }

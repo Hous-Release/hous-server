@@ -5,6 +5,7 @@ import hous.server.common.exception.NotFoundException;
 import hous.server.common.exception.ValidationException;
 import hous.server.common.util.DateUtils;
 import hous.server.domain.room.Room;
+import hous.server.domain.todo.Done;
 import hous.server.domain.todo.Todo;
 import hous.server.domain.todo.repository.DoneRepository;
 import hous.server.domain.todo.repository.TodoRepository;
@@ -109,5 +110,23 @@ public class TodoServiceUtils {
             });
         });
         return todayMyTodosList;
+    }
+
+    public static List<Todo> filterMyTodos(Onboarding me, List<Todo> todos) {
+        List<Todo> myTodos = new ArrayList<>();
+        todos.forEach(todo -> {
+            todo.getTakes().forEach(take -> {
+                if (take.getOnboarding().getId().equals(me.getId())) {
+                    myTodos.add(todo);
+                }
+            });
+        });
+        return myTodos;
+    }
+
+    public static List<Done> filterMyDones(Onboarding me, List<Done> dones) {
+        return dones.stream()
+                .filter(done -> done.getOnboarding().getId().equals(me.getId()))
+                .collect(Collectors.toList());
     }
 }

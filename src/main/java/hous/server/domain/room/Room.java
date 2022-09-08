@@ -22,7 +22,7 @@ public class Room extends AuditingTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "onboarding_id", nullable = false)
     private Onboarding owner;
 
@@ -78,6 +78,11 @@ public class Room extends AuditingTimeEntity {
     public void addParticipate(Participate participate) {
         this.participates.add(participate);
         this.participantsCnt += 1;
+    }
+
+    public void deleteParticipate(Participate participate) {
+        this.participates.remove(participate);
+        this.participantsCnt -= 1;
     }
 
     public void addRule(Rule rule) {
