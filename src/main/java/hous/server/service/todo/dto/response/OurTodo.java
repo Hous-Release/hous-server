@@ -2,7 +2,7 @@ package hous.server.service.todo.dto.response;
 
 import lombok.*;
 
-import java.util.List;
+import java.util.Set;
 
 @ToString
 @Getter
@@ -12,9 +12,9 @@ import java.util.List;
 public class OurTodo {
 
     private String todoName;
-    private List<String> nicknames;
+    private Set<String> nicknames;
 
-    public static OurTodo of(String todoName, List<String> nicknames) {
+    public static OurTodo of(String todoName, Set<String> nicknames) {
         return OurTodo.builder()
                 .todoName(todoName)
                 .nicknames(nicknames)

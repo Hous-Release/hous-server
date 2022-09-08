@@ -78,13 +78,13 @@ public class TodoServiceUtils {
     }
 
     public static List<Todo> filterAllDaysUserTodos(List<Todo> todos, Onboarding onboarding) {
-        List<Todo> myTodosList = new ArrayList<>();
+        List<Todo> userTodosList = new ArrayList<>();
         todos.forEach(todo -> todo.getTakes().forEach(take -> {
             if (take.getOnboarding().getId().equals(onboarding.getId())) {
-                myTodosList.add(todo);
+                userTodosList.add(todo);
             }
         }));
-        return myTodosList;
+        return userTodosList;
     }
 
     public static List<Done> filterAllDaysMyDones(Onboarding me, List<Done> dones) {
@@ -98,10 +98,14 @@ public class TodoServiceUtils {
         for (int index = 0; index < 8; index++) {
             todosList[index] = new ArrayList<>();
         }
-        todos.forEach(todo -> todo.getTakes().forEach(take -> {
-            take.getRedos().forEach(redo ->
-                    todosList[redo.getDayOfWeek().getIndex()].add(todo));
-        }));
+        todos.forEach(todo -> todo.getTakes().forEach(take ->
+                take.getRedos().forEach(redo ->
+                {
+                    if (!todosList[redo.getDayOfWeek().getIndex()].contains(todo)) {
+                        todosList[redo.getDayOfWeek().getIndex()].add(todo);
+                    }
+                })
+        ));
         return todosList;
     }
 

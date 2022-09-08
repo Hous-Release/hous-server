@@ -54,7 +54,7 @@ public class HomeRetrieveService {
                         doneRepository.findTodayOurTodoStatus(today, todo),
                         todo.getTakes().stream()
                                 .map(take -> take.getOnboarding().getNickname())
-                                .collect(Collectors.toList())))
+                                .collect(Collectors.toSet())))
                 .collect(Collectors.toList());
         List<Rule> rules = room.getRules();
         List<Onboarding> participants = room.getParticipates().stream()
