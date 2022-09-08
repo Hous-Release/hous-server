@@ -45,6 +45,7 @@ public enum SuccessCode {
 
     // 성향
     GET_PERSONALITY_INFO_SUCCESS(OK, "성향 정보 조회 성공입니다."),
+    GET_PERSONALITY_TEST_INFO_SUCCESS(OK, "성향테스트 정보 조회 성공입니다."),
 
     /**
      * 201 CREATED

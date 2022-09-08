@@ -9,12 +9,15 @@ import hous.server.domain.personality.PersonalityColor;
 import hous.server.service.user.UserRetrieveService;
 import hous.server.service.user.dto.response.CheckOnboardingInfoResponse;
 import hous.server.service.user.dto.response.PersonalityInfoResponse;
+import hous.server.service.user.dto.response.PersonalityTestInfoResponse;
 import hous.server.service.user.dto.response.UserInfoResponse;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
 
 @Api(tags = "User")
 @RequiredArgsConstructor
@@ -91,5 +94,20 @@ public class UserRetrieveController {
     public ResponseEntity<PersonalityInfoResponse> getPersonalityInfo(@ApiParam(name = "color", value = "조회할 성향 색깔", required = true, example = "RED")
                                                                       @RequestParam PersonalityColor color) {
         return SuccessResponse.success(SuccessCode.GET_PERSONALITY_INFO_SUCCESS, userRetrieveService.getPersonalityInfo(color));
+    }
+
+    @ApiOperation(
+            value = "[인증] 마이 페이지(Profile 뷰) - 성향테스트 정보를 조회합니다.",
+            notes = "15 개의 질문을 리스트에 순서대로 담아서 테스트 내용을 전달합니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "성향테스트 정보 조회 성공입니다."),
+            @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+            @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+    })
+    @Auth
+    @GetMapping("/user/personality/test")
+    public ResponseEntity<List<PersonalityTestInfoResponse>> getPersonalityTestInfo() {
+        return SuccessResponse.success(SuccessCode.GET_PERSONALITY_TEST_INFO_SUCCESS, userRetrieveService.getPersonalityTestInfo());
     }
 }
