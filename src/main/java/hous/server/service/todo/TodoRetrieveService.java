@@ -39,7 +39,7 @@ public class TodoRetrieveService {
         List<Participate> participates = room.getParticipates();
         List<Onboarding> onboardings = participates.stream()
                 .map(Participate::getOnboarding)
-                .sorted(Comparator.comparing(onboarding -> onboarding.getTestScore().getCreatedAt()))
+                .sorted(Comparator.comparing(onboarding -> onboarding.getTestScore().getUpdatedAt()))
                 .collect(Collectors.toList());
         return UserPersonalityInfoResponse.of(onboardings);
     }
@@ -77,7 +77,7 @@ public class TodoRetrieveService {
         List<Participate> participates = room.getParticipates();
         List<Onboarding> onboardings = participates.stream()
                 .map(Participate::getOnboarding)
-                .sorted(Comparator.comparing(onboarding -> onboarding.getTestScore().getCreatedAt()))
+                .sorted(Comparator.comparing(onboarding -> onboarding.getTestScore().getUpdatedAt()))
                 .collect(Collectors.toList());
         List<UserPersonalityInfo> userPersonalityInfos = TodoServiceUtils.toUserPersonalityInfoList(todo);
         return TodoInfoResponse.of(todo, userPersonalityInfos, onboardings);

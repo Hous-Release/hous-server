@@ -46,7 +46,7 @@ public class TodoServiceUtils {
 
     public static List<UserPersonalityInfo> toUserPersonalityInfoList(Todo todo) {
         return todo.getTakes().stream()
-                .sorted(Comparator.comparing(take -> take.getOnboarding().getTestScore().getCreatedAt()))
+                .sorted(Comparator.comparing(take -> take.getOnboarding().getTestScore().getUpdatedAt()))
                 .map(take -> UserPersonalityInfo.of(
                         take.getOnboarding().getId(),
                         take.getOnboarding().getPersonality().getColor(),
