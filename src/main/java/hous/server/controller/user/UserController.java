@@ -121,7 +121,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = ""),
             @ApiResponse(
-                    code = 400, message = "성향 테스트의 각 성향 점수는 최소 3점, 최대 9점입니다. (smell, light, noise, clean,  introversion)", response = ErrorResponse.class),
+                    code = 400, message = "성향 테스트의 각 성향 점수는 최소 3점, 최대 9점입니다. (smell, light, noise, clean, introversion)", response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 404,
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다. \n"
