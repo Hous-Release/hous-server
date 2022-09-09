@@ -37,7 +37,7 @@ public class UserInfoResponse {
 
     private String representBadgeImage;
 
-
+    @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Builder(access = AccessLevel.PRIVATE)
     public static class TestScoreResponse {
@@ -49,18 +49,16 @@ public class UserInfoResponse {
 
         private int smell;
 
-        public static TestScoreResponse of(TestScore testScore) {
-            if (testScore != null) {
-                return TestScoreResponse.builder()
-                        .light(testScore.getLight())
-                        .noise(testScore.getNoise())
-                        .smell(testScore.getSmell())
-                        .clean(testScore.getClean())
-                        .build();
+        private int introversion;
 
-            } else {
-                return null;
-            }
+        public static TestScoreResponse of(TestScore testScore) {
+            return TestScoreResponse.builder()
+                    .light(testScore.getLight())
+                    .noise(testScore.getNoise())
+                    .smell(testScore.getSmell())
+                    .clean(testScore.getClean())
+                    .introversion(testScore.getIntroversion())
+                    .build();
         }
     }
 
