@@ -80,6 +80,10 @@ public class Onboarding extends AuditingTimeEntity {
         this.isChecked = true;
     }
 
+    public void setPersonality(Personality personality) {
+        this.personality = personality;
+    }
+
     public void addParticipate(Participate participate) {
         this.participates.add(participate);
     }

@@ -53,4 +53,8 @@ public class TestScore extends AuditingTimeEntity {
         testScore.updateScore(0, 0, 0, 0, 0);
         return testScore;
     }
+
+    public int getTotalTestScore() {
+        return this.getLight() + this.getNoise() + this.getClean() + this.getSmell() + this.getIntroversion();
+    }
 }
