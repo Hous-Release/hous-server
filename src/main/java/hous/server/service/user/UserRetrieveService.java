@@ -4,7 +4,9 @@ import hous.server.domain.badge.Represent;
 import hous.server.domain.badge.repository.RepresentRepository;
 import hous.server.domain.personality.Personality;
 import hous.server.domain.personality.PersonalityColor;
+import hous.server.domain.personality.PersonalityTest;
 import hous.server.domain.personality.repository.PersonalityRepository;
+import hous.server.domain.personality.repository.PersonalityTestRepository;
 import hous.server.domain.room.Room;
 import hous.server.domain.room.repository.RoomRepository;
 import hous.server.domain.user.Onboarding;
@@ -13,10 +15,14 @@ import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.user.dto.response.CheckOnboardingInfoResponse;
 import hous.server.service.user.dto.response.PersonalityInfoResponse;
+import hous.server.service.user.dto.response.PersonalityTestInfoResponse;
 import hous.server.service.user.dto.response.UserInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -25,6 +31,7 @@ public class UserRetrieveService {
 
     private final UserRepository userRepository;
     private final PersonalityRepository personalityRepository;
+    private final PersonalityTestRepository personalityTestRepository;
     private final RepresentRepository representRepository;
     private final RoomRepository roomRepository;
 
@@ -53,6 +60,13 @@ public class UserRetrieveService {
         UserServiceUtils.validatePersonalityColor(color);
         Personality personality = personalityRepository.findPersonalityByColor(color);
         return PersonalityInfoResponse.of(personality);
+    }
+
+    public List<PersonalityTestInfoResponse> getPersonalityTestInfo() {
+        List<PersonalityTest> personalityTests = personalityTestRepository.findAllPersonalityTest();
+        return personalityTests.stream()
+                .map(PersonalityTestInfoResponse::of)
+                .collect(Collectors.toList());
     }
 
     private UserInfoResponse getProfileInfoByUser(User user) {
