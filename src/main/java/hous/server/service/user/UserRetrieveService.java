@@ -21,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,10 +63,7 @@ public class UserRetrieveService {
     }
 
     public List<PersonalityTestInfoResponse> getPersonalityTestInfo() {
-        List<PersonalityTest> personalityTests = personalityTestRepository.findAll();
-        personalityTests = personalityTests.stream()
-                .sorted(Comparator.comparing(PersonalityTest::getIdx))
-                .collect(Collectors.toList());
+        List<PersonalityTest> personalityTests = personalityTestRepository.findAllPersonalityTest();
         return personalityTests.stream()
                 .map(PersonalityTestInfoResponse::of)
                 .collect(Collectors.toList());
