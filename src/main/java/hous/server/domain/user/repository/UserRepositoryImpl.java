@@ -46,4 +46,12 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 )
                 .fetchOne();
     }
+
+    @Override
+    public long deleteUserById(Long id) {
+        return queryFactory
+                .delete(user)
+                .where(user.id.eq(id))
+                .execute();
+    }
 }

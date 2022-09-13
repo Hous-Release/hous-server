@@ -1,8 +1,11 @@
 package hous.server.service.user;
 
+import hous.server.common.exception.ForbiddenException;
+import hous.server.common.exception.NotFoundException;
 import hous.server.domain.personality.Personality;
 import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.personality.repository.PersonalityRepository;
+import hous.server.domain.room.Participate;
 import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.Setting;
 import hous.server.domain.user.TestScore;
@@ -19,6 +22,11 @@ import hous.server.service.user.dto.request.UpdateUserInfoRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static hous.server.common.exception.ErrorCode.FORBIDDEN_USER_DELETE_ROOM_PARTICIPATE_EXCEPTION;
+import static hous.server.common.exception.ErrorCode.NOTFOUND_USER_EXCEPTION;
 
 @RequiredArgsConstructor
 @Service
@@ -71,5 +79,18 @@ public class UserService {
         testScore.updateScore(request.getLight(), request.getNoise(), request.getClean(), request.getSmell(), request.getIntroversion());
         Personality personality = UserServiceUtils.getPersonalityColorByTestScore(personalityRepository, testScore);
         onboarding.setPersonality(personality);
+    }
+
+    public void deleteUser(Long userId) {
+        User user = UserServiceUtils.findUserById(userRepository, userId);
+        List<Participate> participateList = user.getOnboarding().getParticipates();
+        if (!participateList.isEmpty()) {
+            throw new ForbiddenException(String.format("방 (%s) 의 참가자 는 탈퇴할 수 없습니다.", participateList.get(0).getRoom().getId()),
+                    FORBIDDEN_USER_DELETE_ROOM_PARTICIPATE_EXCEPTION);
+        }
+        if (userRepository.deleteUserById(userId) != 1) {
+            throw new NotFoundException(String.format("존재 하지 않은 유저 (%s) 는 탈퇴할 수 없습니다.", userId),
+                    NOTFOUND_USER_EXCEPTION);
+        }
     }
 }
