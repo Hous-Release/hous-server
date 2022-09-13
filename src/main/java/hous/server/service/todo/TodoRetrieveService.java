@@ -147,4 +147,14 @@ public class TodoRetrieveService {
 
         return allMemberTodos;
     }
+
+    public MyTodoInfoResponse getMyTodoInfo(Long userId) {
+        User user = UserServiceUtils.findUserById(userRepository, userId);
+        Room room = RoomServiceUtils.findParticipatingRoom(user);
+        List<Todo> todos = room.getTodos();
+        List<Todo> myTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, user.getOnboarding()).stream()
+                .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
+                .collect(Collectors.toList());
+        return MyTodoInfoResponse.of(myTodos, user.getOnboarding());
+    }
 }
