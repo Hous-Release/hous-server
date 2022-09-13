@@ -152,4 +152,24 @@ public class TodoRetrieveController {
     public ResponseEntity<List<TodoAllMemberResponse>> getTodoAllMemberInfo(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_TODO_ALL_MEMBER_SUCCESS, todoRetrieveService.getTodoAllMemberInfo(userId));
     }
+
+    @ApiOperation(
+            value = "[인증] 마이 페이지(설정) - MY to-do 를 조회합니다.",
+            notes = "방에서 퇴사할 때 MY to-do 를 조회합니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "나의 todo 정보 조회 성공입니다."),
+            @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+            @ApiResponse(
+                    code = 404,
+                    message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
+                            + "2. 참가중인 방이 존재하지 않습니다.",
+                    response = ErrorResponse.class),
+            @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+    })
+    @Auth
+    @GetMapping("/todos/me")
+    public ResponseEntity<MyTodoInfoResponse> getMyTodoInfo(@ApiIgnore @UserId Long userId) {
+        return SuccessResponse.success(SuccessCode.GET_MY_TODO_SUCCESS, todoRetrieveService.getMyTodoInfo(userId));
+    }
 }
