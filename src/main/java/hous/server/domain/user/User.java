@@ -45,4 +45,8 @@ public class User extends AuditingTimeEntity {
     public void setOnboarding(Onboarding onboarding) {
         this.onboarding = onboarding;
     }
+
+    public void updateFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
 }
