@@ -25,6 +25,9 @@ public class Onboarding extends AuditingTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
     @Column(length = 30)
     private String nickname;
 
@@ -65,8 +68,9 @@ public class Onboarding extends AuditingTimeEntity {
     @JoinColumn(name = "badge_id")
     private final List<Badge> badges = new ArrayList<>();
 
-    public static Onboarding newInstance(Personality personality, TestScore testScore) {
+    public static Onboarding newInstance(User user, Personality personality, TestScore testScore) {
         return Onboarding.builder()
+                .user(user)
                 .isChecked(false)
                 .personality(personality)
                 .testScore(testScore)
