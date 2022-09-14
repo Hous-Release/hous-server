@@ -3,13 +3,12 @@ package hous.server.service.firebase;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.common.net.HttpHeaders;
-import com.google.gson.JsonParseException;
+import hous.server.common.util.HttpHeaderUtils;
 import hous.server.common.util.YamlPropertySourceFactory;
+import hous.server.external.client.firebase.FirebaseApiClient;
+import hous.server.external.client.firebase.dto.response.FcmResponse;
 import hous.server.service.firebase.dto.request.FcmMessage;
 import lombok.RequiredArgsConstructor;
-import okhttp3.*;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -24,26 +23,15 @@ public class FirebaseCloudMessageService {
 
     private final ObjectMapper objectMapper;
 
-    @Value("${cloud.firebase.credentials.uri}")
-    private String API_URL;
+    private final FirebaseApiClient firebaseApiCaller;
 
     public void sendMessageTo(String targetToken, String title, String body) throws IOException {
         String message = makeMessage(targetToken, title, body);
-
-        OkHttpClient client = new OkHttpClient();
-        RequestBody requestBody = RequestBody.create(message,
-                MediaType.get("application/json; charset=utf-8"));
-        Request request = new Request.Builder()
-                .url(API_URL)
-                .post(requestBody)
-                .addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
-                .addHeader(HttpHeaders.CONTENT_TYPE, "application/json; UTF-8")
-                .build();
-
-        Response response = client.newCall(request).execute();
+        FcmResponse fcmResponse = firebaseApiCaller.requestFcmMessaging(HttpHeaderUtils.withBearerToken(getAccessToken()), message);
+        // TODO fcmResponse.name == null 처리 추가하기
     }
 
-    private String makeMessage(String targetToken, String title, String body) throws JsonParseException, JsonProcessingException {
+    private String makeMessage(String targetToken, String title, String body) throws JsonProcessingException {
         FcmMessage fcmMessage = FcmMessage.builder()
                 .validateOnly(false)
                 .message(FcmMessage.Message.builder()

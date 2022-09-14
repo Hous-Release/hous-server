@@ -1,0 +1,17 @@
+package hous.server.external.client.firebase;
+
+import feign.Headers;
+import hous.server.external.client.firebase.dto.response.FcmResponse;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+
+@FeignClient(name = "firebaseApiClient", url = "${cloud.firebase.credentials.uri}")
+public interface FirebaseApiClient {
+
+    @PostMapping()
+    @Headers("Content-Type: application/json; UTF-8")
+    FcmResponse requestFcmMessaging(@RequestHeader("Authorization") String accessTokenWithBearer,
+                                    @RequestBody String requestBody);
+}
