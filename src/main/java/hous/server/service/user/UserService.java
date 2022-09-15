@@ -7,6 +7,7 @@ import hous.server.domain.badge.Represent;
 import hous.server.domain.badge.repository.AcquireRepository;
 import hous.server.domain.badge.repository.BadgeRepository;
 import hous.server.domain.badge.repository.RepresentRepository;
+import hous.server.domain.common.RedisKey;
 import hous.server.domain.personality.Personality;
 import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.personality.repository.PersonalityRepository;
@@ -29,6 +30,7 @@ import hous.server.service.user.dto.request.SetOnboardingInfoRequestDto;
 import hous.server.service.user.dto.request.UpdateTestScoreRequestDto;
 import hous.server.service.user.dto.request.UpdateUserInfoRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +40,8 @@ import java.util.List;
 @Service
 @Transactional
 public class UserService {
+
+    private final RedisTemplate<String, Object> redisTemplate;
 
     private final UserRepository userRepository;
     private final OnboardingRepository onboardingRepository;
@@ -93,6 +97,22 @@ public class UserService {
         testScore.updateScore(request.getLight(), request.getNoise(), request.getClean(), request.getSmell(), request.getIntroversion());
         Personality personality = UserServiceUtils.getPersonalityColorByTestScore(personalityRepository, testScore);
         me.setPersonality(personality);
+
+        if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.I_DONT_EVEN_KNOW_ME, me)) {
+            String personalityTestCountString = (String) redisTemplate.opsForValue().get(RedisKey.PERSONALITY_TEST_COUNT + userId);
+            if (personalityTestCountString != null && Integer.parseInt(personalityTestCountString) >= 4) {
+                Acquire acquire = acquireRepository.save(Acquire.newInstance(me, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.I_DONT_EVEN_KNOW_ME)));
+                me.addAcquire(acquire);
+                notificationService.sendNewBadgeNotification(user, BadgeInfo.I_DONT_EVEN_KNOW_ME);
+                redisTemplate.delete(RedisKey.PERSONALITY_TEST_COUNT + user.getId());
+            } else {
+                if (personalityTestCountString == null) {
+                    redisTemplate.opsForValue().set(RedisKey.PERSONALITY_TEST_COUNT + user.getId(), Integer.toString(1));
+                } else {
+                    redisTemplate.opsForValue().set(RedisKey.PERSONALITY_TEST_COUNT + user.getId(), Integer.toString(Integer.parseInt(personalityTestCountString) + 1));
+                }
+            }
+        }
 
         if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.I_AM_SUCH_A_PERSON, me)) {
             Acquire acquire = acquireRepository.save(Acquire.newInstance(me, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.I_AM_SUCH_A_PERSON)));
