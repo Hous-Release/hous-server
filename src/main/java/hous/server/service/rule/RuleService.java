@@ -1,10 +1,17 @@
 package hous.server.service.rule;
 
+import hous.server.domain.badge.Acquire;
+import hous.server.domain.badge.BadgeInfo;
+import hous.server.domain.badge.repository.AcquireRepository;
+import hous.server.domain.badge.repository.BadgeRepository;
 import hous.server.domain.room.Room;
 import hous.server.domain.rule.Rule;
 import hous.server.domain.rule.repository.RuleRepository;
+import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.User;
 import hous.server.domain.user.repository.UserRepository;
+import hous.server.service.badge.BadgeServiceUtils;
+import hous.server.service.notification.NotificationService;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.rule.dto.request.CreateRuleRequestDto;
 import hous.server.service.rule.dto.request.ModifyRuleReqeustDto;
@@ -21,14 +28,25 @@ public class RuleService {
 
     private final UserRepository userRepository;
     private final RuleRepository ruleRepository;
+    private final BadgeRepository badgeRepository;
+    private final AcquireRepository acquireRepository;
+
+    private final NotificationService notificationService;
 
     public void createRule(CreateRuleRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
+        Onboarding me = user.getOnboarding();
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         RuleServiceUtils.validateRuleCounts(room);
         int ruleIdx = RuleServiceUtils.findRuleIdxByRoomId(ruleRepository, room);
         Rule rule = ruleRepository.save(Rule.newInstance(room, request.getName(), ruleIdx + 1));
         room.addRule(rule);
+
+        if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.LETS_BUILD_A_POLE, me)) {
+            Acquire acquire = acquireRepository.save(Acquire.newInstance(me, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.LETS_BUILD_A_POLE)));
+            me.addAcquire(acquire);
+            notificationService.sendNewBadgeNotification(user, BadgeInfo.LETS_BUILD_A_POLE);
+        }
     }
 
     public void updateRule(UpdateRuleRequestDto request, Long ruleId, Long userId) {
