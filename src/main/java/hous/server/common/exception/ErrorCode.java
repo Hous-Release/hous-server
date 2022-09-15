@@ -38,6 +38,7 @@ public enum ErrorCode {
     FORBIDDEN_RULE_COUNT_EXCEPTION(FORBIDDEN, "rule 은 30개를 초과할 수 없습니다."),
     FORBIDDEN_REQUEST_RULE_COUNT_EXCEPTION(FORBIDDEN, "요청한 rule 의 개수와 방의 rule 의 수가 맞지 않습니다."),
     FORBIDDEN_ROOM_PARTICIPATE_EXCEPTION(FORBIDDEN, "같은 방에 참가하고 있지 않습니다."),
+    FORBIDDEN_ACQUIRE_BADGE_EXCEPTION(FORBIDDEN, "유저가 획득한 뱃지가 아닙니다."),
 
     /**
      * 404 Not Found

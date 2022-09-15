@@ -22,4 +22,12 @@ public class BadgeServiceUtils {
         }
         return acquireRepository.existsByOnboardingAndBadge(onboarding, badge);
     }
+
+    public static Badge findBadgeById(BadgeRepository badgeRepository, Long badgeId) {
+        Badge badge = badgeRepository.findBadgeByBadgeId(badgeId);
+        if (badge == null) {
+            throw new NotFoundException(String.format("존재하지 않는 badge (%s) 입니다", badgeId), NOT_FOUND_BADGE_EXCEPTION);
+        }
+        return badge;
+    }
 }

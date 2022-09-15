@@ -1,9 +1,12 @@
 package hous.server.service.user;
 
 import hous.server.domain.badge.Acquire;
+import hous.server.domain.badge.Badge;
 import hous.server.domain.badge.BadgeInfo;
+import hous.server.domain.badge.Represent;
 import hous.server.domain.badge.repository.AcquireRepository;
 import hous.server.domain.badge.repository.BadgeRepository;
+import hous.server.domain.badge.repository.RepresentRepository;
 import hous.server.domain.personality.Personality;
 import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.personality.repository.PersonalityRepository;
@@ -17,6 +20,7 @@ import hous.server.domain.user.repository.OnboardingRepository;
 import hous.server.domain.user.repository.SettingRepository;
 import hous.server.domain.user.repository.TestScoreRepository;
 import hous.server.domain.user.repository.UserRepository;
+import hous.server.service.badge.AcquireServiceUtils;
 import hous.server.service.badge.BadgeServiceUtils;
 import hous.server.service.notification.NotificationService;
 import hous.server.service.room.RoomServiceUtils;
@@ -42,6 +46,7 @@ public class UserService {
     private final PersonalityRepository personalityRepository;
     private final BadgeRepository badgeRepository;
     private final AcquireRepository acquireRepository;
+    private final RepresentRepository representRepository;
 
     private final NotificationService notificationService;
 
@@ -109,5 +114,15 @@ public class UserService {
                 }
             });
         }
+    }
+
+    public void updateRepresentBadge(Long badgeId, Long userId) {
+        User user = UserServiceUtils.findUserById(userRepository, userId);
+        Onboarding me = user.getOnboarding();
+        RoomServiceUtils.findParticipatingRoom(user);
+        Badge badge = BadgeServiceUtils.findBadgeById(badgeRepository, badgeId);
+        AcquireServiceUtils.existsByOnboardingAndBadge(acquireRepository, me, badge);
+        Represent represent = representRepository.save(Represent.newInstance(me, badge));
+        me.setRepresent(represent);
     }
 }
