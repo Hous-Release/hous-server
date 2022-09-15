@@ -1,5 +1,6 @@
 package hous.server.service.notification.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import hous.server.common.util.DateUtils;
 import hous.server.domain.notification.Notification;
 import hous.server.domain.notification.NotificationType;
@@ -20,12 +21,20 @@ public class NotificationInfo {
     private boolean isRead;
     private String createdAt;
 
+    @JsonProperty("isRead")
+    public boolean isRead() {
+        return isRead;
+    }
+
     public static NotificationInfo of(Notification notification, LocalDateTime now) {
-        return NotificationInfo.builder()
+        NotificationInfo notificationInfo = NotificationInfo.builder()
                 .notificationId(notification.getId())
                 .type(notification.getType())
                 .content(notification.getContent())
+                .isRead(notification.isRead())
                 .createdAt(DateUtils.passedTime(now, notification.getCreatedAt()))
                 .build();
+        notification.updateIsRead();
+        return notificationInfo;
     }
 }

@@ -39,4 +39,8 @@ public class Notification extends AuditingTimeEntity {
                 .isRead(isRead)
                 .build();
     }
+
+    public void updateIsRead() {
+        this.isRead = true;
+    }
 }
