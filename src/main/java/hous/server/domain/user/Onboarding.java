@@ -91,6 +91,10 @@ public class Onboarding extends AuditingTimeEntity {
         this.participates.add(participate);
     }
 
+    public void addAcquire(Acquire acquire) {
+        this.acquires.add(acquire);
+    }
+
     public void deleteParticipate(Participate participate) {
         this.participates.remove(participate);
     }
