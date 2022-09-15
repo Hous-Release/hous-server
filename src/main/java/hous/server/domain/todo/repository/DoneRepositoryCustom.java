@@ -14,4 +14,6 @@ public interface DoneRepositoryCustom {
     OurTodoStatus findTodayOurTodoStatus(LocalDate today, Todo todo);
 
     Done findTodayDoneByOnboardingAndTodo(LocalDate today, Onboarding onboarding, Todo todo);
+
+    boolean existsDayDoneByOnboardingAndTodo(LocalDate today, Onboarding onboarding, Todo todo);
 }
