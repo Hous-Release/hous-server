@@ -35,6 +35,6 @@ public class NotificationService {
     }
 
     private String newBadgeNotification(BadgeInfo badgeInfo) {
-        return String.format("\"%s\" %s", badgeInfo.getValue(), NotificationMessage.NEW_BADGE.getValue());
+        return String.format("'%s' %s", badgeInfo.getValue(), NotificationMessage.NEW_BADGE.getValue());
     }
 }

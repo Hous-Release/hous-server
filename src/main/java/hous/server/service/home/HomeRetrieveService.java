@@ -36,7 +36,7 @@ public class HomeRetrieveService {
     public HomeInfoResponse getHomeInfo(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
-        LocalDate today = DateUtils.today();
+        LocalDate today = DateUtils.todayLocalDate();
         List<Todo> todos = room.getTodos();
         List<Todo> todayOurTodosList = TodoServiceUtils.filterTodayOurTodos(today, todos);
         List<Todo> todayMyTodosList = TodoServiceUtils.filterTodayMyTodos(today, user.getOnboarding(), todos);
