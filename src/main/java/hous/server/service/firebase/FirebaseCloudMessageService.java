@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import hous.server.common.exception.FeignClientException;
+import hous.server.common.exception.InternalServerException;
 import hous.server.common.util.HttpHeaderUtils;
 import hous.server.common.util.JwtUtils;
 import hous.server.common.util.YamlPropertySourceFactory;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
 
+import static hous.server.common.exception.ErrorCode.INTERNAL_SERVER_EXCEPTION;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -31,7 +34,7 @@ public class FirebaseCloudMessageService {
     private final FirebaseApiClient firebaseApiCaller;
     private final JwtUtils jwtProvider;
 
-    public void sendMessageTo(String targetToken, String title, String body) throws IOException {
+    public void sendMessageTo(String targetToken, String title, String body) {
         String message = makeMessage(targetToken, title, body);
         try {
             firebaseApiCaller.requestFcmMessaging(HttpHeaderUtils.withBearerToken(getAccessToken()), message);
@@ -44,7 +47,7 @@ public class FirebaseCloudMessageService {
         }
     }
 
-    private String makeMessage(String targetToken, String title, String body) throws JsonProcessingException {
+    private String makeMessage(String targetToken, String title, String body) {
         FcmMessage fcmMessage = FcmMessage.builder()
                 .validateOnly(false)
                 .message(FcmMessage.Message.builder()
@@ -55,18 +58,25 @@ public class FirebaseCloudMessageService {
                         .token(targetToken)
                         .build())
                 .build();
-
-        return objectMapper.writeValueAsString(fcmMessage);
+        try {
+            return objectMapper.writeValueAsString(fcmMessage);
+        } catch (JsonProcessingException exception) {
+            log.error(exception.getMessage(), exception);
+            throw new InternalServerException("FCM makeMessage exception", INTERNAL_SERVER_EXCEPTION);
+        }
     }
 
-    private String getAccessToken() throws IOException {
+    private String getAccessToken() {
         String firebaseConfigPath = "firebase/firebase_service_key.json";
-
-        GoogleCredentials googleCredentials = GoogleCredentials
-                .fromStream(new ClassPathResource(firebaseConfigPath).getInputStream())
-                .createScoped(List.of("https://www.googleapis.com/auth/cloud-platform"));
-
-        googleCredentials.refreshIfExpired();
-        return googleCredentials.getAccessToken().getTokenValue();
+        try {
+            GoogleCredentials googleCredentials = GoogleCredentials
+                    .fromStream(new ClassPathResource(firebaseConfigPath).getInputStream())
+                    .createScoped(List.of("https://www.googleapis.com/auth/cloud-platform"));
+            googleCredentials.refreshIfExpired();
+            return googleCredentials.getAccessToken().getTokenValue();
+        } catch (IOException exception) {
+            log.error(exception.getMessage(), exception);
+            throw new InternalServerException("FCM getAccessToken exception", INTERNAL_SERVER_EXCEPTION);
+        }
     }
 }
