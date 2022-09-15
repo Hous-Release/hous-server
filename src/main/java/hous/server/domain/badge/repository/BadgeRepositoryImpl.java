@@ -29,4 +29,12 @@ public class BadgeRepositoryImpl implements BadgeRepositoryCustom {
                 .orderBy(badge.id.asc())
                 .fetch();
     }
+
+    @Override
+    public Badge findBadgeByBadgeId(Long id) {
+        return queryFactory
+                .selectFrom(badge)
+                .where(badge.id.eq(id))
+                .fetchOne();
+    }
 }
