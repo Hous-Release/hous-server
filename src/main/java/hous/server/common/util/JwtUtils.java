@@ -27,7 +27,7 @@ public class JwtUtils {
 //        private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;    // 7일
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 365 * 24 * 60 * 60 * 1000L;   // 1년
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 365 * 24 * 60 * 60 * 1000L;    // 1년
-    private static final long EXPIRED = 0L;
+    private static final long EXPIRED_TIME = 1L;
 
     private final Key secretKey;
 
@@ -63,7 +63,7 @@ public class JwtUtils {
     }
 
     public void expireRefreshToken(Long userId) {
-        redisTemplate.opsForValue().set(RedisKey.REFRESH_TOKEN + userId, "", EXPIRED, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(RedisKey.REFRESH_TOKEN + userId, "", EXPIRED_TIME, TimeUnit.MILLISECONDS);
     }
 
     public boolean validateToken(String token) {
