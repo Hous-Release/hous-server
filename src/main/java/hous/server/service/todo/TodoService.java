@@ -148,7 +148,6 @@ public class TodoService {
                             redisTemplate.opsForValue().set(RedisKey.TODO_COMPLETE_COUNT + user.getId(), Integer.toString(1));
                         } else {
                             redisTemplate.opsForValue().set(RedisKey.TODO_COMPLETE_COUNT + user.getId(), Integer.toString(Integer.parseInt(todoCompleteCountString) + 1));
-                            System.out.println(todoCompleteCountString);
                             if (Integer.parseInt(todoCompleteCountString) == 6 && !BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.GOOD_JOB, onboarding)) {
                                 Acquire acquire = acquireRepository.save(Acquire.newInstance(onboarding, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.GOOD_JOB)));
                                 onboarding.addAcquire(acquire);
