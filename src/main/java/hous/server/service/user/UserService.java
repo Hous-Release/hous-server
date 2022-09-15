@@ -1,5 +1,9 @@
 package hous.server.service.user;
 
+import hous.server.domain.badge.Acquire;
+import hous.server.domain.badge.BadgeInfo;
+import hous.server.domain.badge.repository.AcquireRepository;
+import hous.server.domain.badge.repository.BadgeRepository;
 import hous.server.domain.personality.Personality;
 import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.personality.repository.PersonalityRepository;
@@ -11,6 +15,8 @@ import hous.server.domain.user.repository.OnboardingRepository;
 import hous.server.domain.user.repository.SettingRepository;
 import hous.server.domain.user.repository.TestScoreRepository;
 import hous.server.domain.user.repository.UserRepository;
+import hous.server.service.badge.BadgeServiceUtils;
+import hous.server.service.notification.NotificationService;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.user.dto.request.CreateUserDto;
 import hous.server.service.user.dto.request.SetOnboardingInfoRequestDto;
@@ -30,6 +36,10 @@ public class UserService {
     private final SettingRepository settingRepository;
     private final TestScoreRepository testScoreRepository;
     private final PersonalityRepository personalityRepository;
+    private final BadgeRepository badgeRepository;
+    private final AcquireRepository acquireRepository;
+
+    private final NotificationService notificationService;
 
     public Long registerUser(CreateUserDto request) {
         UserServiceUtils.validateNotExistsUser(userRepository, request.getSocialId(), request.getSocialType());
@@ -69,10 +79,16 @@ public class UserService {
     public void updateUserTestScore(UpdateTestScoreRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         RoomServiceUtils.findParticipatingRoom(user);
-        Onboarding onboarding = user.getOnboarding();
-        TestScore testScore = onboarding.getTestScore();
+        Onboarding me = user.getOnboarding();
+        TestScore testScore = me.getTestScore();
         testScore.updateScore(request.getLight(), request.getNoise(), request.getClean(), request.getSmell(), request.getIntroversion());
         Personality personality = UserServiceUtils.getPersonalityColorByTestScore(personalityRepository, testScore);
-        onboarding.setPersonality(personality);
+        me.setPersonality(personality);
+
+        if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.I_AM_SUCH_A_PERSON, me)) {
+            Acquire acquire = acquireRepository.save(Acquire.newInstance(me, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.I_AM_SUCH_A_PERSON)));
+            me.addAcquire(acquire);
+            notificationService.sendNewBadgeNotification(user, BadgeInfo.I_AM_SUCH_A_PERSON);
+        }
     }
 }
