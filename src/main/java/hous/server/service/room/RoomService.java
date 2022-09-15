@@ -1,6 +1,9 @@
 package hous.server.service.room;
 
+import hous.server.domain.badge.Acquire;
+import hous.server.domain.badge.BadgeInfo;
 import hous.server.domain.badge.repository.AcquireRepository;
+import hous.server.domain.badge.repository.BadgeRepository;
 import hous.server.domain.badge.repository.RepresentRepository;
 import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
@@ -15,6 +18,8 @@ import hous.server.domain.todo.repository.TodoRepository;
 import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.User;
 import hous.server.domain.user.repository.UserRepository;
+import hous.server.service.badge.BadgeServiceUtils;
+import hous.server.service.notification.NotificationService;
 import hous.server.service.room.dto.request.SetRoomNameRequestDto;
 import hous.server.service.room.dto.response.RoomInfoResponse;
 import hous.server.service.todo.TodoServiceUtils;
@@ -25,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @RequiredArgsConstructor
 @Service
@@ -39,27 +45,32 @@ public class RoomService {
     private final DoneRepository doneRepository;
     private final AcquireRepository acquireRepository;
     private final RepresentRepository representRepository;
+    private final BadgeRepository badgeRepository;
+
+    private final NotificationService notificationService;
 
     public RoomInfoResponse createRoom(SetRoomNameRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
-        Onboarding onboarding = user.getOnboarding();
-        RoomServiceUtils.validateNotExistsParticipate(participateRepository, onboarding);
-        Room room = roomRepository.save(Room.newInstance(onboarding, request.getName(), RoomServiceUtils.createUniqueRoomCode(roomRepository)));
-        Participate participate = participateRepository.save(Participate.newInstance(onboarding, room));
-        onboarding.addParticipate(participate);
+        Onboarding me = user.getOnboarding();
+        RoomServiceUtils.validateNotExistsParticipate(participateRepository, me);
+        Room room = roomRepository.save(Room.newInstance(me, request.getName(), createUniqueRoomCode()));
+        Participate participate = participateRepository.save(Participate.newInstance(me, room));
+        me.addParticipate(participate);
         room.addParticipate(participate);
+        getBadgeByPoundingHouse(user, me);
         return RoomInfoResponse.of(room);
     }
 
     public RoomInfoResponse joinRoom(Long roomId, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
-        Onboarding onboarding = user.getOnboarding();
-        RoomServiceUtils.validateNotExistsParticipate(participateRepository, onboarding);
+        Onboarding me = user.getOnboarding();
+        RoomServiceUtils.validateNotExistsParticipate(participateRepository, me);
         Room room = RoomServiceUtils.findRoomById(roomRepository, roomId);
         RoomServiceUtils.validateParticipateCounts(participateRepository, room);
-        Participate participate = participateRepository.save(Participate.newInstance(onboarding, room));
-        onboarding.addParticipate(participate);
+        Participate participate = participateRepository.save(Participate.newInstance(me, room));
+        me.addParticipate(participate);
         room.addParticipate(participate);
+        getBadgeByPoundingHouse(user, me);
         return RoomInfoResponse.of(room);
     }
 
@@ -119,5 +130,30 @@ public class RoomService {
         me.resetUserInfo();
         me.resetBadge();
         me.resetTestScore(me.getTestScore());
+    }
+
+    private String createUniqueRoomCode() {
+        String code;
+        do {
+            Random random = new Random();
+            code = random.ints(48, 91)
+                    .filter(i -> (i <= 57 || i >= 65) && (i <= 90))
+                    .limit(8)
+                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                    .toString();
+        } while (isNotUniqueRoomCode(code));
+        return code;
+    }
+
+    private boolean isNotUniqueRoomCode(String code) {
+        return roomRepository.existsByRoomCode(code);
+    }
+
+    private void getBadgeByPoundingHouse(User user, Onboarding me) {
+        if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.POUNDING_HOUSE, me)) {
+            Acquire acquire = acquireRepository.save(Acquire.newInstance(me, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.POUNDING_HOUSE)));
+            me.addAcquire(acquire);
+            notificationService.sendNewBadgeNotification(user, BadgeInfo.POUNDING_HOUSE);
+        }
     }
 }

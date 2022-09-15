@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 import static hous.server.common.exception.ErrorCode.*;
 
@@ -54,22 +53,5 @@ public class RoomServiceUtils {
             throw new ForbiddenException(String.format("같은 방에 참가하고 있지 않습니다. (요청 사용자 방 id: %s, 호미 방 id: %s)",
                     userRoom.getId(), homieRoom.getId()), FORBIDDEN_ROOM_PARTICIPATE_EXCEPTION);
         }
-    }
-
-    private static boolean isNotUniqueRoomCode(RoomRepository roomRepository, String code) {
-        return roomRepository.existsByRoomCode(code);
-    }
-
-    static String createUniqueRoomCode(RoomRepository roomRepository) {
-        String code;
-        do {
-            Random random = new Random();
-            code = random.ints(48, 91)
-                    .filter(i -> (i <= 57 || i >= 65) && (i <= 90))
-                    .limit(8)
-                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                    .toString();
-        } while (isNotUniqueRoomCode(roomRepository, code));
-        return code;
     }
 }
