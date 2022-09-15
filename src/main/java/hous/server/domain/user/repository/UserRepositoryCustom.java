@@ -3,6 +3,8 @@ package hous.server.domain.user.repository;
 import hous.server.domain.user.User;
 import hous.server.domain.user.UserSocialType;
 
+import java.util.List;
+
 public interface UserRepositoryCustom {
 
     boolean existsBySocialIdAndSocialType(String socialId, UserSocialType socialType);
@@ -12,4 +14,6 @@ public interface UserRepositoryCustom {
     User findUserBySocialIdAndSocialType(String socialId, UserSocialType socialType);
 
     User findUserByFcmToken(String fcmToken);
+
+    List<User> findAllUsers();
 }
