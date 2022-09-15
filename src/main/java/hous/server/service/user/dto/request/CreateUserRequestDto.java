@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CreateUserDto {
+public class CreateUserRequestDto {
 
     private String socialId;
 
@@ -15,7 +15,7 @@ public class CreateUserDto {
 
     private String fcmToken;
 
-    public static CreateUserDto of(String socialId, UserSocialType socialType, String fcmToken) {
-        return new CreateUserDto(socialId, socialType, fcmToken);
+    public static CreateUserRequestDto of(String socialId, UserSocialType socialType, String fcmToken) {
+        return new CreateUserRequestDto(socialId, socialType, fcmToken);
     }
 }

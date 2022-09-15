@@ -2,15 +2,15 @@ package hous.server.domain.badge;
 
 import hous.server.domain.common.AuditingTimeEntity;
 import hous.server.domain.user.Onboarding;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 public class Represent extends AuditingTimeEntity {
 
     @Id
@@ -24,4 +24,11 @@ public class Represent extends AuditingTimeEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "badge_id")
     private Badge badge;
+
+    public static Represent newInstance(Onboarding onboarding, Badge badge) {
+        return Represent.builder()
+                .onboarding(onboarding)
+                .badge(badge)
+                .build();
+    }
 }

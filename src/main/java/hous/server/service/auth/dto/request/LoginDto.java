@@ -1,7 +1,7 @@
 package hous.server.service.auth.dto.request;
 
 import hous.server.domain.user.UserSocialType;
-import hous.server.service.user.dto.request.CreateUserDto;
+import hous.server.service.user.dto.request.CreateUserRequestDto;
 import lombok.*;
 
 @ToString
@@ -20,7 +20,7 @@ public class LoginDto {
         return new LoginDto(socialType, token, fcmToken);
     }
 
-    public CreateUserDto toCreateUserDto(String socialId) {
-        return CreateUserDto.of(socialId, socialType, fcmToken);
+    public CreateUserRequestDto toCreateUserDto(String socialId) {
+        return CreateUserRequestDto.of(socialId, socialType, fcmToken);
     }
 }

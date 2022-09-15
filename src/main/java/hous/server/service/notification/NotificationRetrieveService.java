@@ -22,6 +22,7 @@ public class NotificationRetrieveService {
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
 
+    @Transactional
     public NotificationsInfoResponse getNotificationsInfo(int size, Long lastNotificationId, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Onboarding me = user.getOnboarding();
