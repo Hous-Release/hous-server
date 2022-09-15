@@ -22,10 +22,11 @@ public class JwtUtils {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    //    private static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L;              // 30분
-    //    private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;    // 7일
+    //        private static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L;              // 30분
+//        private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;    // 7일
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 365 * 24 * 60 * 60 * 1000L;   // 1년
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 365 * 24 * 60 * 60 * 1000L;    // 1년
+    private static final long EXPIRED = 0L;
 
     private final Key secretKey;
 
@@ -58,6 +59,10 @@ public class JwtUtils {
                 .set("RT:" + userId, refreshToken, REFRESH_TOKEN_EXPIRE_TIME, TimeUnit.MILLISECONDS);
 
         return TokenResponse.of(accessToken, refreshToken);
+    }
+
+    public void expireRefreshToken(Long userId) {
+        redisTemplate.opsForValue().set("RT:" + userId, "", EXPIRED, TimeUnit.MILLISECONDS);
     }
 
     public boolean validateToken(String token) {

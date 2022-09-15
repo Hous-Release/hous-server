@@ -33,11 +33,14 @@ public class UserService {
 
     public Long registerUser(CreateUserDto request) {
         UserServiceUtils.validateNotExistsUser(userRepository, request.getSocialId(), request.getSocialType());
-        User user = userRepository.save(User.newInstance(request.getSocialId(), request.getSocialType(), request.getFcmToken(),
-                onboardingRepository.save(
-                        Onboarding.newInstance(personalityRepository.findPersonalityByColor(PersonalityColor.GRAY),
-                                testScoreRepository.save(TestScore.newInstance()))),
+        User user = userRepository.save(User.newInstance(
+                request.getSocialId(), request.getSocialType(), request.getFcmToken(),
                 settingRepository.save(Setting.newInstance())));
+        Onboarding onboarding = onboardingRepository.save(Onboarding.newInstance(
+                user,
+                personalityRepository.findPersonalityByColor(PersonalityColor.GRAY),
+                testScoreRepository.save(TestScore.newInstance())));
+        user.setOnboarding(onboarding);
         return user.getId();
     }
 

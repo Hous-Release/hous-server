@@ -27,6 +27,7 @@ public class AppleAuthService implements AuthService {
         String socialId = appleTokenDecoder.getSocialIdFromIdToken(request.getToken());
         User user = UserServiceUtils.findUserBySocialIdAndSocialType(userRepository, socialId, socialType);
         if (user == null) return userService.registerUser(request.toCreateUserDto(socialId));
+        else user.updateFcmToken(request.getFcmToken());
         return user.getId();
     }
 }
