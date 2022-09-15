@@ -5,6 +5,7 @@ import hous.server.domain.badge.BadgeInfo;
 import hous.server.domain.badge.repository.AcquireRepository;
 import hous.server.domain.badge.repository.BadgeRepository;
 import hous.server.domain.badge.repository.RepresentRepository;
+import hous.server.domain.notification.repository.NotificationRepository;
 import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
 import hous.server.domain.room.repository.ParticipateRepository;
@@ -46,6 +47,7 @@ public class RoomService {
     private final AcquireRepository acquireRepository;
     private final RepresentRepository representRepository;
     private final BadgeRepository badgeRepository;
+    private final NotificationRepository notificationRepository;
 
     private final NotificationService notificationService;
 
@@ -122,11 +124,12 @@ public class RoomService {
             roomRepository.delete(room);
         }
 
-        // 내 뱃지, 프로필 작성 내역, 테스트 결과 초기화
+        // 내 뱃지, 알림 목록, 프로필 작성 내역, 테스트 결과 초기화
         if (me.getRepresent() != null) {
             representRepository.delete(me.getRepresent());
         }
         acquireRepository.deleteAll(me.getAcquires());
+        notificationRepository.deleteAll(notificationRepository.findNotificationsByOnboarding(me));
         me.resetUserInfo();
         me.resetBadge();
         me.resetTestScore(me.getTestScore());

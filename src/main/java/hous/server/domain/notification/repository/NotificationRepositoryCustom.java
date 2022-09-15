@@ -10,4 +10,6 @@ public interface NotificationRepositoryCustom {
     List<Notification> findNotificationsByOnboardingAndCursor(Onboarding onboarding, Long lastNotificationId, int size);
 
     long countAllByOnboarding(Onboarding onboarding);
+
+    List<Notification> findNotificationsByOnboarding(Onboarding onboarding);
 }
