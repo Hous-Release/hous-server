@@ -46,4 +46,15 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 )
                 .fetchOne();
     }
+
+    @Override
+    public User findUserByFcmToken(String fcmToken) {
+        return queryFactory
+                .selectFrom(user)
+                .where(
+                        user.fcmToken.eq(fcmToken),
+                        user.status.eq(UserStatus.ACTIVE)
+                )
+                .fetchOne();
+    }
 }
