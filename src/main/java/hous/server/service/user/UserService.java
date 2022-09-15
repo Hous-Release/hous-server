@@ -20,7 +20,7 @@ import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.badge.BadgeServiceUtils;
 import hous.server.service.notification.NotificationService;
 import hous.server.service.room.RoomServiceUtils;
-import hous.server.service.user.dto.request.CreateUserDto;
+import hous.server.service.user.dto.request.CreateUserRequestDto;
 import hous.server.service.user.dto.request.SetOnboardingInfoRequestDto;
 import hous.server.service.user.dto.request.UpdateTestScoreRequestDto;
 import hous.server.service.user.dto.request.UpdateUserInfoRequestDto;
@@ -45,7 +45,7 @@ public class UserService {
 
     private final NotificationService notificationService;
 
-    public Long registerUser(CreateUserDto request) {
+    public Long registerUser(CreateUserRequestDto request) {
         UserServiceUtils.validateNotExistsUser(userRepository, request.getSocialId(), request.getSocialType());
         User user = userRepository.save(User.newInstance(
                 request.getSocialId(), request.getSocialType(), request.getFcmToken(),

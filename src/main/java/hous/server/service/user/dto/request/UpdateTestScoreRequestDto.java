@@ -8,8 +8,8 @@ import javax.validation.constraints.Min;
 
 @ToString
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class UpdateTestScoreRequestDto {
 
     @ApiModelProperty(value = "빛", example = "4")

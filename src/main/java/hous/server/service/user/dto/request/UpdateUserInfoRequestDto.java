@@ -2,7 +2,10 @@ package hous.server.service.user.dto.request;
 
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -10,7 +13,6 @@ import javax.validation.constraints.Size;
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class UpdateUserInfoRequestDto extends SetOnboardingInfoRequestDto {
 
     @ApiModelProperty(value = "MBTI", example = "CUTE")
