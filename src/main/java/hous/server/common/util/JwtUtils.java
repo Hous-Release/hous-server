@@ -1,6 +1,7 @@
 package hous.server.common.util;
 
 import hous.server.config.security.JwtConstants;
+import hous.server.domain.common.RedisKey;
 import hous.server.service.auth.dto.response.TokenResponse;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -56,13 +57,13 @@ public class JwtUtils {
                 .compact();
 
         redisTemplate.opsForValue()
-                .set("RT:" + userId, refreshToken, REFRESH_TOKEN_EXPIRE_TIME, TimeUnit.MILLISECONDS);
+                .set(RedisKey.REFRESH_TOKEN + userId, refreshToken, REFRESH_TOKEN_EXPIRE_TIME, TimeUnit.MILLISECONDS);
 
         return TokenResponse.of(accessToken, refreshToken);
     }
 
     public void expireRefreshToken(Long userId) {
-        redisTemplate.opsForValue().set("RT:" + userId, "", EXPIRED, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(RedisKey.REFRESH_TOKEN + userId, "", EXPIRED, TimeUnit.MILLISECONDS);
     }
 
     public boolean validateToken(String token) {
