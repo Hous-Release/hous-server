@@ -2,6 +2,7 @@ package hous.server.service.auth;
 
 import hous.server.common.exception.UnAuthorizedException;
 import hous.server.common.util.JwtUtils;
+import hous.server.domain.common.RedisKey;
 import hous.server.service.auth.dto.request.TokenRequestDto;
 import hous.server.service.auth.dto.response.TokenResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class CreateTokenService {
             throw new UnAuthorizedException(String.format("주어진 리프레시 토큰 (%s) 이 유효하지 않습니다.", request.getRefreshToken()));
         }
         Long userId = jwtProvider.getUserIdFromJwt(request.getAccessToken());
-        String refreshToken = (String) redisTemplate.opsForValue().get("RT:" + userId);
+        String refreshToken = (String) redisTemplate.opsForValue().get(RedisKey.REFRESH_TOKEN + userId);
 
         if (Objects.isNull(refreshToken)) {
             throw new UnAuthorizedException(String.format("이미 만료된 리프레시 토큰 (%s) 입니다.", request.getRefreshToken()));
