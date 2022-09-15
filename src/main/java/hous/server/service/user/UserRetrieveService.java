@@ -1,6 +1,10 @@
 package hous.server.service.user;
 
+import hous.server.domain.badge.Acquire;
+import hous.server.domain.badge.Badge;
 import hous.server.domain.badge.Represent;
+import hous.server.domain.badge.repository.AcquireRepository;
+import hous.server.domain.badge.repository.BadgeRepository;
 import hous.server.domain.badge.repository.RepresentRepository;
 import hous.server.domain.personality.Personality;
 import hous.server.domain.personality.PersonalityColor;
@@ -8,15 +12,11 @@ import hous.server.domain.personality.PersonalityTest;
 import hous.server.domain.personality.repository.PersonalityRepository;
 import hous.server.domain.personality.repository.PersonalityTestRepository;
 import hous.server.domain.room.Room;
-import hous.server.domain.room.repository.RoomRepository;
 import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.User;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.room.RoomServiceUtils;
-import hous.server.service.user.dto.response.CheckOnboardingInfoResponse;
-import hous.server.service.user.dto.response.PersonalityInfoResponse;
-import hous.server.service.user.dto.response.PersonalityTestInfoResponse;
-import hous.server.service.user.dto.response.UserInfoResponse;
+import hous.server.service.user.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +33,8 @@ public class UserRetrieveService {
     private final PersonalityRepository personalityRepository;
     private final PersonalityTestRepository personalityTestRepository;
     private final RepresentRepository representRepository;
-    private final RoomRepository roomRepository;
+    private final BadgeRepository badgeRepository;
+    private final AcquireRepository acquireRepository;
 
     public CheckOnboardingInfoResponse checkMyOnboardingInfo(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
@@ -67,6 +68,16 @@ public class UserRetrieveService {
         return personalityTests.stream()
                 .map(PersonalityTestInfoResponse::of)
                 .collect(Collectors.toList());
+    }
+
+    public MyBadgeInfoResponse getMyBadgeList(Long userId) {
+        User user = UserServiceUtils.findUserById(userRepository, userId);
+        Onboarding onboarding = user.getOnboarding();
+        RoomServiceUtils.findParticipatingRoom(user);
+        Represent represent = onboarding.getRepresent();
+        List<Badge> badgeList = badgeRepository.findAllBadge();
+        List<Acquire> myBadges = acquireRepository.findAllAcquireByOnboarding(onboarding);
+        return MyBadgeInfoResponse.of(represent, badgeList, myBadges);
     }
 
     private UserInfoResponse getProfileInfoByUser(User user) {
