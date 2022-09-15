@@ -1,5 +1,6 @@
 package hous.server.service.room;
 
+import hous.server.domain.badge.repository.AcquireRepository;
 import hous.server.domain.badge.repository.RepresentRepository;
 import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
@@ -36,6 +37,7 @@ public class RoomService {
     private final TodoRepository todoRepository;
     private final TakeRepository takeRepository;
     private final DoneRepository doneRepository;
+    private final AcquireRepository acquireRepository;
     private final RepresentRepository representRepository;
 
     public RoomInfoResponse createRoom(SetRoomNameRequestDto request, Long userId) {
@@ -109,10 +111,11 @@ public class RoomService {
             roomRepository.delete(room);
         }
 
-        //내 뱃지, 프로필 작성 내역, 테스트 결과 초기화
+        // 내 뱃지, 프로필 작성 내역, 테스트 결과 초기화
         if (me.getRepresent() != null) {
             representRepository.delete(me.getRepresent());
         }
+        acquireRepository.deleteAll(me.getAcquires());
         me.resetUserInfo();
         me.resetBadge();
         me.resetTestScore(me.getTestScore());
