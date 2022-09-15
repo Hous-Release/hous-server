@@ -38,8 +38,8 @@ public class HomeRetrieveService {
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         LocalDate today = DateUtils.todayLocalDate();
         List<Todo> todos = room.getTodos();
-        List<Todo> todayOurTodosList = TodoServiceUtils.filterTodayOurTodos(today, todos);
-        List<Todo> todayMyTodosList = TodoServiceUtils.filterTodayMyTodos(today, user.getOnboarding(), todos);
+        List<Todo> todayOurTodosList = TodoServiceUtils.filterDayOurTodos(today, todos);
+        List<Todo> todayMyTodosList = TodoServiceUtils.filterDayMyTodos(today, user.getOnboarding(), todos);
         List<MyTodoInfo> todayMyTodos = todayMyTodosList.stream()
                 .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
                 .map(todo -> MyTodoInfo.of(

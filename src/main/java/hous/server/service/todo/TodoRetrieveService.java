@@ -50,8 +50,8 @@ public class TodoRetrieveService {
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         LocalDate today = DateUtils.todayLocalDate();
         List<Todo> todos = room.getTodos();
-        List<Todo> todayOurTodosList = TodoServiceUtils.filterTodayOurTodos(today, todos);
-        List<Todo> todayMyTodosList = TodoServiceUtils.filterTodayMyTodos(today, user.getOnboarding(), todos);
+        List<Todo> todayOurTodosList = TodoServiceUtils.filterDayOurTodos(today, todos);
+        List<Todo> todayMyTodosList = TodoServiceUtils.filterDayMyTodos(today, user.getOnboarding(), todos);
         List<MyTodoInfo> todayMyTodos = todayMyTodosList.stream().sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt)).map(todo -> MyTodoInfo.of(todo.getId(), todo.getName(), doneRepository.findTodayTodoCheckStatus(today, user.getOnboarding(), todo))).collect(Collectors.toList());
         List<OurTodoInfo> todayOurTodos = todayOurTodosList.stream().sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt)).map(todo -> OurTodoInfo.of(todo.getName(), doneRepository.findTodayOurTodoStatus(today, todo), todo.getTakes().stream().map(take -> take.getOnboarding().getNickname()).collect(Collectors.toSet()))).collect(Collectors.toList());
         return TodoMainResponse.of(today, todayMyTodos, todayOurTodos);

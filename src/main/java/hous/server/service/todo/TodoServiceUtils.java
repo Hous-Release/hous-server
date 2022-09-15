@@ -55,18 +55,18 @@ public class TodoServiceUtils {
                 .collect(Collectors.toList());
     }
 
-    public static List<Todo> filterTodayOurTodos(LocalDate today, List<Todo> todos) {
-        List<Todo> todayOurTodosList = new ArrayList<>();
+    public static List<Todo> filterDayOurTodos(LocalDate day, List<Todo> todos) {
+        List<Todo> dayOurTodosList = new ArrayList<>();
         todos.forEach(todo -> {
             todo.getTakes().forEach(take -> {
                 take.getRedos().forEach(redo -> {
-                    if (redo.getDayOfWeek().toString().equals(DateUtils.nowDayOfWeek(today))) {
-                        todayOurTodosList.add(todo);
+                    if (redo.getDayOfWeek().toString().equals(DateUtils.nowDayOfWeek(day))) {
+                        dayOurTodosList.add(todo);
                     }
                 });
             });
         });
-        return todayOurTodosList;
+        return dayOurTodosList;
     }
 
     public static List<Todo> filterAllDaysOurTodos(List<Todo> todos) {
@@ -109,16 +109,16 @@ public class TodoServiceUtils {
         return todosList;
     }
 
-    public static List<Todo> filterTodayMyTodos(LocalDate today, Onboarding me, List<Todo> todos) {
-        List<Todo> todayMyTodosList = new ArrayList<>();
-        List<Todo> todayOurTodosList = filterTodayOurTodos(today, todos);
-        todayOurTodosList.forEach(todo -> {
+    public static List<Todo> filterDayMyTodos(LocalDate day, Onboarding me, List<Todo> todos) {
+        List<Todo> dayMyTodosList = new ArrayList<>();
+        List<Todo> dayOurTodosList = filterDayOurTodos(day, todos);
+        dayOurTodosList.forEach(todo -> {
             todo.getTakes().forEach(take -> {
                 if (take.getOnboarding().getId().equals(me.getId())) {
-                    todayMyTodosList.add(todo);
+                    dayMyTodosList.add(todo);
                 }
             });
         });
-        return todayMyTodosList;
+        return dayMyTodosList;
     }
 }
