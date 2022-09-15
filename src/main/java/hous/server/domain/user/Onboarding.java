@@ -1,7 +1,7 @@
 package hous.server.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import hous.server.domain.badge.Badge;
+import hous.server.domain.badge.Acquire;
 import hous.server.domain.badge.Represent;
 import hous.server.domain.common.AuditingTimeEntity;
 import hous.server.domain.personality.Personality;
@@ -64,9 +64,8 @@ public class Onboarding extends AuditingTimeEntity {
     @OneToMany(mappedBy = "onboarding", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Participate> participates = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "badge_id")
-    private final List<Badge> badges = new ArrayList<>();
+    @OneToMany(mappedBy = "onboarding", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Acquire> acquires = new ArrayList<>();
 
     public static Onboarding newInstance(User user, Personality personality, TestScore testScore) {
         return Onboarding.builder()
@@ -114,7 +113,7 @@ public class Onboarding extends AuditingTimeEntity {
 
     public void resetBadge() {
         this.represent = null;
-        this.badges.clear();
+        this.acquires.clear();
     }
 
     public void resetTestScore(TestScore testScore) {
