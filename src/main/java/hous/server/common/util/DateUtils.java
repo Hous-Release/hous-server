@@ -11,8 +11,12 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DateUtils {
 
-    public static LocalDate today() {
+    public static LocalDate todayLocalDate() {
         return LocalDate.now(ZoneId.of("Asia/Seoul"));
+    }
+
+    public static LocalDateTime todayLocalDateTime() {
+        return LocalDateTime.now(ZoneId.of("Asia/Seoul"));
     }
 
     public static String parseMonthAndDay(LocalDate date) {
