@@ -20,6 +20,11 @@ public class DateUtils {
         return LocalDateTime.now(ZoneId.of("Asia/Seoul"));
     }
 
+    public static LocalDate yesterdayLocalDate() {
+        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        return today.minusDays(1);
+    }
+
     public static String parseMonthAndDay(LocalDate date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd");
         return date.format(formatter);

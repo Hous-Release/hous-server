@@ -61,4 +61,17 @@ public class DoneRepositoryImpl implements DoneRepositoryCustom {
                 .fetchFirst();
         return DateUtils.isSameDate(lastDone.getCreatedAt(), today) ? lastDone : null;
     }
+
+    @Override
+    public boolean existsDayDoneByOnboardingAndTodo(LocalDate day, Onboarding onboarding, Todo todo) {
+        Done lastDone = queryFactory.selectFrom(done)
+                .where(
+                        done.onboarding.eq(onboarding),
+                        done.todo.eq(todo)
+                )
+                .orderBy(done.createdAt.desc())
+                .fetchFirst();
+        if (lastDone == null) return false;
+        return DateUtils.isSameDate(lastDone.getCreatedAt(), day);
+    }
 }

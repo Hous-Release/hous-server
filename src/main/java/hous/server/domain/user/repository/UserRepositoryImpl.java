@@ -6,6 +6,8 @@ import hous.server.domain.user.UserSocialType;
 import hous.server.domain.user.UserStatus;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 import static hous.server.domain.user.QUser.user;
 
 @RequiredArgsConstructor
@@ -56,5 +58,13 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                         user.status.eq(UserStatus.ACTIVE)
                 )
                 .fetchOne();
+    }
+
+    @Override
+    public List<User> findAllUsers() {
+        return queryFactory
+                .selectFrom(user)
+                .where(user.status.eq(UserStatus.ACTIVE))
+                .fetch();
     }
 }
