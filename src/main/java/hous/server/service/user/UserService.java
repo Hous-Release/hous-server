@@ -7,6 +7,8 @@ import hous.server.domain.badge.repository.BadgeRepository;
 import hous.server.domain.personality.Personality;
 import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.personality.repository.PersonalityRepository;
+import hous.server.domain.room.Participate;
+import hous.server.domain.room.Room;
 import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.Setting;
 import hous.server.domain.user.TestScore;
@@ -25,6 +27,8 @@ import hous.server.service.user.dto.request.UpdateUserInfoRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -78,7 +82,7 @@ public class UserService {
 
     public void updateUserTestScore(UpdateTestScoreRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
-        RoomServiceUtils.findParticipatingRoom(user);
+        Room room = RoomServiceUtils.findParticipatingRoom(user);
         Onboarding me = user.getOnboarding();
         TestScore testScore = me.getTestScore();
         testScore.updateScore(request.getLight(), request.getNoise(), request.getClean(), request.getSmell(), request.getIntroversion());
@@ -89,6 +93,21 @@ public class UserService {
             Acquire acquire = acquireRepository.save(Acquire.newInstance(me, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.I_AM_SUCH_A_PERSON)));
             me.addAcquire(acquire);
             notificationService.sendNewBadgeNotification(user, BadgeInfo.I_AM_SUCH_A_PERSON);
+        }
+
+        List<Participate> participates = room.getParticipates();
+        int testCompleteCnt = (int) participates.stream()
+                .filter(participate -> participate.getOnboarding().getPersonality().getColor() != PersonalityColor.GRAY)
+                .count();
+        if (room.getParticipantsCnt() == testCompleteCnt) {
+            participates.forEach(participate -> {
+                Onboarding onboarding = participate.getOnboarding();
+                if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.OUR_HOUSE_HOMIES, onboarding)) {
+                    Acquire acquire = acquireRepository.save(Acquire.newInstance(onboarding, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.OUR_HOUSE_HOMIES)));
+                    onboarding.addAcquire(acquire);
+                    notificationService.sendNewBadgeNotification(onboarding.getUser(), BadgeInfo.OUR_HOUSE_HOMIES);
+                }
+            });
         }
     }
 }
