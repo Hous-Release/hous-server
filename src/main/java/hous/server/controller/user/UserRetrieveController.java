@@ -6,6 +6,8 @@ import hous.server.common.success.SuccessCode;
 import hous.server.config.interceptor.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.domain.personality.PersonalityColor;
+import hous.server.service.notification.NotificationRetrieveService;
+import hous.server.service.notification.dto.response.NotificationsInfoResponse;
 import hous.server.service.user.UserRetrieveService;
 import hous.server.service.user.dto.response.*;
 import io.swagger.annotations.*;
@@ -23,6 +25,7 @@ import java.util.List;
 public class UserRetrieveController {
 
     private final UserRetrieveService userRetrieveService;
+    private final NotificationRetrieveService notificationRetrieveService;
 
     @ApiOperation(
             value = "[인증] 온보딩 페이지 - 나의 온보딩 정보 등록여부를 확인합니다."
@@ -126,5 +129,29 @@ public class UserRetrieveController {
     @GetMapping("/user/badges")
     public ResponseEntity<MyBadgeInfoResponse> getMyBadgeList(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_BADGE_INFO_SUCCESS, userRetrieveService.getMyBadgeList(userId));
+    }
+
+    @ApiOperation(
+            value = "[인증] 알림 페이지 - 알림 목록을 조회합니다.",
+            notes = "알림 목록을 스크롤 페이지네이션으로 조회합니다.\n" +
+                    "size 에는 스크롤 1회당 조회할 개수를 담습니다.\n" +
+                    "최초 요청으로 lastNotificationId 에 Long 최대값을 담습니다.\n" +
+                    "다음 스크롤의 lastNotificationId 에는 nextCursor 값을 담습니다.\n" +
+                    "nextCursor = -1 일 경우 더이상 조회할 데이터가 없음을 의미합니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "알림 목록 조회 성공입니다."),
+            @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+            @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
+            @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+    })
+    @Auth
+    @GetMapping("/user/notifications")
+    public ResponseEntity<NotificationsInfoResponse> getNotificationsInfo(@ApiParam(name = "size", value = "스크롤 1회당 조회할 개수", required = true, example = "10")
+                                                                          @RequestParam int size,
+                                                                          @ApiParam(name = "lastNotificationId", value = "마지막으로 조회된 notificationId", required = true, example = "100")
+                                                                          @RequestParam Long lastNotificationId,
+                                                                          @ApiIgnore @UserId Long userId) {
+        return SuccessResponse.success(SuccessCode.GET_NOTIFICATIONS_INFO_SUCCESS, notificationRetrieveService.getNotificationsInfo(size, lastNotificationId, userId));
     }
 }

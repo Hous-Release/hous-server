@@ -13,7 +13,7 @@ public class MathUtils {
     }
 
     public static int getAge(LocalDate date) {
-        LocalDate today = DateUtils.today();
+        LocalDate today = DateUtils.todayLocalDate();
         return today.getYear() - date.getYear() + 1;
     }
 }

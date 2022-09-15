@@ -50,6 +50,9 @@ public enum SuccessCode {
 
     // 뱃지
     GET_BADGE_INFO_SUCCESS(OK, "나의 뱃지 목록 조회 성공입니다."),
+    
+    // 알림
+    GET_NOTIFICATIONS_INFO_SUCCESS(OK, "알림 목록 조회 성공입니다."),
 
     /**
      * 201 CREATED

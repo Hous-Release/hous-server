@@ -4,6 +4,7 @@ import hous.server.domain.badge.Acquire;
 import hous.server.domain.badge.BadgeInfo;
 import hous.server.domain.badge.repository.AcquireRepository;
 import hous.server.domain.badge.repository.BadgeRepository;
+import hous.server.domain.common.RedisKey;
 import hous.server.domain.room.Room;
 import hous.server.domain.rule.Rule;
 import hous.server.domain.rule.repository.RuleRepository;
@@ -18,6 +19,7 @@ import hous.server.service.rule.dto.request.ModifyRuleReqeustDto;
 import hous.server.service.rule.dto.request.UpdateRuleRequestDto;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class RuleService {
+
+    private final RedisTemplate<String, Object> redisTemplate;
 
     private final UserRepository userRepository;
     private final RuleRepository ruleRepository;
@@ -46,6 +50,22 @@ public class RuleService {
             Acquire acquire = acquireRepository.save(Acquire.newInstance(me, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.LETS_BUILD_A_POLE)));
             me.addAcquire(acquire);
             notificationService.sendNewBadgeNotification(user, BadgeInfo.LETS_BUILD_A_POLE);
+        }
+
+        if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.OUR_HOUSE_PILLAR_HOMIE, me)) {
+            String createRuleCountString = (String) redisTemplate.opsForValue().get(RedisKey.CREATE_RULE_COUNT + userId);
+            if (createRuleCountString != null && Integer.parseInt(createRuleCountString) >= 4) {
+                Acquire acquire = acquireRepository.save(Acquire.newInstance(me, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.OUR_HOUSE_PILLAR_HOMIE)));
+                me.addAcquire(acquire);
+                notificationService.sendNewBadgeNotification(user, BadgeInfo.OUR_HOUSE_PILLAR_HOMIE);
+                redisTemplate.delete(RedisKey.CREATE_RULE_COUNT + user.getId());
+            } else {
+                if (createRuleCountString == null) {
+                    redisTemplate.opsForValue().set(RedisKey.CREATE_RULE_COUNT + user.getId(), Integer.toString(1));
+                } else {
+                    redisTemplate.opsForValue().set(RedisKey.CREATE_RULE_COUNT + user.getId(), Integer.toString(Integer.parseInt(createRuleCountString) + 1));
+                }
+            }
         }
     }
 
