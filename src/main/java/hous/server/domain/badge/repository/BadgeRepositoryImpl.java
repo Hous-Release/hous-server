@@ -5,6 +5,8 @@ import hous.server.domain.badge.Badge;
 import hous.server.domain.badge.BadgeInfo;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 import static hous.server.domain.badge.QBadge.badge;
 
 @RequiredArgsConstructor
@@ -18,5 +20,13 @@ public class BadgeRepositoryImpl implements BadgeRepositoryCustom {
                 .selectFrom(badge)
                 .where(badge.info.eq(badgeInfo))
                 .fetchOne();
+    }
+
+    @Override
+    public List<Badge> findAllBadge() {
+        return queryFactory
+                .selectFrom(badge)
+                .orderBy(badge.id.asc())
+                .fetch();
     }
 }

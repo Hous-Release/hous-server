@@ -9,10 +9,7 @@ import hous.server.domain.personality.PersonalityColor;
 import hous.server.service.notification.NotificationRetrieveService;
 import hous.server.service.notification.dto.response.NotificationsInfoResponse;
 import hous.server.service.user.UserRetrieveService;
-import hous.server.service.user.dto.response.CheckOnboardingInfoResponse;
-import hous.server.service.user.dto.response.PersonalityInfoResponse;
-import hous.server.service.user.dto.response.PersonalityTestInfoResponse;
-import hous.server.service.user.dto.response.UserInfoResponse;
+import hous.server.service.user.dto.response.*;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -112,6 +109,26 @@ public class UserRetrieveController {
     @GetMapping("/user/personality/test")
     public ResponseEntity<List<PersonalityTestInfoResponse>> getPersonalityTestInfo() {
         return SuccessResponse.success(SuccessCode.GET_PERSONALITY_TEST_INFO_SUCCESS, userRetrieveService.getPersonalityTestInfo());
+    }
+
+    @ApiOperation(
+            value = "[인증] 마이 페이지(뱃지 목록 뷰) - 나의 뱃지 정보를 조회합니다.",
+            notes = "대표 뱃지가 없는 경우, null을 보냅니다.\n" +
+                    "뱃지 목록에서는 모든 뱃지 리스트를 전달하지만. 내가 획득한 뱃지의 경우  acquire = true 입니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "나의 뱃지 목록 조회 성공입니다."),
+            @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+            @ApiResponse(code = 404,
+                    message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
+                            + "2. 참가중인 방이 존재하지 않습니다.",
+                    response = ErrorResponse.class),
+            @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+    })
+    @Auth
+    @GetMapping("/user/badges")
+    public ResponseEntity<MyBadgeInfoResponse> getMyBadgeList(@ApiIgnore @UserId Long userId) {
+        return SuccessResponse.success(SuccessCode.GET_BADGE_INFO_SUCCESS, userRetrieveService.getMyBadgeList(userId));
     }
 
     @ApiOperation(
