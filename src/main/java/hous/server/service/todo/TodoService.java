@@ -44,6 +44,7 @@ public class TodoService {
     private final DoneRepository doneRepository;
     private final BadgeRepository badgeRepository;
     private final AcquireRepository acquireRepository;
+    
     private final NotificationService notificationService;
 
     public void createTodo(TodoInfoRequestDto request, Long userId) {
