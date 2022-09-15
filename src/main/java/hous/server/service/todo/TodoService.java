@@ -1,6 +1,10 @@
 package hous.server.service.todo;
 
 import hous.server.common.util.DateUtils;
+import hous.server.domain.badge.Acquire;
+import hous.server.domain.badge.BadgeInfo;
+import hous.server.domain.badge.repository.AcquireRepository;
+import hous.server.domain.badge.repository.BadgeRepository;
 import hous.server.domain.room.Room;
 import hous.server.domain.todo.Done;
 import hous.server.domain.todo.Redo;
@@ -14,6 +18,7 @@ import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.User;
 import hous.server.domain.user.repository.OnboardingRepository;
 import hous.server.domain.user.repository.UserRepository;
+import hous.server.service.badge.BadgeServiceUtils;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.todo.dto.request.CheckTodoRequestDto;
 import hous.server.service.todo.dto.request.TodoInfoRequestDto;
@@ -36,9 +41,12 @@ public class TodoService {
     private final TakeRepository takeRepository;
     private final RedoRepository redoRepository;
     private final DoneRepository doneRepository;
+    private final BadgeRepository badgeRepository;
+    private final AcquireRepository acquireRepository;
 
     public void createTodo(TodoInfoRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
+        Onboarding me = user.getOnboarding();
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         TodoServiceUtils.validateTodoCounts(room);
         Todo todo = todoRepository.save(Todo.newInstance(room, request.getName(), request.isPushNotification()));
@@ -52,6 +60,11 @@ public class TodoService {
             todo.addTake(take);
         });
         room.addTodo(todo);
+
+        if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.TODO_ONE_STEP, me)) {
+            Acquire acquire = acquireRepository.save(Acquire.newInstance(me, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.TODO_ONE_STEP)));
+            me.addAcquire(acquire);
+        }
     }
 
     public void updateTodo(Long todoId, TodoInfoRequestDto request) {
