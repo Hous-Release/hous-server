@@ -19,6 +19,7 @@ import hous.server.domain.user.User;
 import hous.server.domain.user.repository.OnboardingRepository;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.badge.BadgeServiceUtils;
+import hous.server.service.notification.NotificationService;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.todo.dto.request.CheckTodoRequestDto;
 import hous.server.service.todo.dto.request.TodoInfoRequestDto;
@@ -43,6 +44,7 @@ public class TodoService {
     private final DoneRepository doneRepository;
     private final BadgeRepository badgeRepository;
     private final AcquireRepository acquireRepository;
+    private final NotificationService notificationService;
 
     public void createTodo(TodoInfoRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
@@ -64,6 +66,7 @@ public class TodoService {
         if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.TODO_ONE_STEP, me)) {
             Acquire acquire = acquireRepository.save(Acquire.newInstance(me, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.TODO_ONE_STEP)));
             me.addAcquire(acquire);
+            notificationService.sendNewBadgeNotification(user, BadgeInfo.TODO_ONE_STEP);
         }
     }
 

@@ -30,4 +30,13 @@ public class Notification extends AuditingTimeEntity {
 
     @Column(nullable = false)
     private boolean isRead;
+
+    public static Notification newInstance(Onboarding onboarding, NotificationType type, String content, boolean isRead) {
+        return Notification.builder()
+                .onboarding(onboarding)
+                .type(type)
+                .content(content)
+                .isRead(isRead)
+                .build();
+    }
 }
