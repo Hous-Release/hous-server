@@ -14,6 +14,7 @@ public class RepresentBadgeInfo {
     private String imageUrl;
 
     public static RepresentBadgeInfo of(Represent represent) {
+        if (represent == null) return null;
         return RepresentBadgeInfo.builder()
                 .badgeId(represent.getBadge().getId())
                 .name(represent.getBadge().getInfo().getValue())

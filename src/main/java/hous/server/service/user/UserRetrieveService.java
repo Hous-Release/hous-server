@@ -75,9 +75,11 @@ public class UserRetrieveService {
         Onboarding onboarding = user.getOnboarding();
         RoomServiceUtils.findParticipatingRoom(user);
         Represent represent = onboarding.getRepresent();
-        List<Badge> badgeList = badgeRepository.findAllBadge();
-        List<Acquire> myBadges = acquireRepository.findAllAcquireByOnboarding(onboarding);
-        return MyBadgeInfoResponse.of(represent, badgeList, myBadges);
+        List<Badge> badges = badgeRepository.findAllBadge();
+        List<Badge> myBadges = acquireRepository.findAllAcquireByOnboarding(onboarding).stream()
+                .map(Acquire::getBadge)
+                .collect(Collectors.toList());
+        return MyBadgeInfoResponse.of(represent, badges, myBadges);
     }
 
     private UserInfoResponse getProfileInfoByUser(User user) {

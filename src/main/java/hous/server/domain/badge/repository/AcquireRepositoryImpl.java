@@ -27,9 +27,7 @@ public class AcquireRepositoryImpl implements AcquireRepositoryCustom {
     @Override
     public List<Acquire> findAllAcquireByOnboarding(Onboarding onboarding) {
         return queryFactory.selectFrom(acquire)
-                .where(
-                        acquire.onboarding.eq(onboarding)
-                )
+                .where(acquire.onboarding.eq(onboarding))
                 .orderBy(acquire.badge.id.asc())
                 .fetch();
     }
