@@ -121,7 +121,7 @@ public class UserService {
         Onboarding me = user.getOnboarding();
         RoomServiceUtils.findParticipatingRoom(user);
         Badge badge = BadgeServiceUtils.findBadgeById(badgeRepository, badgeId);
-        AcquireServiceUtils.existsByOnboardingAndBadge(acquireRepository, me, badge);
+        AcquireServiceUtils.validateExistsByOnboardingAndBadge(acquireRepository, me, badge);
         Represent represent = representRepository.save(Represent.newInstance(me, badge));
         me.setRepresent(represent);
     }

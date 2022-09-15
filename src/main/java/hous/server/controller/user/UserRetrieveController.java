@@ -112,12 +112,12 @@ public class UserRetrieveController {
     }
 
     @ApiOperation(
-            value = "[인증] 마이 페이지(뱃지 목록 뷰) - 나의 뱃지 정보를 조회합니다.",
-            notes = "대표 뱃지가 없는 경우, null을 보냅니다.\n" +
-                    "뱃지 목록에서는 모든 뱃지 리스트를 전달하지만. 내가 획득한 뱃지의 경우  acquire = true 입니다."
+            value = "[인증] 마이 페이지(배지 목록 뷰) - 나의 배지 정보를 조회합니다.",
+            notes = "대표 배지가 없는 경우, null을 보냅니다.\n" +
+                    "배지 목록에서는 모든 배지 리스트를 전달하지만. 내가 획득한 배지의 경우  acquire = true 입니다."
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "나의 뱃지 목록 조회 성공입니다."),
+            @ApiResponse(code = 200, message = "나의 배지 목록 조회 성공입니다."),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 404,
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"

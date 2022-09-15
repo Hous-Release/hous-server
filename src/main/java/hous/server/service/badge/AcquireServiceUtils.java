@@ -12,7 +12,7 @@ import static hous.server.common.exception.ErrorCode.FORBIDDEN_ACQUIRE_BADGE_EXC
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AcquireServiceUtils {
 
-    public static void existsByOnboardingAndBadge(AcquireRepository acquireRepository, Onboarding onboarding, Badge badge) {
+    public static void validateExistsByOnboardingAndBadge(AcquireRepository acquireRepository, Onboarding onboarding, Badge badge) {
         if (!acquireRepository.existsByOnboardingAndBadge(onboarding, badge)) {
             throw new ForbiddenException(String.format("유저가 (%s) 획득한 badge (%s) 가 아닙니다.", onboarding.getId(), badge.getId()), FORBIDDEN_ACQUIRE_BADGE_EXCEPTION);
         }
