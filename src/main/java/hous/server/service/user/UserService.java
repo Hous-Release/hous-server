@@ -1,6 +1,5 @@
 package hous.server.service.user;
 
-import hous.server.domain.badge.Acquire;
 import hous.server.domain.badge.Badge;
 import hous.server.domain.badge.BadgeInfo;
 import hous.server.domain.badge.Represent;
@@ -22,8 +21,8 @@ import hous.server.domain.user.repository.SettingRepository;
 import hous.server.domain.user.repository.TestScoreRepository;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.badge.AcquireServiceUtils;
+import hous.server.service.badge.BadgeService;
 import hous.server.service.badge.BadgeServiceUtils;
-import hous.server.service.notification.NotificationService;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.user.dto.request.CreateUserRequestDto;
 import hous.server.service.user.dto.request.SetOnboardingInfoRequestDto;
@@ -52,7 +51,7 @@ public class UserService {
     private final AcquireRepository acquireRepository;
     private final RepresentRepository representRepository;
 
-    private final NotificationService notificationService;
+    private final BadgeService badgeService;
 
     public Long registerUser(CreateUserRequestDto request) {
         UserServiceUtils.validateNotExistsUser(userRepository, request.getSocialId(), request.getSocialType());
@@ -97,13 +96,11 @@ public class UserService {
         testScore.updateScore(request.getLight(), request.getNoise(), request.getClean(), request.getSmell(), request.getIntroversion());
         Personality personality = UserServiceUtils.getPersonalityColorByTestScore(personalityRepository, testScore);
         me.setPersonality(personality);
-
+        badgeService.acquireBadge(user, BadgeInfo.I_AM_SUCH_A_PERSON);
         if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.I_DONT_EVEN_KNOW_ME, me)) {
             String personalityTestCountString = (String) redisTemplate.opsForValue().get(RedisKey.PERSONALITY_TEST_COUNT + userId);
             if (personalityTestCountString != null && Integer.parseInt(personalityTestCountString) >= 4) {
-                Acquire acquire = acquireRepository.save(Acquire.newInstance(me, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.I_DONT_EVEN_KNOW_ME)));
-                me.addAcquire(acquire);
-                notificationService.sendNewBadgeNotification(user, BadgeInfo.I_DONT_EVEN_KNOW_ME);
+                badgeService.acquireBadge(user, BadgeInfo.I_DONT_EVEN_KNOW_ME);
                 redisTemplate.delete(RedisKey.PERSONALITY_TEST_COUNT + user.getId());
             } else {
                 if (personalityTestCountString == null) {
@@ -113,13 +110,6 @@ public class UserService {
                 }
             }
         }
-
-        if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.I_AM_SUCH_A_PERSON, me)) {
-            Acquire acquire = acquireRepository.save(Acquire.newInstance(me, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.I_AM_SUCH_A_PERSON)));
-            me.addAcquire(acquire);
-            notificationService.sendNewBadgeNotification(user, BadgeInfo.I_AM_SUCH_A_PERSON);
-        }
-
         List<Participate> participates = room.getParticipates();
         int testCompleteCnt = (int) participates.stream()
                 .filter(participate -> participate.getOnboarding().getPersonality().getColor() != PersonalityColor.GRAY)
@@ -127,11 +117,7 @@ public class UserService {
         if (room.getParticipantsCnt() == testCompleteCnt) {
             participates.forEach(participate -> {
                 Onboarding onboarding = participate.getOnboarding();
-                if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.OUR_HOUSE_HOMIES, onboarding)) {
-                    Acquire acquire = acquireRepository.save(Acquire.newInstance(onboarding, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.OUR_HOUSE_HOMIES)));
-                    onboarding.addAcquire(acquire);
-                    notificationService.sendNewBadgeNotification(onboarding.getUser(), BadgeInfo.OUR_HOUSE_HOMIES);
-                }
+                badgeService.acquireBadge(onboarding.getUser(), BadgeInfo.OUR_HOUSE_HOMIES);
             });
         }
     }

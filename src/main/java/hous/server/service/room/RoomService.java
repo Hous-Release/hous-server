@@ -1,9 +1,7 @@
 package hous.server.service.room;
 
-import hous.server.domain.badge.Acquire;
 import hous.server.domain.badge.BadgeInfo;
 import hous.server.domain.badge.repository.AcquireRepository;
-import hous.server.domain.badge.repository.BadgeRepository;
 import hous.server.domain.badge.repository.RepresentRepository;
 import hous.server.domain.notification.repository.NotificationRepository;
 import hous.server.domain.room.Participate;
@@ -19,8 +17,7 @@ import hous.server.domain.todo.repository.TodoRepository;
 import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.User;
 import hous.server.domain.user.repository.UserRepository;
-import hous.server.service.badge.BadgeServiceUtils;
-import hous.server.service.notification.NotificationService;
+import hous.server.service.badge.BadgeService;
 import hous.server.service.room.dto.request.SetRoomNameRequestDto;
 import hous.server.service.room.dto.response.RoomInfoResponse;
 import hous.server.service.todo.TodoServiceUtils;
@@ -46,10 +43,9 @@ public class RoomService {
     private final DoneRepository doneRepository;
     private final AcquireRepository acquireRepository;
     private final RepresentRepository representRepository;
-    private final BadgeRepository badgeRepository;
     private final NotificationRepository notificationRepository;
 
-    private final NotificationService notificationService;
+    private final BadgeService badgeService;
 
     public RoomInfoResponse createRoom(SetRoomNameRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
@@ -59,7 +55,7 @@ public class RoomService {
         Participate participate = participateRepository.save(Participate.newInstance(me, room));
         me.addParticipate(participate);
         room.addParticipate(participate);
-        getBadgeByPoundingHouse(user, me);
+        badgeService.acquireBadge(user, BadgeInfo.POUNDING_HOUSE);
         return RoomInfoResponse.of(room);
     }
 
@@ -72,7 +68,7 @@ public class RoomService {
         Participate participate = participateRepository.save(Participate.newInstance(me, room));
         me.addParticipate(participate);
         room.addParticipate(participate);
-        getBadgeByPoundingHouse(user, me);
+        badgeService.acquireBadge(user, BadgeInfo.POUNDING_HOUSE);
         return RoomInfoResponse.of(room);
     }
 
@@ -150,13 +146,5 @@ public class RoomService {
 
     private boolean isNotUniqueRoomCode(String code) {
         return roomRepository.existsByRoomCode(code);
-    }
-
-    private void getBadgeByPoundingHouse(User user, Onboarding me) {
-        if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.POUNDING_HOUSE, me)) {
-            Acquire acquire = acquireRepository.save(Acquire.newInstance(me, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.POUNDING_HOUSE)));
-            me.addAcquire(acquire);
-            notificationService.sendNewBadgeNotification(user, BadgeInfo.POUNDING_HOUSE);
-        }
     }
 }

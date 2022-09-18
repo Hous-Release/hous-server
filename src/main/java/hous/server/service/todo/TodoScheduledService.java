@@ -1,7 +1,6 @@
 package hous.server.service.todo;
 
 import hous.server.common.util.DateUtils;
-import hous.server.domain.badge.Acquire;
 import hous.server.domain.badge.BadgeInfo;
 import hous.server.domain.badge.repository.AcquireRepository;
 import hous.server.domain.badge.repository.BadgeRepository;
@@ -13,8 +12,8 @@ import hous.server.domain.todo.repository.DoneRepository;
 import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.User;
 import hous.server.domain.user.repository.UserRepository;
+import hous.server.service.badge.BadgeService;
 import hous.server.service.badge.BadgeServiceUtils;
-import hous.server.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -36,7 +35,7 @@ public class TodoScheduledService {
     private final BadgeRepository badgeRepository;
     private final AcquireRepository acquireRepository;
 
-    private final NotificationService notificationService;
+    private final BadgeService badgeService;
 
     /**
      * 매일 0시 0분 0초마다 실행
@@ -63,20 +62,14 @@ public class TodoScheduledService {
                             redisTemplate.opsForValue().set(RedisKey.TODO_COMPLETE_COUNT + user.getId(), Integer.toString(1));
                         } else {
                             redisTemplate.opsForValue().set(RedisKey.TODO_COMPLETE_COUNT + user.getId(), Integer.toString(Integer.parseInt(todoCompleteCountString) + 1));
-                            if (Integer.parseInt(todoCompleteCountString) == 6 && !BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.GOOD_JOB, onboarding)) {
-                                Acquire acquire = acquireRepository.save(Acquire.newInstance(onboarding, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.GOOD_JOB)));
-                                onboarding.addAcquire(acquire);
-                                notificationService.sendNewBadgeNotification(user, BadgeInfo.GOOD_JOB);
+                            if (Integer.parseInt(todoCompleteCountString) == 6) {
+                                badgeService.acquireBadge(user, BadgeInfo.GOOD_JOB);
                             }
-                            if (Integer.parseInt(todoCompleteCountString) == 13 && !BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.SINCERITY_KING_HOMIE, onboarding)) {
-                                Acquire acquire = acquireRepository.save(Acquire.newInstance(onboarding, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.SINCERITY_KING_HOMIE)));
-                                onboarding.addAcquire(acquire);
-                                notificationService.sendNewBadgeNotification(user, BadgeInfo.SINCERITY_KING_HOMIE);
+                            if (Integer.parseInt(todoCompleteCountString) == 13) {
+                                badgeService.acquireBadge(user, BadgeInfo.SINCERITY_KING_HOMIE);
                             }
-                            if (Integer.parseInt(todoCompleteCountString) == 20 && !BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.TODO_MASTER, onboarding)) {
-                                Acquire acquire = acquireRepository.save(Acquire.newInstance(onboarding, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.TODO_MASTER)));
-                                onboarding.addAcquire(acquire);
-                                notificationService.sendNewBadgeNotification(user, BadgeInfo.TODO_MASTER);
+                            if (Integer.parseInt(todoCompleteCountString) == 20) {
+                                badgeService.acquireBadge(user, BadgeInfo.TODO_MASTER);
                                 redisTemplate.delete(RedisKey.TODO_COMPLETE_COUNT + user.getId());
                             }
                         }
