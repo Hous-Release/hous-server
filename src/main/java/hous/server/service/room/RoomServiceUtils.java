@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static hous.server.common.exception.ErrorCode.*;
 
@@ -53,5 +54,12 @@ public class RoomServiceUtils {
             throw new ForbiddenException(String.format("같은 방에 참가하고 있지 않습니다. (요청 사용자 방 id: %s, 호미 방 id: %s)",
                     userRoom.getId(), homieRoom.getId()), FORBIDDEN_ROOM_PARTICIPATE_EXCEPTION);
         }
+    }
+
+    public static List<User> findParticipatingUsersExceptMe(Room room, User me) {
+        return room.getParticipates().stream()
+                .filter(participate -> !participate.getOnboarding().getId().equals(me.getOnboarding().getId()))
+                .map(participate -> participate.getOnboarding().getUser())
+                .collect(Collectors.toList());
     }
 }

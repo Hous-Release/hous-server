@@ -12,6 +12,7 @@ import hous.server.domain.user.User;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.badge.BadgeService;
 import hous.server.service.badge.BadgeServiceUtils;
+import hous.server.service.notification.NotificationService;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.rule.dto.request.CreateRuleRequestDto;
 import hous.server.service.rule.dto.request.ModifyRuleReqeustDto;
@@ -21,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -35,6 +38,7 @@ public class RuleService {
     private final AcquireRepository acquireRepository;
 
     private final BadgeService badgeService;
+    private final NotificationService notificationService;
 
     public void createRule(CreateRuleRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
@@ -58,6 +62,8 @@ public class RuleService {
                 }
             }
         }
+        List<User> usersExceptMe = RoomServiceUtils.findParticipatingUsersExceptMe(room, user);
+        usersExceptMe.forEach(userExceptMe -> notificationService.sendNewRuleNotification(userExceptMe, rule));
     }
 
     public void updateRule(UpdateRuleRequestDto request, Long ruleId, Long userId) {
