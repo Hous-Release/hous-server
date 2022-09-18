@@ -23,10 +23,7 @@ import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.badge.BadgeService;
 import hous.server.service.badge.BadgeServiceUtils;
 import hous.server.service.room.RoomServiceUtils;
-import hous.server.service.user.dto.request.CreateUserRequestDto;
-import hous.server.service.user.dto.request.SetOnboardingInfoRequestDto;
-import hous.server.service.user.dto.request.UpdateTestScoreRequestDto;
-import hous.server.service.user.dto.request.UpdateUserInfoRequestDto;
+import hous.server.service.user.dto.request.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -78,13 +75,11 @@ public class UserService {
         onboarding.setUserInfo(request);
     }
 
-    // TODO 푸쉬알림 설정뷰 확정나면 수정하기
-    public void updateUserPushState(boolean state, Long userId) {
+    public void updateUserPushSetting(UpdatePushSettingRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
-        RoomServiceUtils.findParticipatingRoom(user);
         Setting setting = user.getSetting();
-        UserServiceUtils.validatePushNotificationStatus(setting.isPushNotification(), state);
-        setting.setPushNotification(state);
+        UserServiceUtils.validatePushSettingRequestStatus(request, user);
+        setting.updatePushSetting(request);
     }
 
     public void updateUserTestScore(UpdateTestScoreRequestDto request, Long userId) {

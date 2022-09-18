@@ -6,6 +6,7 @@ import hous.server.config.interceptor.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.service.user.UserService;
 import hous.server.service.user.dto.request.SetOnboardingInfoRequestDto;
+import hous.server.service.user.dto.request.UpdatePushSettingRequestDto;
 import hous.server.service.user.dto.request.UpdateTestScoreRequestDto;
 import hous.server.service.user.dto.request.UpdateUserInfoRequestDto;
 import io.swagger.annotations.*;
@@ -89,28 +90,25 @@ public class UserController {
         return SuccessResponse.NO_CONTENT;
     }
 
-    // TODO 푸쉬알림 설정뷰 확정나면 수정하기
     @ApiOperation(
-            value = "[인증] 마이 페이지(Profile 뷰) - 나의 푸쉬 알림 설정 정보를 수정합니다.",
-            notes = "푸쉬 알림 설정 여부를 설정합니다. 성공시 status code = 204, 빈 response body를 보냅니다."
+            value = "[인증] 마이 페이지(Profile 뷰) - 나의 푸시 알림 설정 정보를 수정합니다.",
+            notes = "푸시 알림 설정 여부를 설정합니다.\n" +
+                    "Rules, Badge 설정으로는 ON, OFF 를 담습니다.\n" +
+                    "Todo 관련 설정으로는 ON_ALL, ON_MY, OFF 를 담습니다.\n" +
+                    "성공시 status code = 204, 빈 response body를 보냅니다."
     )
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = ""),
-            @ApiResponse(
-                    code = 400, message = "자기소개는 40 글자 이내로 입력해주세요. (introduction)", response = ErrorResponse.class),
+            @ApiResponse(code = 400, message = "잘못된 상태로 요청했습니다.", response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
-            @ApiResponse(code = 404,
-                    message = "1. 탈퇴했거나 존재하지 않는 유저입니다. \n"
-                            + "2. 존재하지 않는 방입니다.",
-                    response = ErrorResponse.class),
+            @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/user/push")
-    public ResponseEntity<String> updateUserInfo(@ApiParam(name = "state", value = "푸쉬 알림 여부", required = true, example = "true")
-                                                 @RequestParam boolean state, @ApiIgnore @UserId Long userId) {
-        userService.updateUserPushState(state, userId);
+    public ResponseEntity<String> updateUserPushSetting(@Valid @RequestBody UpdatePushSettingRequestDto request, @ApiIgnore @UserId Long userId) {
+        userService.updateUserPushSetting(request, userId);
         return SuccessResponse.NO_CONTENT;
     }
 

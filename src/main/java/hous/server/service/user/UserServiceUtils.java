@@ -10,6 +10,7 @@ import hous.server.domain.user.TestScore;
 import hous.server.domain.user.User;
 import hous.server.domain.user.UserSocialType;
 import hous.server.domain.user.repository.UserRepository;
+import hous.server.service.user.dto.request.UpdatePushSettingRequestDto;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -36,10 +37,14 @@ public class UserServiceUtils {
         return user;
     }
 
-    public static void validatePushNotificationStatus(boolean state, boolean requestState) {
-        if (state == requestState) {
-            throw new ValidationException(String.format("(%s) 유저의 푸쉬 알림 여부 상태는 이미 (%s) 입니다.", state, requestState),
-                    VALIDATION_STATUS_EXCEPTION);
+    public static void validatePushSettingRequestStatus(UpdatePushSettingRequestDto request, User user) {
+        if (request.isPushNotification() == user.getSetting().isPushNotification() &&
+                request.getRulesPushStatus() == user.getSetting().getRulesPushStatus() &&
+                request.getNewTodoPushStatus() == user.getSetting().getNewTodoPushStatus() &&
+                request.getTodayTodoPushStatus() == user.getSetting().getTodayTodoPushStatus() &&
+                request.getRemindTodoPushStatus() == user.getSetting().getRemindTodoPushStatus() &&
+                request.getBadgePushStatus() == user.getSetting().getBadgePushStatus()) {
+            throw new ValidationException(String.format("(%s) 유저의 푸시 알림 상태 중복입니다.\n%s", user.getId(), request), VALIDATION_STATUS_EXCEPTION);
         }
     }
 
