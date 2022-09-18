@@ -20,7 +20,6 @@ import hous.server.domain.user.repository.OnboardingRepository;
 import hous.server.domain.user.repository.SettingRepository;
 import hous.server.domain.user.repository.TestScoreRepository;
 import hous.server.domain.user.repository.UserRepository;
-import hous.server.service.badge.AcquireServiceUtils;
 import hous.server.service.badge.BadgeService;
 import hous.server.service.badge.BadgeServiceUtils;
 import hous.server.service.room.RoomServiceUtils;
@@ -127,7 +126,7 @@ public class UserService {
         Onboarding me = user.getOnboarding();
         RoomServiceUtils.findParticipatingRoom(user);
         Badge badge = BadgeServiceUtils.findBadgeById(badgeRepository, badgeId);
-        AcquireServiceUtils.validateExistsByOnboardingAndBadge(acquireRepository, me, badge);
+        BadgeServiceUtils.validateExistsByOnboardingAndBadge(acquireRepository, me, badge);
         Represent represent = representRepository.save(Represent.newInstance(me, badge));
         me.setRepresent(represent);
     }
