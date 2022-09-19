@@ -1,6 +1,5 @@
 package hous.server.service.rule;
 
-import hous.server.domain.badge.Acquire;
 import hous.server.domain.badge.BadgeInfo;
 import hous.server.domain.badge.repository.AcquireRepository;
 import hous.server.domain.badge.repository.BadgeRepository;
@@ -11,8 +10,8 @@ import hous.server.domain.rule.repository.RuleRepository;
 import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.User;
 import hous.server.domain.user.repository.UserRepository;
+import hous.server.service.badge.BadgeService;
 import hous.server.service.badge.BadgeServiceUtils;
-import hous.server.service.notification.NotificationService;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.rule.dto.request.CreateRuleRequestDto;
 import hous.server.service.rule.dto.request.ModifyRuleReqeustDto;
@@ -35,7 +34,7 @@ public class RuleService {
     private final BadgeRepository badgeRepository;
     private final AcquireRepository acquireRepository;
 
-    private final NotificationService notificationService;
+    private final BadgeService badgeService;
 
     public void createRule(CreateRuleRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
@@ -45,19 +44,11 @@ public class RuleService {
         int ruleIdx = RuleServiceUtils.findRuleIdxByRoomId(ruleRepository, room);
         Rule rule = ruleRepository.save(Rule.newInstance(room, request.getName(), ruleIdx + 1));
         room.addRule(rule);
-
-        if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.LETS_BUILD_A_POLE, me)) {
-            Acquire acquire = acquireRepository.save(Acquire.newInstance(me, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.LETS_BUILD_A_POLE)));
-            me.addAcquire(acquire);
-            notificationService.sendNewBadgeNotification(user, BadgeInfo.LETS_BUILD_A_POLE);
-        }
-
+        badgeService.acquireBadge(user, BadgeInfo.LETS_BUILD_A_POLE);
         if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.OUR_HOUSE_PILLAR_HOMIE, me)) {
             String createRuleCountString = (String) redisTemplate.opsForValue().get(RedisKey.CREATE_RULE_COUNT + userId);
             if (createRuleCountString != null && Integer.parseInt(createRuleCountString) >= 4) {
-                Acquire acquire = acquireRepository.save(Acquire.newInstance(me, badgeRepository.findBadgeByBadgeInfo(BadgeInfo.OUR_HOUSE_PILLAR_HOMIE)));
-                me.addAcquire(acquire);
-                notificationService.sendNewBadgeNotification(user, BadgeInfo.OUR_HOUSE_PILLAR_HOMIE);
+                badgeService.acquireBadge(user, BadgeInfo.OUR_HOUSE_PILLAR_HOMIE);
                 redisTemplate.delete(RedisKey.CREATE_RULE_COUNT + user.getId());
             } else {
                 if (createRuleCountString == null) {
