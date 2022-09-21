@@ -33,11 +33,4 @@ public class NotificationRepositoryImpl implements NotificationRepositoryCustom 
                 .where(notification.onboarding.eq(onboarding))
                 .fetch().size();
     }
-
-    @Override
-    public List<Notification> findNotificationsByOnboarding(Onboarding onboarding) {
-        return queryFactory.selectFrom(notification)
-                .where(notification.onboarding.eq(onboarding))
-                .fetch();
-    }
 }

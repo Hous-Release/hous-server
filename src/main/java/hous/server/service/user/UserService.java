@@ -7,11 +7,18 @@ import hous.server.domain.badge.repository.AcquireRepository;
 import hous.server.domain.badge.repository.BadgeRepository;
 import hous.server.domain.badge.repository.RepresentRepository;
 import hous.server.domain.common.RedisKey;
+import hous.server.domain.notification.repository.NotificationRepository;
 import hous.server.domain.personality.Personality;
 import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.personality.repository.PersonalityRepository;
 import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
+import hous.server.domain.room.repository.ParticipateRepository;
+import hous.server.domain.room.repository.RoomRepository;
+import hous.server.domain.todo.Todo;
+import hous.server.domain.todo.repository.DoneRepository;
+import hous.server.domain.todo.repository.TakeRepository;
+import hous.server.domain.todo.repository.TodoRepository;
 import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.Setting;
 import hous.server.domain.user.TestScore;
@@ -23,6 +30,7 @@ import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.badge.BadgeService;
 import hous.server.service.badge.BadgeServiceUtils;
 import hous.server.service.room.RoomServiceUtils;
+import hous.server.service.todo.TodoServiceUtils;
 import hous.server.service.user.dto.request.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -46,6 +54,12 @@ public class UserService {
     private final BadgeRepository badgeRepository;
     private final AcquireRepository acquireRepository;
     private final RepresentRepository representRepository;
+    private final TakeRepository takeRepository;
+    private final DoneRepository doneRepository;
+    private final TodoRepository todoRepository;
+    private final ParticipateRepository participateRepository;
+    private final RoomRepository roomRepository;
+    private final NotificationRepository notificationRepository;
 
     private final BadgeService badgeService;
 
@@ -124,5 +138,20 @@ public class UserService {
         BadgeServiceUtils.validateExistsByOnboardingAndBadge(acquireRepository, me, badge);
         Represent represent = representRepository.save(Represent.newInstance(me, badge));
         me.setRepresent(represent);
+    }
+
+    public void deleteUser(Long userId) {
+        User user = UserServiceUtils.findUserById(userRepository, userId);
+        Room room = RoomServiceUtils.findParticipatingRoom(user);
+        Onboarding me = user.getOnboarding();
+
+        List<Todo> todos = room.getTodos();
+        List<Todo> myTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, me);
+        RoomServiceUtils.deleteMyTodosTakeMe(takeRepository, doneRepository, todoRepository, myTodos, me, room);
+
+        userRepository.delete(user);
+        if (room.getParticipates().isEmpty()) {
+            roomRepository.delete(room);
+        }
     }
 }

@@ -24,14 +24,16 @@ public class NotificationService {
     private final FirebaseCloudMessageService firebaseCloudMessageService;
 
     public void sendNewRuleNotification(User to, Rule rule) {
-        notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.RULE, newRuleNotification(rule), false));
+        Notification notification = notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.RULE, newRuleNotification(rule), false));
+        to.getOnboarding().addNotification(notification);
         if (to.getSetting().isPushNotification() && to.getSetting().getRulesPushStatus() == PushStatus.ON) {
             firebaseCloudMessageService.sendMessageTo(to.getFcmToken(), PushMessage.NEW_RULE.getTitle(), PushMessage.NEW_RULE.getBody());
         }
     }
 
     public void sendNewBadgeNotification(User to, BadgeInfo badgeInfo) {
-        notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.BADGE, newBadgeNotification(badgeInfo), false));
+        Notification notification = notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.BADGE, newBadgeNotification(badgeInfo), false));
+        to.getOnboarding().addNotification(notification);
         if (to.getSetting().isPushNotification() && to.getSetting().getBadgePushStatus() == PushStatus.ON) {
             firebaseCloudMessageService.sendMessageTo(to.getFcmToken(), newBadgePushTitle(badgeInfo), newBadgePushBody(to.getOnboarding()));
         }
