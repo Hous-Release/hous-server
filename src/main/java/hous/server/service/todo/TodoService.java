@@ -16,6 +16,7 @@ import hous.server.domain.user.User;
 import hous.server.domain.user.repository.OnboardingRepository;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.badge.BadgeService;
+import hous.server.service.notification.NotificationService;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.todo.dto.request.CheckTodoRequestDto;
 import hous.server.service.todo.dto.request.TodoInfoRequestDto;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -40,6 +42,7 @@ public class TodoService {
     private final DoneRepository doneRepository;
 
     private final BadgeService badgeService;
+    private final NotificationService notificationService;
 
     public void createTodo(TodoInfoRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
@@ -57,6 +60,13 @@ public class TodoService {
         });
         room.addTodo(todo);
         badgeService.acquireBadge(user, BadgeInfo.TODO_ONE_STEP);
+        List<User> usersExceptMe = RoomServiceUtils.findParticipatingUsersExceptMe(room, user);
+        usersExceptMe.forEach(userExceptMe -> {
+            List<Onboarding> onboardings = todo.getTakes().stream()
+                    .map(Take::getOnboarding)
+                    .collect(Collectors.toList());
+            notificationService.sendNewTodoNotification(userExceptMe, todo, onboardings.contains(userExceptMe.getOnboarding()));
+        });
     }
 
     public void updateTodo(Long todoId, TodoInfoRequestDto request) {
