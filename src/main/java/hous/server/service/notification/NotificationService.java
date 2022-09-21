@@ -28,7 +28,8 @@ public class NotificationService {
     private final FirebaseCloudMessageService firebaseCloudMessageService;
 
     public void sendNewTodoNotification(User to, Todo todo, boolean isTake) {
-        notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.TODO, newTodoNotification(todo, isTake), false));
+        Notification notification = notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.TODO, newTodoNotification(todo, isTake), false));
+        to.getOnboarding().addNotification(notification);
         if (to.getSetting().isPushNotification() && to.getSetting().getNewTodoPushStatus() == TodoPushStatus.ON_ALL) {
             firebaseCloudMessageService.sendMessageTo(to.getFcmToken(), PushMessage.NEW_TODO.getTitle(), PushMessage.NEW_TODO.getBody());
         }
@@ -47,7 +48,10 @@ public class NotificationService {
     }
 
     public void sendRemindTodoNotification(User to, List<Todo> todos, boolean isTake) {
-        todos.forEach(todo -> notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.TODO, remindTodoNotification(todo), false)));
+        todos.forEach(todo -> {
+            Notification notification = notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.TODO, remindTodoNotification(todo), false));
+            to.getOnboarding().addNotification(notification);
+        });
         if (to.getSetting().isPushNotification() && to.getSetting().getRemindTodoPushStatus() == TodoPushStatus.ON_ALL) {
             firebaseCloudMessageService.sendMessageTo(to.getFcmToken(), PushMessage.TODO_REMIND.getTitle(), PushMessage.TODO_REMIND.getBody());
         }
