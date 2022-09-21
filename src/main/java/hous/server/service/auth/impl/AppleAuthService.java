@@ -10,24 +10,30 @@ import hous.server.service.user.UserService;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class AppleAuthService implements AuthService {
 
     private static final UserSocialType socialType = UserSocialType.APPLE;
 
     private final AppleTokenProvider appleTokenDecoder;
 
-    private final UserService userService;
     private final UserRepository userRepository;
+
+    private final UserService userService;
 
     @Override
     public Long login(LoginDto request) {
         String socialId = appleTokenDecoder.getSocialIdFromIdToken(request.getToken());
         User user = UserServiceUtils.findUserBySocialIdAndSocialType(userRepository, socialId, socialType);
         if (user == null) return userService.registerUser(request.toCreateUserDto(socialId));
-        else user.updateFcmToken(request.getFcmToken());
+        else {
+            UserServiceUtils.validateUniqueFcmToken(userRepository, request.getFcmToken());
+            user.updateFcmToken(request.getFcmToken());
+        }
         return user.getId();
     }
 }
