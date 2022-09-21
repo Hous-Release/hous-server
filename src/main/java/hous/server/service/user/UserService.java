@@ -7,14 +7,18 @@ import hous.server.domain.badge.repository.AcquireRepository;
 import hous.server.domain.badge.repository.BadgeRepository;
 import hous.server.domain.badge.repository.RepresentRepository;
 import hous.server.domain.common.RedisKey;
-import hous.server.common.exception.ForbiddenException;
-import hous.server.common.exception.NotFoundException;
+import hous.server.domain.notification.repository.NotificationRepository;
 import hous.server.domain.personality.Personality;
 import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.personality.repository.PersonalityRepository;
 import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
-import hous.server.domain.room.Participate;
+import hous.server.domain.room.repository.ParticipateRepository;
+import hous.server.domain.room.repository.RoomRepository;
+import hous.server.domain.todo.Todo;
+import hous.server.domain.todo.repository.DoneRepository;
+import hous.server.domain.todo.repository.TakeRepository;
+import hous.server.domain.todo.repository.TodoRepository;
 import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.Setting;
 import hous.server.domain.user.TestScore;
@@ -26,6 +30,7 @@ import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.badge.BadgeService;
 import hous.server.service.badge.BadgeServiceUtils;
 import hous.server.service.room.RoomServiceUtils;
+import hous.server.service.todo.TodoServiceUtils;
 import hous.server.service.user.dto.request.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -33,11 +38,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import java.util.List;
-
-import static hous.server.common.exception.ErrorCode.FORBIDDEN_USER_DELETE_ROOM_PARTICIPATE_EXCEPTION;
-import static hous.server.common.exception.ErrorCode.NOTFOUND_USER_EXCEPTION;
 
 @RequiredArgsConstructor
 @Service
@@ -54,6 +54,12 @@ public class UserService {
     private final BadgeRepository badgeRepository;
     private final AcquireRepository acquireRepository;
     private final RepresentRepository representRepository;
+    private final TakeRepository takeRepository;
+    private final DoneRepository doneRepository;
+    private final TodoRepository todoRepository;
+    private final ParticipateRepository participateRepository;
+    private final RoomRepository roomRepository;
+    private final NotificationRepository notificationRepository;
 
     private final BadgeService badgeService;
 
@@ -136,14 +142,17 @@ public class UserService {
 
     public void deleteUser(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
-        List<Participate> participateList = user.getOnboarding().getParticipates();
-        if (!participateList.isEmpty()) {
-            throw new ForbiddenException(String.format("방 (%s) 의 참가자 는 탈퇴할 수 없습니다.", participateList.get(0).getRoom().getId()),
-                    FORBIDDEN_USER_DELETE_ROOM_PARTICIPATE_EXCEPTION);
-        }
-        if (userRepository.deleteUserById(userId) != 1) {
-            throw new NotFoundException(String.format("존재 하지 않은 유저 (%s) 는 탈퇴할 수 없습니다.", userId),
-                    NOTFOUND_USER_EXCEPTION);
-        }
+        Room room = RoomServiceUtils.findParticipatingRoom(user);
+        Onboarding me = user.getOnboarding();
+
+        List<Todo> todos = room.getTodos();
+        List<Todo> myTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, me);
+        RoomServiceUtils.deleteMyTodosTakeMe(takeRepository, doneRepository, todoRepository, myTodos, me, room);
+        RoomServiceUtils.leaveParticipateRoom(participateRepository, roomRepository, me, room);
+        RoomServiceUtils.deleteRepresentByOnboarding(representRepository, me);
+        RoomServiceUtils.deleteAcquireByOnboarding(acquireRepository, me);
+        RoomServiceUtils.deleteNotificationByOnboarding(notificationRepository, me);
+
+        userRepository.delete(user);
     }
 }
