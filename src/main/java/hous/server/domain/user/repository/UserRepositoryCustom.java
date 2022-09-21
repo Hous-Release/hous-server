@@ -16,6 +16,4 @@ public interface UserRepositoryCustom {
     User findUserByFcmToken(String fcmToken);
 
     List<User> findAllUsers();
-
-    long deleteUserById(Long id);
 }
