@@ -39,6 +39,7 @@ public enum ErrorCode {
     FORBIDDEN_REQUEST_RULE_COUNT_EXCEPTION(FORBIDDEN, "요청한 rule 의 개수와 방의 rule 의 수가 맞지 않습니다."),
     FORBIDDEN_ROOM_PARTICIPATE_EXCEPTION(FORBIDDEN, "같은 방에 참가하고 있지 않습니다."),
     FORBIDDEN_ACQUIRE_BADGE_EXCEPTION(FORBIDDEN, "유저가 획득한 배지가 아닙니다."),
+    FORBIDDEN_USER_DELETE_ROOM_PARTICIPATE_EXCEPTION(FORBIDDEN, "방에 참가하고 있는 유저는 탈퇴할 수 없습니다."),
 
     /**
      * 404 Not Found
@@ -53,6 +54,7 @@ public enum ErrorCode {
     NOT_FOUND_TODO_EXCEPTION(NOT_FOUND, "존재하지 않는 todo 입니다."),
     NOT_FOUND_BADGE_EXCEPTION(NOT_FOUND, "존재하지 않는 배지 입니다."),
     NOT_FOUND_PERSONALITY_COLOR_EXCEPTION(NOT_FOUND, "GRAY 에 대한 성향 정보는 존재하지 않습니다."),
+    NOTFOUND_USER_EXCEPTION(NOT_FOUND, "존재하지 않는 유저입니다."),
 
     /**
      * 405 Method Not Allowed

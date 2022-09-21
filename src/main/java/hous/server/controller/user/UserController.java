@@ -160,4 +160,29 @@ public class UserController {
         userService.updateRepresentBadge(badgeId, userId);
         return SuccessResponse.NO_CONTENT;
     }
+    
+
+    @ApiOperation(
+            value = "[인증] 마이 페이지(설정) - 회원 정보를 삭제합니다.",
+            notes = "회원 정보 탈퇴 요청 시 해당 유저의 모든 정보를 삭제합니다. 성공시 status code = 204, 빈 response body를 보냅니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = ""),
+            @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+            @ApiResponse(code = 403, message = "방에 참가하고 있는 유저는 탈퇴할 수 없습니다..", response = ErrorResponse.class),
+            @ApiResponse(code = 404,
+                    message = "1. 탈퇴했거나 존재하지 않는 유저입니다. \n"
+                            + "2. 같은 방에 참가하고 있지 않습니다.\n"
+                            + "3. 존재하지 않는 유저입니다.",
+                    response = ErrorResponse.class),
+            @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+    })
+    @Auth
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/user")
+    public ResponseEntity<String> deleteUser(
+            @Valid @RequestBody UpdateTestScoreRequestDto request, @ApiIgnore @UserId Long userId) {
+        userService.deleteUser(userId);
+        return SuccessResponse.NO_CONTENT;
+    }
 }

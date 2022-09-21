@@ -67,4 +67,12 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 .where(user.status.eq(UserStatus.ACTIVE))
                 .fetch();
     }
+
+    @Override
+    public long deleteUserById(Long id) {
+        return queryFactory
+                .delete(user)
+                .where(user.id.eq(id))
+                .execute();
+    }
 }
