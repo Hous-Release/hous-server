@@ -3,17 +3,28 @@ package hous.server.service.room;
 import hous.server.common.exception.ConflictException;
 import hous.server.common.exception.ForbiddenException;
 import hous.server.common.exception.NotFoundException;
+import hous.server.domain.badge.repository.AcquireRepository;
+import hous.server.domain.badge.repository.RepresentRepository;
+import hous.server.domain.notification.repository.NotificationRepository;
 import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
 import hous.server.domain.room.repository.ParticipateRepository;
 import hous.server.domain.room.repository.RoomRepository;
+import hous.server.domain.todo.Done;
+import hous.server.domain.todo.Take;
+import hous.server.domain.todo.Todo;
+import hous.server.domain.todo.repository.DoneRepository;
+import hous.server.domain.todo.repository.TakeRepository;
+import hous.server.domain.todo.repository.TodoRepository;
 import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.User;
+import hous.server.service.todo.TodoServiceUtils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static hous.server.common.exception.ErrorCode.*;
@@ -61,5 +72,59 @@ public class RoomServiceUtils {
                 .filter(participate -> !participate.getOnboarding().getId().equals(me.getOnboarding().getId()))
                 .map(participate -> participate.getOnboarding().getUser())
                 .collect(Collectors.toList());
+    }
+
+    public static void deleteMyTodosTakeMe(TakeRepository takeRepository, DoneRepository doneRepository, TodoRepository todoRepository,
+                                           List<Todo> myTodos, Onboarding me, Room room) {
+        myTodos.forEach(todo -> {
+            // todo 담당자가 여러명이면 나의 담당 해제
+            if (todo.getTakes().size() > 1) {
+                Optional<Take> myTake = todo.getTakes().stream()
+                        .filter(take -> take.getOnboarding().getId().equals(me.getId()))
+                        .findFirst();
+                if (myTake.isPresent()) {
+                    List<Done> myDones = TodoServiceUtils.filterAllDaysMyDones(me, todo.getDones());
+                    takeRepository.delete(myTake.get());
+                    myDones.forEach(todo::deleteDone);
+                    doneRepository.deleteAll(myDones);
+                    todo.deleteTake(myTake.get());
+                }
+            }
+            // todo 담당자가 나뿐이면 todo 삭제
+            else {
+                Todo myTodo = myTodos.get(0);
+                room.deleteTodo(myTodo);
+                todoRepository.delete(myTodo);
+            }
+        });
+    }
+
+    public static void leaveParticipateRoom(ParticipateRepository participateRepository, RoomRepository roomRepository,
+                                            Onboarding me, Room room) {
+        List<Participate> participates = room.getParticipates();
+        if (participates.size() > 1) {
+            room.deleteParticipate(participates.get(0));
+            me.deleteParticipate(participates.get(0));
+            participateRepository.delete(participates.get(0));
+        }
+        // 방의 참가자가 나 혼자면 방을 나가고 삭제
+        else {
+            me.deleteParticipate(participates.get(0));
+            roomRepository.delete(room);
+        }
+    }
+
+    public static void deleteRepresentByOnboarding(RepresentRepository representRepository, Onboarding me) {
+        if (me.getRepresent() != null) {
+            representRepository.delete(me.getRepresent());
+        }
+    }
+
+    public static void deleteAcquireByOnboarding(AcquireRepository acquireRepository, Onboarding me) {
+        acquireRepository.deleteAll(me.getAcquires());
+    }
+
+    public static void deleteNotificationByOnboarding(NotificationRepository notificationRepository, Onboarding me) {
+        notificationRepository.deleteAll(notificationRepository.findNotificationsByOnboarding(me));
     }
 }
