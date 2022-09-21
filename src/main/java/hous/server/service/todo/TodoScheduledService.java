@@ -14,6 +14,7 @@ import hous.server.domain.user.User;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.badge.BadgeService;
 import hous.server.service.badge.BadgeServiceUtils;
+import hous.server.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -36,12 +37,13 @@ public class TodoScheduledService {
     private final AcquireRepository acquireRepository;
 
     private final BadgeService badgeService;
+    private final NotificationService notificationService;
 
     /**
      * 매일 0시 0분 0초마다 실행
      */
     @Scheduled(cron = "0  0  0  *  *  *")
-    public void scheduledDoneMyToDos() {
+    public void scheduledDoneMyTodos() {
         List<User> users = userRepository.findAllUsers();
         users.forEach(user -> {
             Onboarding onboarding = user.getOnboarding();
@@ -76,6 +78,27 @@ public class TodoScheduledService {
                     } else {
                         redisTemplate.delete(RedisKey.TODO_COMPLETE_COUNT + user.getId());
                     }
+                }
+            }
+        });
+    }
+
+    /**
+     * 매일 9시 0분 0초마다 실행
+     */
+    @Scheduled(cron = "0  0  9  *  *  *")
+    public void scheduledTodayTodos() {
+        List<User> users = userRepository.findAllUsers();
+        users.forEach(user -> {
+            Onboarding onboarding = user.getOnboarding();
+            List<Participate> participates = onboarding.getParticipates();
+            if (participates.size() != 0) {
+                LocalDate today = DateUtils.todayLocalDate();
+                Room room = participates.get(0).getRoom();
+                List<Todo> todayOurTodos = TodoServiceUtils.filterDayOurTodos(today, room.getTodos());
+                List<Todo> todayMyTodos = TodoServiceUtils.filterDayMyTodos(today, onboarding, room.getTodos());
+                if (!todayOurTodos.isEmpty()) {
+                    notificationService.sendTodayTodoNotification(user, !todayMyTodos.isEmpty());
                 }
             }
         });

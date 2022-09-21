@@ -35,6 +35,15 @@ public class NotificationService {
         }
     }
 
+    public void sendTodayTodoNotification(User to, boolean isTake) {
+        if (to.getSetting().isPushNotification() && to.getSetting().getTodayTodoPushStatus() == TodoPushStatus.ON_ALL) {
+            firebaseCloudMessageService.sendMessageTo(to.getFcmToken(), PushMessage.TODAY_TODO_START.getTitle(), PushMessage.TODAY_TODO_START.getBody());
+        }
+        if (to.getSetting().isPushNotification() && to.getSetting().getTodayTodoPushStatus() == TodoPushStatus.ON_MY && isTake) {
+            firebaseCloudMessageService.sendMessageTo(to.getFcmToken(), PushMessage.TODAY_TODO_TAKE_START.getTitle(), PushMessage.TODAY_TODO_TAKE_START.getBody());
+        }
+    }
+
     public void sendNewRuleNotification(User to, Rule rule) {
         Notification notification = notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.RULE, newRuleNotification(rule), false));
         to.getOnboarding().addNotification(notification);
