@@ -84,12 +84,24 @@ public class RoomService {
         List<Todo> myTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, me);
 
         RoomServiceUtils.deleteMyTodosTakeMe(takeRepository, doneRepository, todoRepository, myTodos, me, room);
-        RoomServiceUtils.leaveParticipateRoom(participateRepository, roomRepository, me, room);
 
+        List<Participate> participates = room.getParticipates();
+        if (participates.size() > 1) {
+            room.deleteParticipate(participates.get(0));
+            me.deleteParticipate(participates.get(0));
+            participateRepository.delete(participates.get(0));
+        }
+        // 방의 참가자가 나 혼자면 방을 나가고 삭제
+        else {
+            me.deleteParticipate(participates.get(0));
+            roomRepository.delete(room);
+        }
         // 내 뱃지, 알림 목록, 프로필 작성 내역, 테스트 결과 초기화
-        RoomServiceUtils.deleteRepresentByOnboarding(representRepository, me);
-        RoomServiceUtils.deleteAcquireByOnboarding(acquireRepository, me);
-        RoomServiceUtils.deleteNotificationByOnboarding(notificationRepository, me);
+        if (me.getRepresent() != null) {
+            representRepository.delete(me.getRepresent());
+        }
+        acquireRepository.deleteAll(me.getAcquires());
+        notificationRepository.deleteAll(notificationRepository.findNotificationsByOnboarding(me));
         me.resetUserInfo();
         me.resetBadge();
         me.resetTestScore(me.getTestScore());

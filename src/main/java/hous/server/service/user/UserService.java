@@ -148,11 +148,10 @@ public class UserService {
         List<Todo> todos = room.getTodos();
         List<Todo> myTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, me);
         RoomServiceUtils.deleteMyTodosTakeMe(takeRepository, doneRepository, todoRepository, myTodos, me, room);
-        RoomServiceUtils.leaveParticipateRoom(participateRepository, roomRepository, me, room);
-        RoomServiceUtils.deleteRepresentByOnboarding(representRepository, me);
-        RoomServiceUtils.deleteAcquireByOnboarding(acquireRepository, me);
-        RoomServiceUtils.deleteNotificationByOnboarding(notificationRepository, me);
 
         userRepository.delete(user);
+        if (room.getParticipates().isEmpty()) {
+            roomRepository.delete(room);
+        }
     }
 }

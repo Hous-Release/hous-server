@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import hous.server.domain.badge.Acquire;
 import hous.server.domain.badge.Represent;
 import hous.server.domain.common.AuditingTimeEntity;
+import hous.server.domain.notification.Notification;
 import hous.server.domain.personality.Personality;
 import hous.server.domain.room.Participate;
 import hous.server.service.user.dto.request.UpdateUserInfoRequestDto;
@@ -67,6 +68,9 @@ public class Onboarding extends AuditingTimeEntity {
     @OneToMany(mappedBy = "onboarding", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Acquire> acquires = new ArrayList<>();
 
+    @OneToMany(mappedBy = "onboarding", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Notification> notifications = new ArrayList<>();
+
     public static Onboarding newInstance(User user, Personality personality, TestScore testScore) {
         return Onboarding.builder()
                 .user(user)
@@ -97,6 +101,10 @@ public class Onboarding extends AuditingTimeEntity {
 
     public void addAcquire(Acquire acquire) {
         this.acquires.add(acquire);
+    }
+
+    public void addNotification(Notification notification) {
+        this.notifications.add(notification);
     }
 
     public void deleteParticipate(Participate participate) {

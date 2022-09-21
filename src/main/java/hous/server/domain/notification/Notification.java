@@ -17,8 +17,8 @@ public class Notification extends AuditingTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "onboarding_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "onboarding_id")
     private Onboarding onboarding;
 
     @Column(nullable = false, length = 30)

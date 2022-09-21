@@ -3,9 +3,6 @@ package hous.server.service.room;
 import hous.server.common.exception.ConflictException;
 import hous.server.common.exception.ForbiddenException;
 import hous.server.common.exception.NotFoundException;
-import hous.server.domain.badge.repository.AcquireRepository;
-import hous.server.domain.badge.repository.RepresentRepository;
-import hous.server.domain.notification.repository.NotificationRepository;
 import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
 import hous.server.domain.room.repository.ParticipateRepository;
@@ -97,34 +94,5 @@ public class RoomServiceUtils {
                 todoRepository.delete(myTodo);
             }
         });
-    }
-
-    public static void leaveParticipateRoom(ParticipateRepository participateRepository, RoomRepository roomRepository,
-                                            Onboarding me, Room room) {
-        List<Participate> participates = room.getParticipates();
-        if (participates.size() > 1) {
-            room.deleteParticipate(participates.get(0));
-            me.deleteParticipate(participates.get(0));
-            participateRepository.delete(participates.get(0));
-        }
-        // 방의 참가자가 나 혼자면 방을 나가고 삭제
-        else {
-            me.deleteParticipate(participates.get(0));
-            roomRepository.delete(room);
-        }
-    }
-
-    public static void deleteRepresentByOnboarding(RepresentRepository representRepository, Onboarding me) {
-        if (me.getRepresent() != null) {
-            representRepository.delete(me.getRepresent());
-        }
-    }
-
-    public static void deleteAcquireByOnboarding(AcquireRepository acquireRepository, Onboarding me) {
-        acquireRepository.deleteAll(me.getAcquires());
-    }
-
-    public static void deleteNotificationByOnboarding(NotificationRepository notificationRepository, Onboarding me) {
-        notificationRepository.deleteAll(notificationRepository.findNotificationsByOnboarding(me));
     }
 }
