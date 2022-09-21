@@ -11,7 +11,7 @@ public enum BadgeInfo implements EnumModel {
 
     POUNDING_HOUSE("두근두근 하우스", "어서와요\n우리 Hous-에!", "imageUrl"),
     I_AM_SUCH_A_PERSON("나 이런 사람이야", "Homie 카드를\n완성한 호미", "imageUrl"),
-    OUR_HOUSE_HOMIES("우리 집 호미들", "모든 Homie들의\n카드 확인", "imageUrl"),
+    OUR_HOUSE_HOMIES("우리 집 호미들", "모든 Homie들의\n테스트 참여", "imageUrl"),
     I_DONT_EVEN_KNOW_ME("나도 날 모르겠어", "성향 테스트를\n5번 이상 한 호미", "imageUrl"),
     HOMIE_IS_BORN("Homie 탄생", "Hous-에서의\n첫 생일", "imageUrl"),
     TODO_ONE_STEP("to-do 한 걸음", "to-do 전체보기에서\n첫 to-do 등록", "imageUrl"),
