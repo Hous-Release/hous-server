@@ -19,7 +19,7 @@ public class User extends AuditingTimeEntity {
     @Embedded
     private SocialInfo socialInfo;
 
-    @Column(nullable = false, length = 300)
+    @Column(unique = true, length = 300)
     private String fcmToken;
 
     @Column(nullable = false, length = 30)
@@ -33,10 +33,9 @@ public class User extends AuditingTimeEntity {
     @JoinColumn(name = "setting_id", nullable = false)
     private Setting setting;
 
-    public static User newInstance(String socialId, UserSocialType socialType, String fcmToken, Setting setting) {
+    public static User newInstance(String socialId, UserSocialType socialType, Setting setting) {
         return User.builder()
                 .socialInfo(SocialInfo.of(socialId, socialType))
-                .fcmToken(fcmToken)
                 .setting(setting)
                 .status(UserStatus.ACTIVE)
                 .build();

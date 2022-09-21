@@ -52,12 +52,14 @@ public class UserService {
     public Long registerUser(CreateUserRequestDto request) {
         UserServiceUtils.validateNotExistsUser(userRepository, request.getSocialId(), request.getSocialType());
         User user = userRepository.save(User.newInstance(
-                request.getSocialId(), request.getSocialType(), request.getFcmToken(),
+                request.getSocialId(), request.getSocialType(),
                 settingRepository.save(Setting.newInstance())));
         Onboarding onboarding = onboardingRepository.save(Onboarding.newInstance(
                 user,
                 personalityRepository.findPersonalityByColor(PersonalityColor.GRAY),
                 testScoreRepository.save(TestScore.newInstance())));
+        UserServiceUtils.validateUniqueFcmToken(userRepository, request.getFcmToken());
+        user.updateFcmToken(request.getFcmToken());
         user.setOnboarding(onboarding);
         return user.getId();
     }
