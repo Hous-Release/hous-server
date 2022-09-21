@@ -101,7 +101,7 @@ public class RoomService {
             representRepository.delete(me.getRepresent());
         }
         acquireRepository.deleteAll(me.getAcquires());
-        notificationRepository.deleteAll(notificationRepository.findNotificationsByOnboarding(me));
+        notificationRepository.deleteAll(me.getNotifications());
         me.resetUserInfo();
         me.resetBadge();
         me.resetTestScore(me.getTestScore());
