@@ -17,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -44,6 +46,16 @@ public class NotificationService {
         }
     }
 
+    public void sendRemindTodoNotification(User to, List<Todo> todos, boolean isTake) {
+        todos.forEach(todo -> notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.TODO, remindTodoNotification(todo), false)));
+        if (to.getSetting().isPushNotification() && to.getSetting().getRemindTodoPushStatus() == TodoPushStatus.ON_ALL) {
+            firebaseCloudMessageService.sendMessageTo(to.getFcmToken(), PushMessage.TODO_REMIND.getTitle(), PushMessage.TODO_REMIND.getBody());
+        }
+        if (to.getSetting().isPushNotification() && to.getSetting().getRemindTodoPushStatus() == TodoPushStatus.ON_MY && isTake) {
+            firebaseCloudMessageService.sendMessageTo(to.getFcmToken(), PushMessage.TODO_TAKE_REMIND.getTitle(), PushMessage.TODO_TAKE_REMIND.getBody());
+        }
+    }
+
     public void sendNewRuleNotification(User to, Rule rule) {
         Notification notification = notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.RULE, newRuleNotification(rule), false));
         to.getOnboarding().addNotification(notification);
@@ -63,6 +75,10 @@ public class NotificationService {
     private String newTodoNotification(Todo todo, boolean isTake) {
         if (isTake) return String.format("'%s' %s", todo.getName(), NotificationMessage.NEW_TODO_TAKE);
         else return String.format("'%s' %s", todo.getName(), NotificationMessage.NEW_TODO);
+    }
+
+    private String remindTodoNotification(Todo todo) {
+        return String.format("'%s' %s", todo.getName(), NotificationMessage.TODO_REMIND);
     }
 
     private String newRuleNotification(Rule rule) {

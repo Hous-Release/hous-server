@@ -7,6 +7,7 @@ import hous.server.domain.badge.repository.BadgeRepository;
 import hous.server.domain.common.RedisKey;
 import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
+import hous.server.domain.todo.OurTodoStatus;
 import hous.server.domain.todo.Todo;
 import hous.server.domain.todo.repository.DoneRepository;
 import hous.server.domain.user.Onboarding;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -99,6 +101,33 @@ public class TodoScheduledService {
                 List<Todo> todayMyTodos = TodoServiceUtils.filterDayMyTodos(today, onboarding, room.getTodos());
                 if (!todayOurTodos.isEmpty()) {
                     notificationService.sendTodayTodoNotification(user, !todayMyTodos.isEmpty());
+                }
+            }
+        });
+    }
+
+    /**
+     * 매일 22시 0분 0초마다 실행
+     */
+    @Scheduled(cron = "0  0  22  *  *  *")
+    public void scheduledRemindTodos() {
+        List<User> users = userRepository.findAllUsers();
+        users.forEach(user -> {
+            Onboarding onboarding = user.getOnboarding();
+            List<Participate> participates = onboarding.getParticipates();
+            if (participates.size() != 0) {
+                LocalDate today = DateUtils.todayLocalDate();
+                Room room = participates.get(0).getRoom();
+                List<Todo> todayOurTodos = TodoServiceUtils.filterDayOurTodos(today, room.getTodos());
+                List<Todo> todayMyTodos = TodoServiceUtils.filterDayMyTodos(today, onboarding, room.getTodos());
+                List<Todo> undoneTodayOurTodos = todayOurTodos.stream()
+                        .filter(todayOurTodo -> doneRepository.findTodayOurTodoStatus(today, todayOurTodo) != OurTodoStatus.FULL_CHECK)
+                        .collect(Collectors.toList());
+                List<Todo> undoneTodayMyTodos = todayMyTodos.stream()
+                        .filter(todayOurTodo -> !doneRepository.findTodayTodoCheckStatus(today, onboarding, todayOurTodo))
+                        .collect(Collectors.toList());
+                if (!undoneTodayOurTodos.isEmpty()) {
+                    notificationService.sendRemindTodoNotification(user, undoneTodayOurTodos, !undoneTodayMyTodos.isEmpty());
                 }
             }
         });
