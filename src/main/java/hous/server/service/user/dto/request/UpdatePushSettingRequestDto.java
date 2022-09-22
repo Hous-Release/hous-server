@@ -13,7 +13,7 @@ import lombok.*;
 public class UpdatePushSettingRequestDto {
 
     @ApiModelProperty(value = "알림 받기", example = "true")
-    private boolean isPushNotification;
+    private Boolean isPushNotification;
 
     @ApiModelProperty(value = "새로운 Rules 추가", example = "ON")
     private PushStatus rulesPushStatus;
@@ -31,7 +31,7 @@ public class UpdatePushSettingRequestDto {
     private PushStatus badgePushStatus;
 
     @JsonProperty("isPushNotification")
-    public boolean isPushNotification() {
+    public Boolean isPushNotification() {
         return isPushNotification;
     }
 }

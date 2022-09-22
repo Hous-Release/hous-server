@@ -94,7 +94,7 @@ public class UserService {
     public void updateUserPushSetting(UpdatePushSettingRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Setting setting = user.getSetting();
-        UserServiceUtils.validatePushSettingRequestStatus(request, user);
+        UserServiceUtils.validatePushSettingRequest(request, user);
         setting.updatePushSetting(request);
     }
 

@@ -52,11 +52,23 @@ public class Setting extends AuditingTimeEntity {
     }
 
     public void updatePushSetting(UpdatePushSettingRequestDto request) {
-        this.isPushNotification = request.isPushNotification();
-        this.rulesPushStatus = request.getRulesPushStatus();
-        this.newTodoPushStatus = request.getNewTodoPushStatus();
-        this.todayTodoPushStatus = request.getTodayTodoPushStatus();
-        this.remindTodoPushStatus = request.getRemindTodoPushStatus();
-        this.badgePushStatus = request.getBadgePushStatus();
+        if (request.isPushNotification() != null) {
+            this.isPushNotification = request.isPushNotification();
+        }
+        if (request.getRulesPushStatus() != null) {
+            this.rulesPushStatus = request.getRulesPushStatus();
+        }
+        if (request.getNewTodoPushStatus() != null) {
+            this.newTodoPushStatus = request.getNewTodoPushStatus();
+        }
+        if (request.getTodayTodoPushStatus() != null) {
+            this.todayTodoPushStatus = request.getTodayTodoPushStatus();
+        }
+        if (request.getRemindTodoPushStatus() != null) {
+            this.remindTodoPushStatus = request.getRemindTodoPushStatus();
+        }
+        if (request.getBadgePushStatus() != null) {
+            this.badgePushStatus = request.getBadgePushStatus();
+        }
     }
 }
