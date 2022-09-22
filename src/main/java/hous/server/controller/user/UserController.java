@@ -91,8 +91,9 @@ public class UserController {
     }
 
     @ApiOperation(
-            value = "[인증] 마이 페이지(Profile 뷰) - 나의 푸시 알림 설정 정보를 수정합니다.",
+            value = "[인증] 마이 페이지(설정) - 나의 푸시 알림 설정 정보를 수정합니다.",
             notes = "푸시 알림 설정 여부를 설정합니다.\n" +
+                    "6가지 상태값 중 수정할 상태값 1개만 담아서 요청합니다.\n" +
                     "Rules, Badge 설정으로는 ON, OFF 를 담습니다.\n" +
                     "Todo 관련 설정으로는 ON_ALL, ON_MY, OFF 를 담습니다.\n" +
                     "성공시 status code = 204, 빈 response body를 보냅니다."
@@ -106,7 +107,7 @@ public class UserController {
     })
     @Auth
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PutMapping("/user/push")
+    @PatchMapping("/user/push")
     public ResponseEntity<String> updateUserPushSetting(@Valid @RequestBody UpdatePushSettingRequestDto request, @ApiIgnore @UserId Long userId) {
         userService.updateUserPushSetting(request, userId);
         return SuccessResponse.NO_CONTENT;

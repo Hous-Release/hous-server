@@ -44,14 +44,46 @@ public class UserServiceUtils {
         }
     }
 
-    public static void validatePushSettingRequestStatus(UpdatePushSettingRequestDto request, User user) {
-        if (request.isPushNotification() == user.getSetting().isPushNotification() &&
-                request.getRulesPushStatus() == user.getSetting().getRulesPushStatus() &&
-                request.getNewTodoPushStatus() == user.getSetting().getNewTodoPushStatus() &&
-                request.getTodayTodoPushStatus() == user.getSetting().getTodayTodoPushStatus() &&
-                request.getRemindTodoPushStatus() == user.getSetting().getRemindTodoPushStatus() &&
-                request.getBadgePushStatus() == user.getSetting().getBadgePushStatus()) {
-            throw new ValidationException(String.format("(%s) 유저의 푸시 알림 상태 중복입니다.\n%s", user.getId(), request), VALIDATION_STATUS_EXCEPTION);
+    public static void validatePushSettingRequest(UpdatePushSettingRequestDto request, User user) {
+        int notNullStatusCnt = 0;
+        if (request.isPushNotification() != null) {
+            if (request.isPushNotification() == user.getSetting().isPushNotification()) {
+                throw new ValidationException(String.format("(%s) 유저의 알림 상태 중복입니다.", user.getId()), VALIDATION_STATUS_EXCEPTION);
+            }
+            notNullStatusCnt++;
+        }
+        if (request.getRulesPushStatus() != null) {
+            if (request.getRulesPushStatus() == user.getSetting().getRulesPushStatus()) {
+                throw new ValidationException(String.format("(%s) 유저의 알림 상태 중복입니다.", user.getId()), VALIDATION_STATUS_EXCEPTION);
+            }
+            notNullStatusCnt++;
+        }
+        if (request.getNewTodoPushStatus() != null) {
+            if (request.getNewTodoPushStatus() == user.getSetting().getNewTodoPushStatus()) {
+                throw new ValidationException(String.format("(%s) 유저의 알림 상태 중복입니다.", user.getId()), VALIDATION_STATUS_EXCEPTION);
+            }
+            notNullStatusCnt++;
+        }
+        if (request.getTodayTodoPushStatus() != null) {
+            if (request.getTodayTodoPushStatus() == user.getSetting().getTodayTodoPushStatus()) {
+                throw new ValidationException(String.format("(%s) 유저의 알림 상태 중복입니다.", user.getId()), VALIDATION_STATUS_EXCEPTION);
+            }
+            notNullStatusCnt++;
+        }
+        if (request.getRemindTodoPushStatus() != null) {
+            if (request.getRemindTodoPushStatus() == user.getSetting().getRemindTodoPushStatus()) {
+                throw new ValidationException(String.format("(%s) 유저의 알림 상태 중복입니다.", user.getId()), VALIDATION_STATUS_EXCEPTION);
+            }
+            notNullStatusCnt++;
+        }
+        if (request.getBadgePushStatus() != null) {
+            if (request.getBadgePushStatus() == user.getSetting().getBadgePushStatus()) {
+                throw new ValidationException(String.format("(%s) 유저의 알림 상태 중복입니다.", user.getId()), VALIDATION_STATUS_EXCEPTION);
+            }
+            notNullStatusCnt++;
+        }
+        if (notNullStatusCnt != 1) {
+            throw new ValidationException(String.format("(%s) 유저의 잘못된 요청 (%s) 입니다.", user.getId(), request), VALIDATION_EXCEPTION);
         }
     }
 
