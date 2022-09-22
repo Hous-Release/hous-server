@@ -3,6 +3,7 @@ package hous.server.domain.user.repository;
 import hous.server.domain.user.User;
 import hous.server.domain.user.UserSocialType;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface UserRepositoryCustom {
@@ -16,4 +17,6 @@ public interface UserRepositoryCustom {
     User findUserByFcmToken(String fcmToken);
 
     List<User> findAllUsers();
+
+    List<User> findAllUserByBirthday(LocalDate birthday);
 }
