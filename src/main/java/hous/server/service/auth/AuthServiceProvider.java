@@ -2,7 +2,7 @@ package hous.server.service.auth;
 
 import hous.server.domain.user.UserSocialType;
 import hous.server.service.auth.impl.AppleAuthService;
-import hous.server.service.auth.impl.KaKaoAuthService;
+import hous.server.service.auth.impl.KakaoAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,12 +17,12 @@ public class AuthServiceProvider {
     private static final Map<UserSocialType, AuthService> authServiceMap = new HashMap<>();
 
     private final AppleAuthService appleAuthService;
-    private final KaKaoAuthService kaKaoAuthService;
+    private final KakaoAuthService kakaoAuthService;
 
     @PostConstruct
     void initializeAuthServicesMap() {
         authServiceMap.put(UserSocialType.APPLE, appleAuthService);
-        authServiceMap.put(UserSocialType.KAKAO, kaKaoAuthService);
+        authServiceMap.put(UserSocialType.KAKAO, kakaoAuthService);
     }
 
     public AuthService getAuthService(UserSocialType socialType) {

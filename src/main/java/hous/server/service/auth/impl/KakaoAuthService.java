@@ -17,11 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class KaKaoAuthService implements AuthService {
+public class KakaoAuthService implements AuthService {
 
     private static final UserSocialType socialType = UserSocialType.KAKAO;
 
-    private final KakaoApiClient kaKaoApiCaller;
+    private final KakaoApiClient kakaoApiCaller;
 
     private final UserRepository userRepository;
 
@@ -29,7 +29,7 @@ public class KaKaoAuthService implements AuthService {
 
     @Override
     public Long login(LoginDto request) {
-        KakaoProfileResponse response = kaKaoApiCaller.getProfileInfo(HttpHeaderUtils.withBearerToken(request.getToken()));
+        KakaoProfileResponse response = kakaoApiCaller.getProfileInfo(HttpHeaderUtils.withBearerToken(request.getToken()));
         User user = UserServiceUtils.findUserBySocialIdAndSocialType(userRepository, response.getId(), socialType);
         if (user == null) return userService.registerUser(request.toCreateUserDto(response.getId()));
         else {
