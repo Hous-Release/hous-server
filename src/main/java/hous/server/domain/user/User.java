@@ -48,4 +48,8 @@ public class User extends AuditingTimeEntity {
     public void updateFcmToken(String fcmToken) {
         this.fcmToken = fcmToken;
     }
+
+    public void resetFcmToken() {
+        this.fcmToken = null;
+    }
 }

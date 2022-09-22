@@ -42,6 +42,7 @@ public class FirebaseCloudMessageService {
             User user = userRepository.findUserByFcmToken(targetToken);
             if (user != null) {
                 jwtProvider.expireRefreshToken(user.getId());
+                user.resetFcmToken();
             }
             log.error(exception.getErrorMessage(), exception);
         }
