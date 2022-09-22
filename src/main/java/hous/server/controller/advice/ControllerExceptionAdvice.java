@@ -31,14 +31,46 @@ import static hous.server.common.exception.ErrorCode.*;
 public class ControllerExceptionAdvice {
 
     /**
+     * Hous Custom Exception
+     */
+    @ExceptionHandler(HousException.class)
+    protected ResponseEntity<ErrorResponse> handleBaseException(HousException exception) {
+        if (exception.getStatus() >= 400 && exception.getStatus() < 500) {
+            log.warn(exception.getMessage(), exception);
+        } else {
+            log.error(exception.getMessage(), exception);
+        }
+        return ResponseEntity.status(exception.getStatus())
+                .body(ErrorResponse.error(exception.getErrorCode()));
+    }
+
+    /**
+     * Feign Client Exception
+     */
+    @ExceptionHandler(FeignClientException.class)
+    protected ResponseEntity<ErrorResponse> handleFeignClientException(final FeignClientException exception) {
+        if (exception.getStatus() >= 400 && exception.getStatus() < 500) {
+            log.warn(exception.getMessage(), exception);
+        } else {
+            log.error(exception.getMessage(), exception);
+        }
+        if (exception.getStatus() == UNAUTHORIZED_INVALID_TOKEN_EXCEPTION.getStatus()) {
+            return ResponseEntity.status(UNAUTHORIZED_INVALID_TOKEN_EXCEPTION.getStatus())
+                    .body(ErrorResponse.error(UNAUTHORIZED_INVALID_TOKEN_EXCEPTION));
+        }
+        return ResponseEntity.status(INTERNAL_SERVER_EXCEPTION.getStatus())
+                .body(ErrorResponse.error(INTERNAL_SERVER_EXCEPTION));
+    }
+
+    /**
      * 400 BadRequest
      * Spring Validation
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BindException.class)
-    protected ErrorResponse handleBadRequest(final BindException e) {
-        log.error(e.getMessage());
-        FieldError fieldError = Objects.requireNonNull(e.getFieldError());
+    protected ErrorResponse handleBadRequest(final BindException exception) {
+        log.warn(exception.getMessage());
+        FieldError fieldError = Objects.requireNonNull(exception.getFieldError());
         return ErrorResponse.error(VALIDATION_EXCEPTION, String.format("%s (%s)", fieldError.getDefaultMessage(), fieldError.getField()));
     }
 
@@ -48,8 +80,8 @@ public class ControllerExceptionAdvice {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
-    protected ErrorResponse handleConstraintViolationException(final ConstraintViolationException e) {
-        log.error(e.getMessage());
+    protected ErrorResponse handleConstraintViolationException(final ConstraintViolationException exception) {
+        log.warn(exception.getMessage());
         return ErrorResponse.error(VALIDATION_SORT_TYPE_EXCEPTION);
     }
 
@@ -59,8 +91,8 @@ public class ControllerExceptionAdvice {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    protected ErrorResponse handleHttpMessageNotReadableException(final HttpMessageNotReadableException e) {
-        log.error(e.getMessage());
+    protected ErrorResponse handleHttpMessageNotReadableException(final HttpMessageNotReadableException exception) {
+        log.warn(exception.getMessage());
         return ErrorResponse.error(VALIDATION_ENUM_VALUE_EXCEPTION);
     }
 
@@ -70,8 +102,8 @@ public class ControllerExceptionAdvice {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingRequestValueException.class)
-    protected ErrorResponse handle(final MissingRequestValueException e) {
-        log.error(e.getMessage());
+    protected ErrorResponse handle(final MissingRequestValueException exception) {
+        log.warn(exception.getMessage());
         return ErrorResponse.error(VALIDATION_REQUEST_MISSING_EXCEPTION);
     }
 
@@ -81,9 +113,9 @@ public class ControllerExceptionAdvice {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(TypeMismatchException.class)
-    protected ErrorResponse handleTypeMismatchException(final TypeMismatchException e) {
-        log.error(e.getMessage());
-        return ErrorResponse.error(VALIDATION_WRONG_TYPE_EXCEPTION, String.format("%s (%s)", VALIDATION_WRONG_TYPE_EXCEPTION.getMessage(), e.getValue()));
+    protected ErrorResponse handleTypeMismatchException(final TypeMismatchException exception) {
+        log.warn(exception.getMessage());
+        return ErrorResponse.error(VALIDATION_WRONG_TYPE_EXCEPTION, String.format("%s (%s)", VALIDATION_WRONG_TYPE_EXCEPTION.getMessage(), exception.getValue()));
     }
 
     /**
@@ -95,8 +127,8 @@ public class ControllerExceptionAdvice {
             ServletRequestBindingException.class,
             MethodArgumentTypeMismatchException.class
     })
-    protected ErrorResponse handleInvalidFormatException(final Exception e) {
-        log.error(e.getMessage());
+    protected ErrorResponse handleInvalidFormatException(final Exception exception) {
+        log.warn(exception.getMessage());
         return ErrorResponse.error(VALIDATION_EXCEPTION);
     }
 
@@ -106,8 +138,8 @@ public class ControllerExceptionAdvice {
      */
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    protected ErrorResponse handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
-        log.error(e.getMessage());
+    protected ErrorResponse handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException exception) {
+        log.warn(exception.getMessage());
         return ErrorResponse.error(METHOD_NOT_ALLOWED_EXCEPTION);
     }
 
@@ -116,8 +148,8 @@ public class ControllerExceptionAdvice {
      */
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
-    protected ErrorResponse handleHttpMediaTypeNotAcceptableException(HttpMediaTypeNotAcceptableException e) {
-        log.error(e.getMessage());
+    protected ErrorResponse handleHttpMediaTypeNotAcceptableException(HttpMediaTypeNotAcceptableException exception) {
+        log.warn(exception.getMessage());
         return ErrorResponse.error(NOT_ACCEPTABLE_EXCEPTION);
     }
 
@@ -127,33 +159,9 @@ public class ControllerExceptionAdvice {
      */
     @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
     @ExceptionHandler(HttpMediaTypeException.class)
-    protected ErrorResponse handleHttpMediaTypeException(final HttpMediaTypeException e) {
-        log.error(e.getMessage(), e);
+    protected ErrorResponse handleHttpMediaTypeException(final HttpMediaTypeException exception) {
+        log.warn(exception.getMessage(), exception);
         return ErrorResponse.error(UNSUPPORTED_MEDIA_TYPE_EXCEPTION);
-    }
-
-    /**
-     * Feign Client Exception
-     */
-    @ExceptionHandler(FeignClientException.class)
-    protected ResponseEntity<ErrorResponse> handleFeignClientException(final FeignClientException e) {
-        log.error(e.getErrorMessage(), e);
-        if (e.getStatus() == UNAUTHORIZED_INVALID_TOKEN_EXCEPTION.getStatus()) {
-            return ResponseEntity.status(UNAUTHORIZED_INVALID_TOKEN_EXCEPTION.getStatus())
-                    .body(ErrorResponse.error(UNAUTHORIZED_INVALID_TOKEN_EXCEPTION));
-        }
-        return ResponseEntity.status(INTERNAL_SERVER_EXCEPTION.getStatus())
-                .body(ErrorResponse.error(INTERNAL_SERVER_EXCEPTION));
-    }
-
-    /**
-     * Hous Custom Exception
-     */
-    @ExceptionHandler(HousException.class)
-    protected ResponseEntity<ErrorResponse> handleBaseException(HousException exception) {
-        log.error(exception.getMessage(), exception);
-        return ResponseEntity.status(exception.getStatus())
-                .body(ErrorResponse.error(exception.getErrorCode()));
     }
 
     /**
