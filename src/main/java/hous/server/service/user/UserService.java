@@ -156,4 +156,11 @@ public class UserService {
             roomRepository.delete(room);
         }
     }
+
+    public void acquireFeedbackBadge(Long userId) {
+        User user = UserServiceUtils.findUserById(userRepository, userId);
+        RoomServiceUtils.findParticipatingRoom(user);
+        badgeService.acquireBadge(user, BadgeInfo.FEEDBACK_ONE_STEP);
+    }
+
 }

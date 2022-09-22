@@ -155,13 +155,12 @@ public class UserController {
     @Auth
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/user/badge/{badgeId}/represent")
-    public ResponseEntity<String> updateRepresentBadge(@ApiParam(name = "badgeId", value = "대표 뱃지로 설정할 badge 의 id", required = true, example = "1")
+    public ResponseEntity<String> updateRepresentBadge(@ApiParam(name = "badgeId", value = "대표 배지로 설정할 badge 의 id", required = true, example = "1")
                                                        @PathVariable Long badgeId,
                                                        @ApiIgnore @UserId Long userId) {
         userService.updateRepresentBadge(badgeId, userId);
         return SuccessResponse.NO_CONTENT;
     }
-
 
     @ApiOperation(
             value = "[인증] 마이 페이지(설정) - 회원 정보를 삭제합니다.",
@@ -181,6 +180,27 @@ public class UserController {
     @DeleteMapping("/user")
     public ResponseEntity<String> deleteUser(@ApiIgnore @UserId Long userId) {
         userService.deleteUser(userId);
+        return SuccessResponse.NO_CONTENT;
+    }
+
+    @ApiOperation(
+            value = "[인증] 마이 페이지(설정) - 피드백 보내기 버튼 클릭 시 피드백 한걸음 배지를 전달 받습니다.",
+            notes = "요청에 디해여 성공시 status code = 204, 빈 response body를 보냅니다. 배지는 푸쉬알림으로 전달합니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = ""),
+            @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+            @ApiResponse(code = 404,
+                    message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
+                            + "2. 참가중인 방이 존재하지 않습니다.",
+                    response = ErrorResponse.class),
+            @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+    })
+    @Auth
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PostMapping("/user/feedback")
+    public ResponseEntity<String> acquireFeedbackBadge(@ApiIgnore @UserId Long userId) {
+        userService.acquireFeedbackBadge(userId);
         return SuccessResponse.NO_CONTENT;
     }
 }

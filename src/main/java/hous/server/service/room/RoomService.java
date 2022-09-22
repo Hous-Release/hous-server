@@ -96,7 +96,7 @@ public class RoomService {
             me.deleteParticipate(participates.get(0));
             roomRepository.delete(room);
         }
-        // 내 뱃지, 알림 목록, 프로필 작성 내역, 테스트 결과 초기화
+        // 내 배지, 알림 목록, 프로필 작성 내역, 테스트 결과 초기화
         if (me.getRepresent() != null) {
             representRepository.delete(me.getRepresent());
         }
