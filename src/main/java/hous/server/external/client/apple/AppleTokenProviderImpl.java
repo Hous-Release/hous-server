@@ -3,6 +3,7 @@ package hous.server.external.client.apple;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hous.server.common.exception.UnAuthorizedException;
 import hous.server.external.client.apple.dto.response.ApplePublicKeyResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -20,6 +21,8 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Base64;
 import java.util.Map;
+
+import static hous.server.common.exception.ErrorCode.UNAUTHORIZED_INVALID_TOKEN_EXCEPTION;
 
 @RequiredArgsConstructor
 @Component
@@ -42,10 +45,10 @@ public class AppleTokenProviderImpl implements AppleTokenProvider {
                     .getBody();
             return claims.getSubject(); // return socialId;
         } catch (JsonProcessingException | InvalidKeySpecException | InvalidClaimException |
-                 NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException(String.format("잘못된 애플 idToken (%s) 입니다 (reason: %s)", idToken, e.getMessage()));
+                 NoSuchAlgorithmException | IllegalArgumentException e) {
+            throw new UnAuthorizedException(String.format("잘못된 애플 idToken (%s) 입니다 (reason: %s)", idToken, e.getMessage()), UNAUTHORIZED_INVALID_TOKEN_EXCEPTION);
         } catch (ExpiredJwtException e) {
-            throw new IllegalArgumentException(String.format("만료된 애플 idToken (%s) 입니다 (reason: %s)", idToken, e.getMessage()));
+            throw new UnAuthorizedException(String.format("만료된 애플 idToken (%s) 입니다 (reason: %s)", idToken, e.getMessage()), UNAUTHORIZED_INVALID_TOKEN_EXCEPTION);
         }
     }
 
