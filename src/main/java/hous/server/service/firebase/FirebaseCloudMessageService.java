@@ -9,7 +9,6 @@ import hous.server.common.util.HttpHeaderUtils;
 import hous.server.common.util.JwtUtils;
 import hous.server.common.util.YamlPropertySourceFactory;
 import hous.server.domain.user.User;
-import hous.server.domain.user.repository.UserRepository;
 import hous.server.external.client.firebase.FirebaseApiClient;
 import hous.server.service.firebase.dto.request.FcmMessage;
 import lombok.RequiredArgsConstructor;
@@ -29,21 +28,18 @@ import static hous.server.common.exception.ErrorCode.INTERNAL_SERVER_EXCEPTION;
 @PropertySource(value = "classpath:application-firebase.yml", factory = YamlPropertySourceFactory.class, ignoreResourceNotFound = true)
 public class FirebaseCloudMessageService {
 
-    private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
     private final FirebaseApiClient firebaseApiCaller;
     private final JwtUtils jwtProvider;
 
-    public void sendMessageTo(String targetToken, String title, String body) {
+    public void sendMessageTo(User to, String title, String body) {
+        String targetToken = to.getFcmToken();
         String message = makeMessage(targetToken, title, body);
         try {
             firebaseApiCaller.requestFcmMessaging(HttpHeaderUtils.withBearerToken(getAccessToken()), message);
         } catch (FeignClientException exception) {
-            User user = userRepository.findUserByFcmToken(targetToken);
-            if (user != null) {
-                jwtProvider.expireRefreshToken(user.getId());
-                user.resetFcmToken();
-            }
+            jwtProvider.expireRefreshToken(to.getId());
+            to.resetFcmToken();
             log.error(exception.getErrorMessage(), exception);
         }
     }
