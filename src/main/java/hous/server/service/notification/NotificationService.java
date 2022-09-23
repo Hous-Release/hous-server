@@ -31,19 +31,19 @@ public class NotificationService {
         Notification notification = notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.TODO, newTodoNotification(todo, isTake), false));
         to.getOnboarding().addNotification(notification);
         if (to.getSetting().isPushNotification() && to.getSetting().getNewTodoPushStatus() == TodoPushStatus.ON_ALL) {
-            firebaseCloudMessageService.sendMessageTo(to.getFcmToken(), PushMessage.NEW_TODO.getTitle(), PushMessage.NEW_TODO.getBody());
+            firebaseCloudMessageService.sendMessageTo(to, PushMessage.NEW_TODO.getTitle(), PushMessage.NEW_TODO.getBody());
         }
         if (to.getSetting().isPushNotification() && to.getSetting().getNewTodoPushStatus() == TodoPushStatus.ON_MY && isTake) {
-            firebaseCloudMessageService.sendMessageTo(to.getFcmToken(), PushMessage.NEW_TODO_TAKE.getTitle(), PushMessage.NEW_TODO_TAKE.getBody());
+            firebaseCloudMessageService.sendMessageTo(to, PushMessage.NEW_TODO_TAKE.getTitle(), PushMessage.NEW_TODO_TAKE.getBody());
         }
     }
 
     public void sendTodayTodoNotification(User to, boolean isTake) {
         if (to.getSetting().isPushNotification() && to.getSetting().getTodayTodoPushStatus() == TodoPushStatus.ON_ALL) {
-            firebaseCloudMessageService.sendMessageTo(to.getFcmToken(), PushMessage.TODAY_TODO_START.getTitle(), PushMessage.TODAY_TODO_START.getBody());
+            firebaseCloudMessageService.sendMessageTo(to, PushMessage.TODAY_TODO_START.getTitle(), PushMessage.TODAY_TODO_START.getBody());
         }
         if (to.getSetting().isPushNotification() && to.getSetting().getTodayTodoPushStatus() == TodoPushStatus.ON_MY && isTake) {
-            firebaseCloudMessageService.sendMessageTo(to.getFcmToken(), PushMessage.TODAY_TODO_TAKE_START.getTitle(), PushMessage.TODAY_TODO_TAKE_START.getBody());
+            firebaseCloudMessageService.sendMessageTo(to, PushMessage.TODAY_TODO_TAKE_START.getTitle(), PushMessage.TODAY_TODO_TAKE_START.getBody());
         }
     }
 
@@ -53,10 +53,10 @@ public class NotificationService {
             to.getOnboarding().addNotification(notification);
         });
         if (to.getSetting().isPushNotification() && to.getSetting().getRemindTodoPushStatus() == TodoPushStatus.ON_ALL) {
-            firebaseCloudMessageService.sendMessageTo(to.getFcmToken(), PushMessage.TODO_REMIND.getTitle(), PushMessage.TODO_REMIND.getBody());
+            firebaseCloudMessageService.sendMessageTo(to, PushMessage.TODO_REMIND.getTitle(), PushMessage.TODO_REMIND.getBody());
         }
         if (to.getSetting().isPushNotification() && to.getSetting().getRemindTodoPushStatus() == TodoPushStatus.ON_MY && isTake) {
-            firebaseCloudMessageService.sendMessageTo(to.getFcmToken(), PushMessage.TODO_TAKE_REMIND.getTitle(), PushMessage.TODO_TAKE_REMIND.getBody());
+            firebaseCloudMessageService.sendMessageTo(to, PushMessage.TODO_TAKE_REMIND.getTitle(), PushMessage.TODO_TAKE_REMIND.getBody());
         }
     }
 
@@ -64,7 +64,7 @@ public class NotificationService {
         Notification notification = notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.RULE, newRuleNotification(rule), false));
         to.getOnboarding().addNotification(notification);
         if (to.getSetting().isPushNotification() && to.getSetting().getRulesPushStatus() == PushStatus.ON) {
-            firebaseCloudMessageService.sendMessageTo(to.getFcmToken(), PushMessage.NEW_RULE.getTitle(), PushMessage.NEW_RULE.getBody());
+            firebaseCloudMessageService.sendMessageTo(to, PushMessage.NEW_RULE.getTitle(), PushMessage.NEW_RULE.getBody());
         }
     }
 
@@ -72,7 +72,7 @@ public class NotificationService {
         Notification notification = notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.BADGE, newBadgeNotification(badgeInfo), false));
         to.getOnboarding().addNotification(notification);
         if (to.getSetting().isPushNotification() && to.getSetting().getBadgePushStatus() == PushStatus.ON) {
-            firebaseCloudMessageService.sendMessageTo(to.getFcmToken(), newBadgePushTitle(badgeInfo), newBadgePushBody(to.getOnboarding()));
+            firebaseCloudMessageService.sendMessageTo(to, newBadgePushTitle(badgeInfo), newBadgePushBody(to.getOnboarding()));
         }
     }
 

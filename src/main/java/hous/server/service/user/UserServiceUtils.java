@@ -38,9 +38,11 @@ public class UserServiceUtils {
     }
 
     public static void validateUniqueFcmToken(UserRepository userRepository, String fcmToken) {
-        User user = userRepository.findUserByFcmToken(fcmToken);
-        if (user != null) {
-            throw new ConflictException(String.format("fcm token (%s) 중복입니다.", fcmToken), CONFLICT_FCM_TOKEN_EXCEPTION);
+        if (fcmToken != null) {
+            User user = userRepository.findUserByFcmToken(fcmToken);
+            if (user != null) {
+                throw new ConflictException(String.format("fcm token (%s) 중복입니다.", fcmToken), CONFLICT_FCM_TOKEN_EXCEPTION);
+            }
         }
     }
 
