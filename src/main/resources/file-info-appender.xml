@@ -1,0 +1,21 @@
+<included>
+    <appender name="FILE-INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>./logs/info/info.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+        <!-- 일자별 로그파일 생성 -->
+        <!-- Application이 동작중일 땐 활성화된 로그 파일에 로그를 쌓이고, 매일 자정이 지나면 info-2020-10-03.log 와 같은 이름으로 생성 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>./logs/info/info-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 30일동안, 최대 3GB의 log를 저장함 -->
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+</included>

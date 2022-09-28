@@ -22,4 +22,4 @@ fi
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 
 echo "> DEPLOY_JAR 배포" >> /home/ubuntu/hous/deploy.log
-nohup java -jar $DEPLOY_JAR >> /home/ubuntu/hous/deploy.log 2>/home/ubuntu/hous/deploy_err.log &
+java -jar $DEPLOY_JAR &
