@@ -26,7 +26,11 @@ public class UserServiceUtils {
     }
 
     public static User findUserBySocialIdAndSocialType(UserRepository userRepository, String socialId, UserSocialType socialType) {
-        return userRepository.findUserBySocialIdAndSocialType(socialId, socialType);
+        User user = userRepository.findUserBySocialIdAndSocialType(socialId, socialType);
+        if (user == null) {
+            throw new NotFoundException(String.format("존재하지 않는 유저 (%s) (%s) 입니다", socialType, socialId), NOT_FOUND_USER_EXCEPTION);
+        }
+        return user;
     }
 
     public static User findUserById(UserRepository userRepository, Long userId) {

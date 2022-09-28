@@ -7,13 +7,11 @@ import hous.server.domain.badge.repository.AcquireRepository;
 import hous.server.domain.badge.repository.BadgeRepository;
 import hous.server.domain.badge.repository.RepresentRepository;
 import hous.server.domain.common.RedisKey;
-import hous.server.domain.notification.repository.NotificationRepository;
 import hous.server.domain.personality.Personality;
 import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.personality.repository.PersonalityRepository;
 import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
-import hous.server.domain.room.repository.ParticipateRepository;
 import hous.server.domain.room.repository.RoomRepository;
 import hous.server.domain.todo.Todo;
 import hous.server.domain.todo.repository.DoneRepository;
@@ -57,9 +55,7 @@ public class UserService {
     private final TakeRepository takeRepository;
     private final DoneRepository doneRepository;
     private final TodoRepository todoRepository;
-    private final ParticipateRepository participateRepository;
     private final RoomRepository roomRepository;
-    private final NotificationRepository notificationRepository;
 
     private final BadgeService badgeService;
 
@@ -71,7 +67,10 @@ public class UserService {
         Onboarding onboarding = onboardingRepository.save(Onboarding.newInstance(
                 user,
                 personalityRepository.findPersonalityByColor(PersonalityColor.GRAY),
-                testScoreRepository.save(TestScore.newInstance())));
+                testScoreRepository.save(TestScore.newInstance()),
+                request.getNickname(),
+                request.getBirthday(),
+                request.getIsPublic()));
         UserServiceUtils.validateUniqueFcmToken(userRepository, request.getFcmToken());
         user.updateFcmToken(request.getFcmToken());
         user.setOnboarding(onboarding);

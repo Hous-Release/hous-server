@@ -8,6 +8,7 @@ import hous.server.external.client.kakao.KakaoApiClient;
 import hous.server.external.client.kakao.dto.response.KakaoProfileResponse;
 import hous.server.service.auth.AuthService;
 import hous.server.service.auth.dto.request.LoginDto;
+import hous.server.service.auth.dto.request.SignUpDto;
 import hous.server.service.user.UserService;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
@@ -28,14 +29,17 @@ public class KakaoAuthService implements AuthService {
     private final UserService userService;
 
     @Override
+    public Long signUp(SignUpDto request) {
+        KakaoProfileResponse response = kakaoApiCaller.getProfileInfo(HttpHeaderUtils.withBearerToken(request.getToken()));
+        return userService.registerUser(request.toCreateUserDto(response.getId()));
+    }
+
+    @Override
     public Long login(LoginDto request) {
         KakaoProfileResponse response = kakaoApiCaller.getProfileInfo(HttpHeaderUtils.withBearerToken(request.getToken()));
         User user = UserServiceUtils.findUserBySocialIdAndSocialType(userRepository, response.getId(), socialType);
-        if (user == null) return userService.registerUser(request.toCreateUserDto(response.getId()));
-        else {
-            UserServiceUtils.validateUniqueFcmToken(userRepository, request.getFcmToken());
-            user.updateFcmToken(request.getFcmToken());
-        }
+        UserServiceUtils.validateUniqueFcmToken(userRepository, request.getFcmToken());
+        user.updateFcmToken(request.getFcmToken());
         return user.getId();
     }
 }

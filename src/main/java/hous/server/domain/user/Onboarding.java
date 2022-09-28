@@ -29,10 +29,11 @@ public class Onboarding extends AuditingTimeEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @Column(length = 30)
+
+    @Column(nullable = false, length = 30)
     private String nickname;
 
-    @Column
+    @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate birthday;
 
@@ -71,12 +72,16 @@ public class Onboarding extends AuditingTimeEntity {
     @OneToMany(mappedBy = "onboarding", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Notification> notifications = new ArrayList<>();
 
-    public static Onboarding newInstance(User user, Personality personality, TestScore testScore) {
+    public static Onboarding newInstance(User user, Personality personality, TestScore testScore,
+                                         String nickname, LocalDate birthday, boolean isPublic) {
         return Onboarding.builder()
                 .user(user)
                 .isChecked(false)
                 .personality(personality)
                 .testScore(testScore)
+                .nickname(nickname)
+                .birthday(birthday)
+                .isPublic(isPublic)
                 .build();
     }
 
