@@ -84,7 +84,7 @@ public class UserService {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         RoomServiceUtils.findParticipatingRoom(user);
         Onboarding onboarding = user.getOnboarding();
-        onboarding.setUserInfo(request);
+        onboarding.updateUserInfo(request);
     }
 
     public void updateUserPushSetting(UpdatePushSettingRequestDto request, Long userId) {
@@ -101,7 +101,7 @@ public class UserService {
         TestScore testScore = me.getTestScore();
         testScore.updateScore(request.getLight(), request.getNoise(), request.getClean(), request.getSmell(), request.getIntroversion());
         Personality personality = UserServiceUtils.getPersonalityColorByTestScore(personalityRepository, testScore);
-        me.setPersonality(personality);
+        me.updatePersonality(personality);
         badgeService.acquireBadge(user, BadgeInfo.I_AM_SUCH_A_PERSON);
         if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.I_DONT_EVEN_KNOW_ME, me)) {
             String personalityTestCountString = (String) redisTemplate.opsForValue().get(RedisKey.PERSONALITY_TEST_COUNT + userId);
@@ -135,7 +135,7 @@ public class UserService {
         Badge badge = BadgeServiceUtils.findBadgeById(badgeRepository, badgeId);
         BadgeServiceUtils.validateExistsByOnboardingAndBadge(acquireRepository, me, badge);
         Represent represent = representRepository.save(Represent.newInstance(me, badge));
-        me.setRepresent(represent);
+        me.updateRepresent(represent);
     }
 
     public void deleteUser(Long userId) {

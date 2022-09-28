@@ -81,11 +81,11 @@ public class Onboarding extends AuditingTimeEntity {
                 .build();
     }
 
-    public void setRepresent(Represent represent) {
+    public void updateRepresent(Represent represent) {
         this.represent = represent;
     }
 
-    public void setPersonality(Personality personality) {
+    public void updatePersonality(Personality personality) {
         this.personality = personality;
     }
 
@@ -105,7 +105,7 @@ public class Onboarding extends AuditingTimeEntity {
         this.participates.remove(participate);
     }
 
-    public void setUserInfo(UpdateUserInfoRequestDto request) {
+    public void updateUserInfo(UpdateUserInfoRequestDto request) {
         this.nickname = request.getNickname();
         this.isPublic = request.isPublic();
         this.birthday = request.getBirthday();
