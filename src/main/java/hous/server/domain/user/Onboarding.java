@@ -81,12 +81,6 @@ public class Onboarding extends AuditingTimeEntity {
                 .build();
     }
 
-    public void setOnboarding(String nickname, LocalDate birthday, boolean isPublic) {
-        this.nickname = nickname;
-        this.birthday = birthday;
-        this.isPublic = isPublic;
-    }
-
     public void setRepresent(Represent represent) {
         this.represent = represent;
     }

@@ -29,7 +29,10 @@ import hous.server.service.badge.BadgeService;
 import hous.server.service.badge.BadgeServiceUtils;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.todo.TodoServiceUtils;
-import hous.server.service.user.dto.request.*;
+import hous.server.service.user.dto.request.CreateUserRequestDto;
+import hous.server.service.user.dto.request.UpdatePushSettingRequestDto;
+import hous.server.service.user.dto.request.UpdateTestScoreRequestDto;
+import hous.server.service.user.dto.request.UpdateUserInfoRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -75,12 +78,6 @@ public class UserService {
         user.updateFcmToken(request.getFcmToken());
         user.setOnboarding(onboarding);
         return user.getId();
-    }
-
-    public void setOnboardingInfo(SetOnboardingInfoRequestDto request, Long userId) {
-        User user = UserServiceUtils.findUserById(userRepository, userId);
-        Onboarding onboarding = user.getOnboarding();
-        onboarding.setOnboarding(request.getNickname(), request.getBirthday(), request.isPublic());
     }
 
     public void updateUserInfo(UpdateUserInfoRequestDto request, Long userId) {
