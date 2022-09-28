@@ -47,9 +47,6 @@ public class Onboarding extends AuditingTimeEntity {
     private String job;
 
     @Column(nullable = false)
-    private boolean isChecked;
-
-    @Column(nullable = false)
     private boolean isPublic;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -76,7 +73,6 @@ public class Onboarding extends AuditingTimeEntity {
                                          String nickname, LocalDate birthday, boolean isPublic) {
         return Onboarding.builder()
                 .user(user)
-                .isChecked(false)
                 .personality(personality)
                 .testScore(testScore)
                 .nickname(nickname)
@@ -89,7 +85,6 @@ public class Onboarding extends AuditingTimeEntity {
         this.nickname = nickname;
         this.birthday = birthday;
         this.isPublic = isPublic;
-        this.isChecked = true;
     }
 
     public void setRepresent(Represent represent) {
