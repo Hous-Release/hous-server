@@ -41,6 +41,7 @@ jobs:
           echo server.port=$PORT >> application.properties
           echo server.servlet.encoding.charset=UTF-8 >> application.properties
           echo server.servlet.encoding.force=true >> application.properties
+          echo spring.profiles.default=prod >> application.properties
           echo spring.servlet.multipart.max-file-size=10MB >> application.properties
           echo spring.servlet.multipart.max-request-size=10MB >> application.properties
           echo logging.level.org.hibernate.type.descriptor.sql=trace >> application.properties
