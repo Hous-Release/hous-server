@@ -20,6 +20,8 @@ public enum ErrorCode {
     VALIDATION_SOCIAL_TYPE_EXCEPTION(BAD_REQUEST, "잘못된 소셜 프로바이더 입니다."),
     VALIDATION_SORT_TYPE_EXCEPTION(BAD_REQUEST, "허용하지 않는 정렬기준을 입력했습니다."),
     VALIDATION_STATUS_EXCEPTION(BAD_REQUEST, "잘못된 상태로 요청했습니다."),
+    VALIDATION_RULE_MAX_LENGTH_EXCEPTION(BAD_REQUEST, "규칙은 20 글자 이내로 입력해주세요."),
+    VALIDATION_RULE_MIN_LENGTH_EXCEPTION(BAD_REQUEST, "규칙 내용을 입력해주세요."),
 
     /**
      * 401 UnAuthorized

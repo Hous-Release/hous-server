@@ -60,9 +60,11 @@ public class NotificationService {
         }
     }
 
-    public void sendNewRuleNotification(User to, Rule rule) {
-        Notification notification = notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.RULE, newRuleNotification(rule), false));
-        to.getOnboarding().addNotification(notification);
+    public void sendNewRuleNotification(User to, List<Rule> rules) {
+        rules.stream().forEach(rule -> {
+            Notification notification = notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.RULE, newRuleNotification(rule), false));
+            to.getOnboarding().addNotification(notification);
+        });
         if (to.getSetting().isPushNotification() && to.getSetting().getRulesPushStatus() == PushStatus.ON) {
             firebaseCloudMessageService.sendMessageTo(to, PushMessage.NEW_RULE.getTitle(), PushMessage.NEW_RULE.getBody());
         }
