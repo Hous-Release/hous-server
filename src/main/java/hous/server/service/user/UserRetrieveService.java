@@ -16,7 +16,10 @@ import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.User;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.room.RoomServiceUtils;
-import hous.server.service.user.dto.response.*;
+import hous.server.service.user.dto.response.MyBadgeInfoResponse;
+import hous.server.service.user.dto.response.PersonalityInfoResponse;
+import hous.server.service.user.dto.response.PersonalityTestInfoResponse;
+import hous.server.service.user.dto.response.UserInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,12 +38,6 @@ public class UserRetrieveService {
     private final RepresentRepository representRepository;
     private final BadgeRepository badgeRepository;
     private final AcquireRepository acquireRepository;
-
-    public CheckOnboardingInfoResponse checkMyOnboardingInfo(Long userId) {
-        User user = UserServiceUtils.findUserById(userRepository, userId);
-        Onboarding onboarding = user.getOnboarding();
-        return !onboarding.isChecked() ? CheckOnboardingInfoResponse.of(false) : CheckOnboardingInfoResponse.of(true);
-    }
 
     public UserInfoResponse getUserInfo(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);

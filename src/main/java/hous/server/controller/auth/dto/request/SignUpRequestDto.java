@@ -1,13 +1,11 @@
-package hous.server.service.user.dto.request;
-
+package hous.server.controller.auth.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import hous.server.domain.user.UserSocialType;
+import hous.server.service.auth.dto.request.SignUpDto;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -16,8 +14,21 @@ import java.time.LocalDate;
 
 @ToString
 @Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class UpdateUserInfoRequestDto {
+public class SignUpRequestDto {
+
+    @ApiModelProperty(value = "소셜 로그인 타입 - KAKAO, APPLE", example = "KAKAO")
+    @NotNull(message = "{user.socialType.notNull}")
+    private UserSocialType socialType;
+
+    @ApiModelProperty(value = "토큰 - socialToken", example = "ijv4qLk0I7jYuDpFe-9A-oAx59-AAfC6UbTuairPCj1zTQAAAYI6e-6o")
+    @NotBlank(message = "{auth.token.notBlank}")
+    private String token;
+
+    @ApiModelProperty(value = "토큰 - fcmToken", example = "dfdafjdslkfjslfjslifsjvmdsklvdosijiofjamvsdlkvmiodsjfdiosmvsdjvosadjvosd")
+    @NotBlank(message = "{auth.fcmToken.notBlank}")
+    private String fcmToken;
 
     @ApiModelProperty(value = "닉네임", example = "혜조니")
     @NotBlank(message = "{onboarding.nickname.notBlank}")
@@ -33,23 +44,12 @@ public class UpdateUserInfoRequestDto {
     @NotNull(message = "{onboarding.isPublic.notNull}")
     private Boolean isPublic;
 
-    @ApiModelProperty(value = "MBTI", example = "CUTE")
-    @NotBlank(message = "{user.mbti.notBlank}")
-    @Size(min = 1, max = 4, message = "{user.mbti.max}")
-    private String mbti;
-
-    @ApiModelProperty(value = "직업", example = "대학생")
-    @NotBlank(message = "{user.job.notBlank}")
-    @Size(min = 1, max = 3, message = "{user.job.max}")
-    private String job;
-
-    @ApiModelProperty(value = "자기소개", example = "안녕하세요. 저는 혜조니입니다~")
-    @NotBlank(message = "{user.introduction.notBlank}")
-    @Size(min = 1, max = 40, message = "{user.introduction.max}")
-    private String introduction;
-
     @JsonProperty("isPublic")
     public Boolean isPublic() {
         return isPublic;
+    }
+
+    public SignUpDto toServiceDto() {
+        return SignUpDto.of(socialType, token, fcmToken, nickname, birthday, isPublic);
     }
 }

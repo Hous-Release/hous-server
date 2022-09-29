@@ -1,7 +1,8 @@
-package hous.server.service.user.dto.request;
+package hous.server.service.auth.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import hous.server.domain.user.UserSocialType;
+import hous.server.service.user.dto.request.CreateUserRequestDto;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -11,10 +12,10 @@ import java.time.LocalDate;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
-public class CreateUserRequestDto {
+public class SignUpDto {
 
-    private String socialId;
     private UserSocialType socialType;
+    private String token;
     private String fcmToken;
     private String nickname;
     private LocalDate birthday;
@@ -25,15 +26,19 @@ public class CreateUserRequestDto {
         return isPublic;
     }
 
-    public static CreateUserRequestDto of(String socialId, UserSocialType socialType, String fcmToken,
-                                          String nickname, LocalDate birthday, Boolean isPublic) {
-        return CreateUserRequestDto.builder()
-                .socialId(socialId)
+    public static SignUpDto of(UserSocialType socialType, String token, String fcmToken,
+                               String nickname, LocalDate birthday, Boolean isPublic) {
+        return SignUpDto.builder()
                 .socialType(socialType)
+                .token(token)
                 .fcmToken(fcmToken)
                 .nickname(nickname)
                 .birthday(birthday)
                 .isPublic(isPublic)
                 .build();
+    }
+
+    public CreateUserRequestDto toCreateUserDto(String socialId) {
+        return CreateUserRequestDto.of(socialId, socialType, fcmToken, nickname, birthday, isPublic);
     }
 }

@@ -7,13 +7,11 @@ import hous.server.domain.badge.repository.AcquireRepository;
 import hous.server.domain.badge.repository.BadgeRepository;
 import hous.server.domain.badge.repository.RepresentRepository;
 import hous.server.domain.common.RedisKey;
-import hous.server.domain.notification.repository.NotificationRepository;
 import hous.server.domain.personality.Personality;
 import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.personality.repository.PersonalityRepository;
 import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
-import hous.server.domain.room.repository.ParticipateRepository;
 import hous.server.domain.room.repository.RoomRepository;
 import hous.server.domain.todo.Todo;
 import hous.server.domain.todo.repository.DoneRepository;
@@ -31,7 +29,10 @@ import hous.server.service.badge.BadgeService;
 import hous.server.service.badge.BadgeServiceUtils;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.todo.TodoServiceUtils;
-import hous.server.service.user.dto.request.*;
+import hous.server.service.user.dto.request.CreateUserRequestDto;
+import hous.server.service.user.dto.request.UpdatePushSettingRequestDto;
+import hous.server.service.user.dto.request.UpdateTestScoreRequestDto;
+import hous.server.service.user.dto.request.UpdateUserInfoRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -57,9 +58,7 @@ public class UserService {
     private final TakeRepository takeRepository;
     private final DoneRepository doneRepository;
     private final TodoRepository todoRepository;
-    private final ParticipateRepository participateRepository;
     private final RoomRepository roomRepository;
-    private final NotificationRepository notificationRepository;
 
     private final BadgeService badgeService;
 
@@ -71,24 +70,21 @@ public class UserService {
         Onboarding onboarding = onboardingRepository.save(Onboarding.newInstance(
                 user,
                 personalityRepository.findPersonalityByColor(PersonalityColor.GRAY),
-                testScoreRepository.save(TestScore.newInstance())));
+                testScoreRepository.save(TestScore.newInstance()),
+                request.getNickname(),
+                request.getBirthday(),
+                request.getIsPublic()));
         UserServiceUtils.validateUniqueFcmToken(userRepository, request.getFcmToken());
         user.updateFcmToken(request.getFcmToken());
         user.setOnboarding(onboarding);
         return user.getId();
     }
 
-    public void setOnboardingInfo(SetOnboardingInfoRequestDto request, Long userId) {
-        User user = UserServiceUtils.findUserById(userRepository, userId);
-        Onboarding onboarding = user.getOnboarding();
-        onboarding.setOnboarding(request.getNickname(), request.getBirthday(), request.isPublic());
-    }
-
     public void updateUserInfo(UpdateUserInfoRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         RoomServiceUtils.findParticipatingRoom(user);
         Onboarding onboarding = user.getOnboarding();
-        onboarding.setUserInfo(request);
+        onboarding.updateUserInfo(request);
     }
 
     public void updateUserPushSetting(UpdatePushSettingRequestDto request, Long userId) {
@@ -105,7 +101,7 @@ public class UserService {
         TestScore testScore = me.getTestScore();
         testScore.updateScore(request.getLight(), request.getNoise(), request.getClean(), request.getSmell(), request.getIntroversion());
         Personality personality = UserServiceUtils.getPersonalityColorByTestScore(personalityRepository, testScore);
-        me.setPersonality(personality);
+        me.updatePersonality(personality);
         badgeService.acquireBadge(user, BadgeInfo.I_AM_SUCH_A_PERSON);
         if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.I_DONT_EVEN_KNOW_ME, me)) {
             String personalityTestCountString = (String) redisTemplate.opsForValue().get(RedisKey.PERSONALITY_TEST_COUNT + userId);
@@ -139,7 +135,7 @@ public class UserService {
         Badge badge = BadgeServiceUtils.findBadgeById(badgeRepository, badgeId);
         BadgeServiceUtils.validateExistsByOnboardingAndBadge(acquireRepository, me, badge);
         Represent represent = representRepository.save(Represent.newInstance(me, badge));
-        me.setRepresent(represent);
+        me.updateRepresent(represent);
     }
 
     public void deleteUser(Long userId) {

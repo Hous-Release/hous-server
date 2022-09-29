@@ -29,10 +29,11 @@ public class Onboarding extends AuditingTimeEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @Column(length = 30)
+
+    @Column(nullable = false, length = 30)
     private String nickname;
 
-    @Column
+    @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate birthday;
 
@@ -44,9 +45,6 @@ public class Onboarding extends AuditingTimeEntity {
 
     @Column(length = 30)
     private String job;
-
-    @Column(nullable = false)
-    private boolean isChecked;
 
     @Column(nullable = false)
     private boolean isPublic;
@@ -71,27 +69,23 @@ public class Onboarding extends AuditingTimeEntity {
     @OneToMany(mappedBy = "onboarding", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Notification> notifications = new ArrayList<>();
 
-    public static Onboarding newInstance(User user, Personality personality, TestScore testScore) {
+    public static Onboarding newInstance(User user, Personality personality, TestScore testScore,
+                                         String nickname, LocalDate birthday, boolean isPublic) {
         return Onboarding.builder()
                 .user(user)
-                .isChecked(false)
                 .personality(personality)
                 .testScore(testScore)
+                .nickname(nickname)
+                .birthday(birthday)
+                .isPublic(isPublic)
                 .build();
     }
 
-    public void setOnboarding(String nickname, LocalDate birthday, boolean isPublic) {
-        this.nickname = nickname;
-        this.birthday = birthday;
-        this.isPublic = isPublic;
-        this.isChecked = true;
-    }
-
-    public void setRepresent(Represent represent) {
+    public void updateRepresent(Represent represent) {
         this.represent = represent;
     }
 
-    public void setPersonality(Personality personality) {
+    public void updatePersonality(Personality personality) {
         this.personality = personality;
     }
 
@@ -111,7 +105,7 @@ public class Onboarding extends AuditingTimeEntity {
         this.participates.remove(participate);
     }
 
-    public void setUserInfo(UpdateUserInfoRequestDto request) {
+    public void updateUserInfo(UpdateUserInfoRequestDto request) {
         this.nickname = request.getNickname();
         this.isPublic = request.isPublic();
         this.birthday = request.getBirthday();
