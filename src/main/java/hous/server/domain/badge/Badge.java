@@ -19,4 +19,7 @@ public class Badge extends AuditingTimeEntity {
     @Column(nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     private BadgeInfo info;
+
+    @Column(nullable = false, length = 300)
+    private String imageUrl;
 }
