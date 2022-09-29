@@ -1,5 +1,6 @@
 package hous.server.service.room.dto.request;
 
+import hous.server.domain.common.Constraint;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,6 +17,6 @@ public class SetRoomNameRequestDto {
 
     @ApiModelProperty(value = "방 이름", example = "러블리더블리")
     @NotBlank(message = "{room.name.notBlank}")
-    @Size(max = 8, message = "{room.name.max}")
+    @Size(max = Constraint.ROOM_NAME_MAX, message = "{room.name.max}")
     private String name;
 }

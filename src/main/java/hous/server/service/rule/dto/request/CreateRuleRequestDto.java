@@ -1,5 +1,6 @@
 package hous.server.service.rule.dto.request;
 
+import hous.server.domain.common.Constraint;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,6 +16,6 @@ import java.util.List;
 public class CreateRuleRequestDto {
 
     @ApiModelProperty(value = "규칙 내용 배열", example = "[\"우리집 대장은 김또순\", \"우리집 대장은 혜조니\", \"우리집 대장은 혁주니\", ...]")
-    @Size(min = 1, message = "{rule.list.min}")
+    @Size(min = Constraint.RULE_LIST_MIN, message = "{rule.list.min}")
     private List<String> ruleNames;
 }

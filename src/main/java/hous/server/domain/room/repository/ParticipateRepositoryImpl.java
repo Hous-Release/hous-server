@@ -1,7 +1,6 @@
 package hous.server.domain.room.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import hous.server.domain.room.Room;
 import hous.server.domain.user.Onboarding;
 import lombok.RequiredArgsConstructor;
 
@@ -18,12 +17,5 @@ public class ParticipateRepositoryImpl implements ParticipateRepositoryCustom {
                 .from(participate)
                 .where(participate.onboarding.eq(onboarding))
                 .fetchFirst() != null;
-    }
-
-    @Override
-    public int findCountsByRoom(Room room) {
-        return queryFactory.selectFrom(participate)
-                .where(participate.room.eq(room))
-                .fetch().size();
     }
 }

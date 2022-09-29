@@ -3,6 +3,7 @@ package hous.server.service.user.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import hous.server.domain.common.Constraint;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,7 +22,7 @@ public class UpdateUserInfoRequestDto {
 
     @ApiModelProperty(value = "닉네임", example = "혜조니")
     @NotBlank(message = "{onboarding.nickname.notBlank}")
-    @Size(min = 1, max = 3, message = "{onboarding.nickname.max}")
+    @Size(max = Constraint.ONBOARDING_NICKNAME_MAX, message = "{onboarding.nickname.max}")
     private String nickname;
 
     @ApiModelProperty(value = "생년월일", example = "1999-03-04")
@@ -34,18 +35,18 @@ public class UpdateUserInfoRequestDto {
     private Boolean isPublic;
 
     @ApiModelProperty(value = "MBTI", example = "CUTE")
-    @NotBlank(message = "{user.mbti.notBlank}")
-    @Size(min = 1, max = 4, message = "{user.mbti.max}")
+    @NotBlank(message = "{onboarding.mbti.notBlank}")
+    @Size(max = Constraint.ONBOARDING_MBTI_MAX, message = "{onboarding.mbti.max}")
     private String mbti;
 
     @ApiModelProperty(value = "직업", example = "대학생")
-    @NotBlank(message = "{user.job.notBlank}")
-    @Size(min = 1, max = 3, message = "{user.job.max}")
+    @NotBlank(message = "{onboarding.job.notBlank}")
+    @Size(max = Constraint.ONBOARDING_JOB_MAX, message = "{onboarding.job.max}")
     private String job;
 
     @ApiModelProperty(value = "자기소개", example = "안녕하세요. 저는 혜조니입니다~")
-    @NotBlank(message = "{user.introduction.notBlank}")
-    @Size(min = 1, max = 40, message = "{user.introduction.max}")
+    @NotBlank(message = "{onboarding.introduction.notBlank}")
+    @Size(max = Constraint.ONBOARDING_INTRODUCTION_MAX, message = "{onboarding.introduction.max}")
     private String introduction;
 
     @JsonProperty("isPublic")
