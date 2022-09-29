@@ -3,6 +3,7 @@ package hous.server.service.rule;
 import hous.server.common.exception.ForbiddenException;
 import hous.server.common.exception.NotFoundException;
 import hous.server.common.exception.ValidationException;
+import hous.server.domain.common.Constraint;
 import hous.server.domain.room.Room;
 import hous.server.domain.rule.Rule;
 import hous.server.domain.rule.repository.RuleRepository;
@@ -22,16 +23,16 @@ public class RuleServiceUtils {
     }
 
     public static void validateRuleName(Room room, String ruleName) {
-        if (ruleName.length() <= 0) {
+        if (ruleName.length() == 0) {
             throw new ValidationException(String.format("방 (%s) 의 ruleName (%s) 은 빈 값이 될 수 없습니다.", room.getId(), ruleName), VALIDATION_RULE_MIN_LENGTH_EXCEPTION);
         }
-        if (ruleName.length() > 20) {
+        if (ruleName.length() > Constraint.RULE_NAME_MAX) {
             throw new ValidationException(String.format("방 (%s) 의 ruleName (%s) 의 최대 길이는 20 글자 이내만 가능합니다.", room.getId(), ruleName), VALIDATION_RULE_MAX_LENGTH_EXCEPTION);
         }
     }
 
     public static void validateRuleCounts(Room room, int requestRuleCnt) {
-        if (room.getRulesCnt() + requestRuleCnt > 30) {
+        if (room.getRulesCnt() + requestRuleCnt > Constraint.RULE_COUNT_MAX) {
             throw new ForbiddenException(String.format("방 (%s) 의 rule 는 30 개를 초과할 수 없습니다.", room.getId()), FORBIDDEN_RULE_COUNT_EXCEPTION);
         }
     }

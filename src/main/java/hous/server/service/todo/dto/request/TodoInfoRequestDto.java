@@ -1,6 +1,7 @@
 package hous.server.service.todo.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import hous.server.domain.common.Constraint;
 import hous.server.domain.todo.DayOfWeek;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
@@ -22,7 +23,7 @@ public class TodoInfoRequestDto {
 
     @ApiModelProperty(value = "todo 이름", example = "청소기 돌리기")
     @NotBlank(message = "{todo.name.notBlank}")
-    @Size(max = 15, message = "{todo.name.max}")
+    @Size(max = Constraint.TODO_NAME_MAX, message = "{todo.name.max}")
     private String name;
 
     @ApiModelProperty(value = "알림 여부", example = "true")

@@ -2,6 +2,7 @@ package hous.server.controller.auth.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import hous.server.domain.common.Constraint;
 import hous.server.domain.user.UserSocialType;
 import hous.server.service.auth.dto.request.SignUpDto;
 import io.swagger.annotations.ApiModelProperty;
@@ -32,7 +33,7 @@ public class SignUpRequestDto {
 
     @ApiModelProperty(value = "닉네임", example = "혜조니")
     @NotBlank(message = "{onboarding.nickname.notBlank}")
-    @Size(min = 1, max = 3, message = "{onboarding.nickname.max}")
+    @Size(max = Constraint.ONBOARDING_NICKNAME_MAX, message = "{onboarding.nickname.max}")
     private String nickname;
 
     @ApiModelProperty(value = "생년월일", example = "1999-03-04")

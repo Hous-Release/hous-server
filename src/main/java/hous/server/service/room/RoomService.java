@@ -61,7 +61,7 @@ public class RoomService {
         Onboarding me = user.getOnboarding();
         RoomServiceUtils.validateNotExistsParticipate(participateRepository, me);
         Room room = RoomServiceUtils.findRoomById(roomRepository, roomId);
-        RoomServiceUtils.validateParticipateCounts(participateRepository, room);
+        RoomServiceUtils.validateParticipateCounts(room);
         Participate participate = participateRepository.save(Participate.newInstance(me, room));
         me.addParticipate(participate);
         room.addParticipate(participate);

@@ -4,6 +4,7 @@ import hous.server.common.exception.ForbiddenException;
 import hous.server.common.exception.NotFoundException;
 import hous.server.common.exception.ValidationException;
 import hous.server.common.util.DateUtils;
+import hous.server.domain.common.Constraint;
 import hous.server.domain.room.Room;
 import hous.server.domain.todo.Done;
 import hous.server.domain.todo.Todo;
@@ -34,7 +35,7 @@ public class TodoServiceUtils {
     }
 
     public static void validateTodoCounts(Room room) {
-        if (room.getTodosCnt() >= 60) {
+        if (room.getTodosCnt() >= Constraint.TODO_COUNT_MAX) {
             throw new ForbiddenException(String.format("방 (%s) 의 todo 는 60개를 초과할 수 없습니다.", room.getId()), FORBIDDEN_TODO_COUNT_EXCEPTION);
         }
     }
