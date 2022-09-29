@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -44,10 +46,15 @@ public class RuleService {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Onboarding me = user.getOnboarding();
         Room room = RoomServiceUtils.findParticipatingRoom(user);
-        RuleServiceUtils.validateRuleCounts(room);
-        int ruleIdx = RuleServiceUtils.findRuleIdxByRoomId(ruleRepository, room);
-        Rule rule = ruleRepository.save(Rule.newInstance(room, request.getName(), ruleIdx + 1));
-        room.addRule(rule);
+        RuleServiceUtils.validateRuleCounts(room, request.getRuleNames().size());
+        AtomicInteger ruleIdx = new AtomicInteger(RuleServiceUtils.findRuleIdxByRoomId(ruleRepository, room));
+        List<Rule> rules = request.getRuleNames().stream()
+                .map(ruleName -> {
+                    RuleServiceUtils.validateRuleName(room, ruleName);
+                    return ruleRepository.save(Rule.newInstance(room, ruleName, ruleIdx.addAndGet(1)));
+                })
+                .collect(Collectors.toList());
+        room.addRules(rules);
         badgeService.acquireBadge(user, BadgeInfo.LETS_BUILD_A_POLE);
         if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.OUR_HOUSE_PILLAR_HOMIE, me)) {
             String createRuleCountString = (String) redisTemplate.opsForValue().get(RedisKey.CREATE_RULE_COUNT + userId);
@@ -63,7 +70,7 @@ public class RuleService {
             }
         }
         List<User> usersExceptMe = RoomServiceUtils.findParticipatingUsersExceptMe(room, user);
-        usersExceptMe.forEach(userExceptMe -> notificationService.sendNewRuleNotification(userExceptMe, rule));
+        usersExceptMe.forEach(userExceptMe -> notificationService.sendNewRuleNotification(userExceptMe, rules));
     }
 
     public void updateRule(UpdateRuleRequestDto request, Long ruleId, Long userId) {
