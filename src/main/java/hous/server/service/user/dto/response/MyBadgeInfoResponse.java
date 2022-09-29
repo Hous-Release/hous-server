@@ -47,7 +47,7 @@ public class MyBadgeInfoResponse {
             return BadgeInfo.builder()
                     .badgeId(badge.getId())
                     .name(badge.getInfo().getValue())
-                    .imageUrl(badge.getInfo().getImageUrl())
+                    .imageUrl(badge.getImageUrl())
                     .isAcquired(isAcquired)
                     .description(badge.getInfo().getDescription())
                     .build();

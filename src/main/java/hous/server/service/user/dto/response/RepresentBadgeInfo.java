@@ -18,7 +18,7 @@ public class RepresentBadgeInfo {
         return RepresentBadgeInfo.builder()
                 .badgeId(represent.getBadge().getId())
                 .name(represent.getBadge().getInfo().getValue())
-                .imageUrl(represent.getBadge().getInfo().getImageUrl())
+                .imageUrl(represent.getBadge().getImageUrl())
                 .build();
     }
 }

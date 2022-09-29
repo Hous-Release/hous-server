@@ -76,7 +76,7 @@ public class UserInfoResponse {
                 .introduction(onboarding.getIntroduction())
                 .testScore(TestScoreResponse.of(onboarding.getTestScore()))
                 .representBadge(represent != null ? represent.getBadge().getInfo().getValue() : null)
-                .representBadgeImage(represent != null ? represent.getBadge().getInfo().getImageUrl() : null)
+                .representBadgeImage(represent != null ? represent.getBadge().getImageUrl() : null)
                 .build();
     }
 }
