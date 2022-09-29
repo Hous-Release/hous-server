@@ -36,7 +36,7 @@ public class RuleController {
                     code = 400,
                     message = "1. 규칙 내용을 입력해주세요.\n"
                             + "2. 규칙은 20 글자 이내로 입력해주세요.\n"
-                            + "3. 규칙 id 리스트는 빈 값을 보낼 수 없습니다. (ruleNames)",
+                            + "3. 규칙 리스트는 빈 배열을 보낼 수 없습니다. (ruleNames)",
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 403, message = "rule 은 30개를 초과할 수 없습니다.", response = ErrorResponse.class),
@@ -49,7 +49,7 @@ public class RuleController {
     })
     @Auth
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PostMapping("/rule")
+    @PostMapping("/rules")
     public ResponseEntity<String> createRule(@Valid @RequestBody CreateRuleRequestDto request,
                                              @ApiIgnore @UserId Long userId) {
         ruleService.createRule(request, userId);
@@ -78,7 +78,7 @@ public class RuleController {
     })
     @Auth
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PostMapping("/rule/{ruleId}")
+    @PutMapping("/rule/{ruleId}")
     public ResponseEntity<String> updateRule(@ApiParam(name = "ruleId", value = "수정할 rule 의 id", required = true, example = "1")
                                              @PathVariable Long ruleId,
                                              @Valid @RequestBody UpdateRuleRequestDto request,
@@ -94,7 +94,7 @@ public class RuleController {
     )
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = ""),
-            @ApiResponse(code = 400, message = "규칙 id 리스트는 빈 값을 보낼 수 없습니다. (rulesIdList)", response = ErrorResponse.class),
+            @ApiResponse(code = 400, message = "규칙 리스트는 빈 배열을 보낼 수 없습니다. (rulesIdList)", response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(
                     code = 404,
@@ -120,7 +120,7 @@ public class RuleController {
     )
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = ""),
-            @ApiResponse(code = 400, message = "규칙 id 리스트는 빈 값을 보낼 수 없습니다. (rulesIdList)", response = ErrorResponse.class),
+            @ApiResponse(code = 400, message = "규칙 리스트는 빈 배열을 보낼 수 없습니다. (rulesIdList)", response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(
                     code = 404,

@@ -23,15 +23,15 @@ public class RuleServiceUtils {
 
     public static void validateRuleName(Room room, String ruleName) {
         if (ruleName.length() <= 0) {
-            throw new ValidationException(String.format("방 (%s) 의 rule 은 빈 값이 될 수 없습니다.", room.getId()), VALIDATION_RULE_MIN_LENGTH_EXCEPTION);
+            throw new ValidationException(String.format("방 (%s) 의 ruleName (%s) 은 빈 값이 될 수 없습니다.", room.getId(), ruleName), VALIDATION_RULE_MIN_LENGTH_EXCEPTION);
         }
         if (ruleName.length() > 20) {
-            throw new ValidationException(String.format("방 (%s) 의 rule 의 최대 길이는 20 글자 이내만 가능합니다.", room.getId()), VALIDATION_RULE_MAX_LENGTH_EXCEPTION);
+            throw new ValidationException(String.format("방 (%s) 의 ruleName (%s) 의 최대 길이는 20 글자 이내만 가능합니다.", room.getId(), ruleName), VALIDATION_RULE_MAX_LENGTH_EXCEPTION);
         }
     }
 
     public static void validateRuleCounts(Room room, int requestRuleCnt) {
-        if (room.getRulesCnt() + requestRuleCnt >= 30) {
+        if (room.getRulesCnt() + requestRuleCnt > 30) {
             throw new ForbiddenException(String.format("방 (%s) 의 rule 는 30 개를 초과할 수 없습니다.", room.getId()), FORBIDDEN_RULE_COUNT_EXCEPTION);
         }
     }
