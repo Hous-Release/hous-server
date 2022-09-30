@@ -43,6 +43,7 @@ application-prod.yml
 application-aws.yml
 application-jwt.yml
 application-firebase.yml
+application-slack.yml
 
 ### log 파일 ###
 logs
