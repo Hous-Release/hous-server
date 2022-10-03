@@ -79,16 +79,16 @@ public class NotificationService {
     }
 
     private String newTodoNotification(Todo todo, boolean isTake) {
-        if (isTake) return String.format("'%s' %s", todo.getName(), NotificationMessage.NEW_TODO_TAKE);
-        else return String.format("'%s' %s", todo.getName(), NotificationMessage.NEW_TODO);
+        if (isTake) return String.format("'%s' %s", todo.getName(), NotificationMessage.NEW_TODO_TAKE.getValue());
+        else return String.format("'%s' %s", todo.getName(), NotificationMessage.NEW_TODO.getValue());
     }
 
     private String remindTodoNotification(Todo todo) {
-        return String.format("'%s' %s", todo.getName(), NotificationMessage.TODO_REMIND);
+        return String.format("'%s' %s", todo.getName(), NotificationMessage.TODO_REMIND.getValue());
     }
 
     private String newRuleNotification(Rule rule) {
-        return String.format("'%s' %s", rule.getName(), NotificationMessage.NEW_RULE);
+        return String.format("'%s' %s", rule.getName(), NotificationMessage.NEW_RULE.getValue());
     }
 
     private String newBadgePushTitle(BadgeInfo badgeInfo) {
