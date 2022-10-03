@@ -26,11 +26,10 @@ public class TodoController {
 
     @ApiOperation(
             value = "[인증] todo 추가 페이지 - 새로운 todo 를 생성합니다.",
-            notes = "todo 이름을 15글자 이내로 설정하고 알림 여부, 담당자, 담당 요일을 설정하여 새로운 todo 생성을 요청합니다.\n" +
-                    "성공시 status code = 204, 빈 response body를 보냅니다."
+            notes = "todo 이름을 15글자 이내로 설정하고 알림 여부, 담당자, 담당 요일을 설정하여 새로운 todo 생성을 요청합니다."
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = ""),
+            @ApiResponse(code = 201, message = "생성 성공입니다."),
             @ApiResponse(
                     code = 400,
                     message = "1. todo 이름을 입력해주세요. (name)\n"
@@ -49,20 +48,19 @@ public class TodoController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/todo")
     public ResponseEntity<String> createTodo(@Valid @RequestBody TodoInfoRequestDto request, @ApiIgnore @UserId Long userId) {
         todoService.createTodo(request, userId);
-        return SuccessResponse.NO_CONTENT;
+        return SuccessResponse.CREATED;
     }
 
     @ApiOperation(
             value = "[인증] todo 수정 페이지 - todo 를 수정합니다.",
-            notes = "todo 이름을 15글자 이내로 설정하고 알림 여부, 담당자, 담당 요일을 설정하여 todo 수정을 요청합니다.\n" +
-                    "성공시 status code = 204, 빈 response body를 보냅니다."
+            notes = "todo 이름을 15글자 이내로 설정하고 알림 여부, 담당자, 담당 요일을 설정하여 todo 수정을 요청합니다."
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = ""),
+            @ApiResponse(code = 200, message = "성공입니다."),
             @ApiResponse(
                     code = 400,
                     message = "1. todo 이름을 입력해주세요. (name)\n"
@@ -76,23 +74,21 @@ public class TodoController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/todo/{todoId}")
     public ResponseEntity<String> updateTodo(@ApiParam(name = "todoId", value = "수정할 todo 의 id", required = true, example = "1")
                                              @PathVariable Long todoId,
                                              @Valid @RequestBody TodoInfoRequestDto request) {
         todoService.updateTodo(todoId, request);
-        return SuccessResponse.NO_CONTENT;
+        return SuccessResponse.OK;
     }
 
     @ApiOperation(
             value = "[인증] todo 메인 페이지 - todo 를 체크합니다.",
             notes = "체크 요청 (status = true), 해제 요청 (status = false) 로 todo 체크를 요청합니다.\n" +
-                    "요청한 status 가 현재 서버의 status 인 경우, 400 에러 (잘못된 상태로 요청했습니다.) 를 전달합니다. \n" +
-                    "성공시 status code = 204, 빈 response body를 보냅니다."
+                    "요청한 status 가 현재 서버의 status 인 경우, 400 에러 (잘못된 상태로 요청했습니다.) 를 전달합니다."
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = ""),
+            @ApiResponse(code = 200, message = "성공입니다."),
             @ApiResponse(
                     code = 400,
                     message = "1. 요청할 체크 상태를 입력해주세요.\n"
@@ -107,33 +103,30 @@ public class TodoController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/todo/{todoId}/check")
     public ResponseEntity<String> checkTodo(@ApiParam(name = "todoId", value = "체크할 todo 의 id", required = true, example = "1")
                                             @PathVariable Long todoId,
                                             @Valid @RequestBody CheckTodoRequestDto request,
                                             @ApiIgnore @UserId Long userId) {
         todoService.checkTodo(todoId, request, userId);
-        return SuccessResponse.NO_CONTENT;
+        return SuccessResponse.OK;
     }
 
     @ApiOperation(
             value = "[인증] todo 전체 페이지 - todo 를 삭제합니다.",
-            notes = "todo 삭제를 요청합니다.\n" +
-                    "성공시 status code = 204, 빈 response body를 보냅니다."
+            notes = "todo 삭제를 요청합니다."
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = ""),
+            @ApiResponse(code = 200, message = "성공입니다."),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "존재하지 않는 todo 입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/todo/{todoId}")
     public ResponseEntity<String> deleteTodo(@ApiParam(name = "todoId", value = "삭제할 todo 의 id", required = true, example = "1")
                                              @PathVariable Long todoId) {
         todoService.deleteTodo(todoId);
-        return SuccessResponse.NO_CONTENT;
+        return SuccessResponse.OK;
     }
 }

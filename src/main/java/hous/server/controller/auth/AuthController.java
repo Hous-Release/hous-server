@@ -19,9 +19,11 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
@@ -121,10 +123,10 @@ public class AuthController {
 
     @ApiOperation(
             value = "[인증] 마이 페이지(설정) - 로그아웃을 요청합니다.",
-            notes = "성공시 status code = 204, 빈 response body로 보냅니다."
+            notes = "로그아웃 성공시 로그인 페이지로 이동합니다."
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = ""),
+            @ApiResponse(code = 200, message = "성공입니다."),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(
                     code = 404,
@@ -134,10 +136,9 @@ public class AuthController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/auth/logout")
     public ResponseEntity<String> logout(@ApiIgnore @UserId Long userId) {
         commonAuthService.logout(userId);
-        return SuccessResponse.NO_CONTENT;
+        return SuccessResponse.OK;
     }
 }

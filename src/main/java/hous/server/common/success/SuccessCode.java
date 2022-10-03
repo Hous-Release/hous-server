@@ -13,6 +13,8 @@ public enum SuccessCode {
     /**
      * 200 OK
      */
+    OK_SUCCESS(OK, "성공입니다."),
+
     // 인증
     SIGNUP_SUCCESS(OK, "회원가입 성공입니다."),
     LOGIN_SUCCESS(OK, "로그인 성공입니다."),
@@ -55,6 +57,7 @@ public enum SuccessCode {
     /**
      * 201 CREATED
      */
+    CREATED_SUCCESS(CREATED, "생성 성공입니다."),
 
     // 방
     CREATE_ROOM_SUCCESS(CREATED, "방 생성 성공입니다."),

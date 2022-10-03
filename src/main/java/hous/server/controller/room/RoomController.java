@@ -76,11 +76,10 @@ public class RoomController {
 
     @ApiOperation(
             value = "[인증] Hous- 페이지 - 방 별명을 수정합니다.",
-            notes = "방 별명을 8글자 이내로 설정하여 수정을 요청합니다.\n" +
-                    "성공시 status code = 204, 빈 response body를 보냅니다."
+            notes = "방 별명을 8글자 이내로 설정하여 수정을 요청합니다."
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = ""),
+            @ApiResponse(code = 200, message = "성공입니다."),
             @ApiResponse(
                     code = 400,
                     message = "1. 방 이름을 입력해주세요. (name)\n"
@@ -95,19 +94,18 @@ public class RoomController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/room/name")
     public ResponseEntity<String> updateRoomName(@Valid @RequestBody SetRoomNameRequestDto request, @ApiIgnore @UserId Long userId) {
         roomService.updateRoomName(request, userId);
-        return SuccessResponse.NO_CONTENT;
+        return SuccessResponse.OK;
     }
 
     @ApiOperation(
             value = "[인증] 마이 페이지(설정) - 방에서 퇴사합니다.",
-            notes = "성공시 status code = 204, 빈 response body로 보냅니다."
+            notes = "퇴사 성공시 방 생성, 입장 페이지로 이동합니다."
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = ""),
+            @ApiResponse(code = 200, message = "성공입니다."),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(
                     code = 404,
@@ -117,10 +115,9 @@ public class RoomController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/room/leave")
     public ResponseEntity<String> leaveRoom(@ApiIgnore @UserId Long userId) {
         roomService.leaveRoom(userId);
-        return SuccessResponse.NO_CONTENT;
+        return SuccessResponse.OK;
     }
 }
