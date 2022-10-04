@@ -4,7 +4,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import static hous.server.common.success.SuccessStatusCode.*;
+import static hous.server.common.success.SuccessStatusCode.CREATED;
+import static hous.server.common.success.SuccessStatusCode.OK;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -63,7 +64,7 @@ public enum SuccessCode {
     CREATE_ROOM_SUCCESS(CREATED, "방 생성 성공입니다."),
 
     // 규칙
-    CREATE_RULE_SUCCESS(CREATED, "규칙 생성 성공입니다."),
+    CREATE_RULE_SUCCESS(CREATED, "규칙 생성 성공입니다.");
 
     /**
      * 202 ACCEPTED
@@ -72,7 +73,6 @@ public enum SuccessCode {
     /**
      * 204 NO_CONTENT
      */
-    NO_CONTENT_SUCCESS(NO_CONTENT, "");
 
     private final SuccessStatusCode statusCode;
     private final String message;

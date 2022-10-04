@@ -12,7 +12,6 @@ public class SuccessResponse<T> {
 
     public static final ResponseEntity<SuccessResponse<String>> OK = success(SuccessCode.OK_SUCCESS, null);
     public static final ResponseEntity<SuccessResponse<String>> CREATED = success(SuccessCode.CREATED_SUCCESS, null);
-    public static final ResponseEntity<SuccessResponse<String>> NO_CONTENT = success(SuccessCode.NO_CONTENT_SUCCESS, null);
 
     private int status;
     private boolean success;
