@@ -45,7 +45,7 @@ public class RoomController {
     @Auth
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/room")
-    public ResponseEntity<RoomInfoResponse> createRoom(@Valid @RequestBody SetRoomNameRequestDto request, @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<RoomInfoResponse>> createRoom(@Valid @RequestBody SetRoomNameRequestDto request, @ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.CREATE_ROOM_SUCCESS, roomService.createRoom(request, userId));
     }
 
@@ -68,9 +68,9 @@ public class RoomController {
     })
     @Auth
     @PostMapping("/room/{roomId}/join")
-    public ResponseEntity<RoomInfoResponse> joinRoom(@ApiParam(name = "roomId", value = "참가할 room 의 id", required = true, example = "1")
-                                                     @PathVariable Long roomId,
-                                                     @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<RoomInfoResponse>> joinRoom(@ApiParam(name = "roomId", value = "참가할 room 의 id", required = true, example = "1")
+                                                                      @PathVariable Long roomId,
+                                                                      @ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.JOIN_ROOM_SUCCESS, roomService.joinRoom(roomId, userId));
     }
 
@@ -95,7 +95,7 @@ public class RoomController {
     })
     @Auth
     @PutMapping("/room/name")
-    public ResponseEntity<String> updateRoomName(@Valid @RequestBody SetRoomNameRequestDto request, @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> updateRoomName(@Valid @RequestBody SetRoomNameRequestDto request, @ApiIgnore @UserId Long userId) {
         roomService.updateRoomName(request, userId);
         return SuccessResponse.OK;
     }
@@ -116,7 +116,7 @@ public class RoomController {
     })
     @Auth
     @DeleteMapping("/room/leave")
-    public ResponseEntity<String> leaveRoom(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> leaveRoom(@ApiIgnore @UserId Long userId) {
         roomService.leaveRoom(userId);
         return SuccessResponse.OK;
     }

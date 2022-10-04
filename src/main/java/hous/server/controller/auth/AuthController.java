@@ -64,7 +64,7 @@ public class AuthController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PostMapping("/auth/signup")
-    public ResponseEntity<LoginResponse> signUp(@Valid @RequestBody SignUpRequestDto request) {
+    public ResponseEntity<SuccessResponse<LoginResponse>> signUp(@Valid @RequestBody SignUpRequestDto request) {
         AuthService authService = authServiceProvider.getAuthService(request.getSocialType());
         Long userId = authService.signUp(request.toServiceDto());
 
@@ -92,7 +92,7 @@ public class AuthController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PostMapping("/auth/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequestDto request) {
+    public ResponseEntity<SuccessResponse<LoginResponse>> login(@Valid @RequestBody LoginRequestDto request) {
         AuthService authService = authServiceProvider.getAuthService(request.getSocialType());
         Long userId = authService.login(request.toServiceDto());
 
@@ -117,7 +117,7 @@ public class AuthController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PostMapping("/auth/refresh")
-    public ResponseEntity<TokenResponse> reissue(@Valid @RequestBody TokenRequestDto request) {
+    public ResponseEntity<SuccessResponse<TokenResponse>> reissue(@Valid @RequestBody TokenRequestDto request) {
         return SuccessResponse.success(SuccessCode.REISSUE_TOKEN_SUCCESS, createTokenService.reissueToken(request));
     }
 
@@ -137,7 +137,7 @@ public class AuthController {
     })
     @Auth
     @PostMapping("/auth/logout")
-    public ResponseEntity<String> logout(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> logout(@ApiIgnore @UserId Long userId) {
         commonAuthService.logout(userId);
         return SuccessResponse.OK;
     }

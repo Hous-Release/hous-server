@@ -38,7 +38,7 @@ public class RoomRetrieveController {
     })
     @Auth
     @GetMapping("/room")
-    public ResponseEntity<GetRoomResponse> getRoom(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<GetRoomResponse>> getRoom(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_ROOM_SUCCESS, roomRetrieveService.getRoom(userId));
     }
 
@@ -54,8 +54,8 @@ public class RoomRetrieveController {
     })
     @Auth
     @GetMapping("/room/info")
-    public ResponseEntity<GetRoomInfoResponse> getRoomInfo(@ApiParam(name = "code", value = "참가하려는 방 코드", required = true, example = "PNO6VN6A")
-                                                           @RequestParam String code) {
+    public ResponseEntity<SuccessResponse<GetRoomInfoResponse>> getRoomInfo(@ApiParam(name = "code", value = "참가하려는 방 코드", required = true, example = "PNO6VN6A")
+                                                                            @RequestParam String code) {
         return SuccessResponse.success(SuccessCode.GET_ROOM_INFO_SUCCESS, roomRetrieveService.getRoomInfo(code));
     }
 }

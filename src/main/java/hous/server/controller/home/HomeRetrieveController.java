@@ -42,7 +42,7 @@ public class HomeRetrieveController {
     })
     @Auth
     @GetMapping("/home")
-    public ResponseEntity<HomeInfoResponse> getHomeInfo(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<HomeInfoResponse>> getHomeInfo(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_HOME_INFO_SUCCESS, homeRetrieveService.getHomeInfo(userId));
     }
 }

@@ -49,8 +49,8 @@ public class RuleController {
     @Auth
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/rules")
-    public ResponseEntity<String> createRule(@Valid @RequestBody CreateRuleRequestDto request,
-                                             @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> createRule(@Valid @RequestBody CreateRuleRequestDto request,
+                                                              @ApiIgnore @UserId Long userId) {
         ruleService.createRule(request, userId);
         return SuccessResponse.CREATED;
     }
@@ -77,10 +77,10 @@ public class RuleController {
     })
     @Auth
     @PutMapping("/rule/{ruleId}")
-    public ResponseEntity<String> updateRule(@ApiParam(name = "ruleId", value = "수정할 rule 의 id", required = true, example = "1")
-                                             @PathVariable Long ruleId,
-                                             @Valid @RequestBody UpdateRuleRequestDto request,
-                                             @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> updateRule(@ApiParam(name = "ruleId", value = "수정할 rule 의 id", required = true, example = "1")
+                                                              @PathVariable Long ruleId,
+                                                              @Valid @RequestBody UpdateRuleRequestDto request,
+                                                              @ApiIgnore @UserId Long userId) {
         ruleService.updateRule(request, ruleId, userId);
         return SuccessResponse.OK;
     }
@@ -103,8 +103,8 @@ public class RuleController {
     })
     @Auth
     @PutMapping("/rules")
-    public ResponseEntity<String> updateSortByRules(@Valid @RequestBody ModifyRuleReqeustDto request,
-                                                    @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> updateSortByRules(@Valid @RequestBody ModifyRuleReqeustDto request,
+                                                                     @ApiIgnore @UserId Long userId) {
         ruleService.updateSortByRule(request, userId);
         return SuccessResponse.OK;
     }
@@ -127,8 +127,8 @@ public class RuleController {
     })
     @Auth
     @DeleteMapping("/rules")
-    public ResponseEntity<String> deleteRules(@Valid @RequestBody ModifyRuleReqeustDto request,
-                                              @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> deleteRules(@Valid @RequestBody ModifyRuleReqeustDto request,
+                                                               @ApiIgnore @UserId Long userId) {
         ruleService.deleteRules(request, userId);
         return SuccessResponse.OK;
     }

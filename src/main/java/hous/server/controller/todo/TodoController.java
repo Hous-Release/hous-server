@@ -50,7 +50,7 @@ public class TodoController {
     @Auth
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/todo")
-    public ResponseEntity<String> createTodo(@Valid @RequestBody TodoInfoRequestDto request, @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> createTodo(@Valid @RequestBody TodoInfoRequestDto request, @ApiIgnore @UserId Long userId) {
         todoService.createTodo(request, userId);
         return SuccessResponse.CREATED;
     }
@@ -75,9 +75,9 @@ public class TodoController {
     })
     @Auth
     @PutMapping("/todo/{todoId}")
-    public ResponseEntity<String> updateTodo(@ApiParam(name = "todoId", value = "수정할 todo 의 id", required = true, example = "1")
-                                             @PathVariable Long todoId,
-                                             @Valid @RequestBody TodoInfoRequestDto request) {
+    public ResponseEntity<SuccessResponse<String>> updateTodo(@ApiParam(name = "todoId", value = "수정할 todo 의 id", required = true, example = "1")
+                                                              @PathVariable Long todoId,
+                                                              @Valid @RequestBody TodoInfoRequestDto request) {
         todoService.updateTodo(todoId, request);
         return SuccessResponse.OK;
     }
@@ -104,10 +104,10 @@ public class TodoController {
     })
     @Auth
     @PostMapping("/todo/{todoId}/check")
-    public ResponseEntity<String> checkTodo(@ApiParam(name = "todoId", value = "체크할 todo 의 id", required = true, example = "1")
-                                            @PathVariable Long todoId,
-                                            @Valid @RequestBody CheckTodoRequestDto request,
-                                            @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> checkTodo(@ApiParam(name = "todoId", value = "체크할 todo 의 id", required = true, example = "1")
+                                                             @PathVariable Long todoId,
+                                                             @Valid @RequestBody CheckTodoRequestDto request,
+                                                             @ApiIgnore @UserId Long userId) {
         todoService.checkTodo(todoId, request, userId);
         return SuccessResponse.OK;
     }
@@ -124,8 +124,8 @@ public class TodoController {
     })
     @Auth
     @DeleteMapping("/todo/{todoId}")
-    public ResponseEntity<String> deleteTodo(@ApiParam(name = "todoId", value = "삭제할 todo 의 id", required = true, example = "1")
-                                             @PathVariable Long todoId) {
+    public ResponseEntity<SuccessResponse<String>> deleteTodo(@ApiParam(name = "todoId", value = "삭제할 todo 의 id", required = true, example = "1")
+                                                              @PathVariable Long todoId) {
         todoService.deleteTodo(todoId);
         return SuccessResponse.OK;
     }

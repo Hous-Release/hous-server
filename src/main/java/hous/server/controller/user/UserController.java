@@ -52,7 +52,7 @@ public class UserController {
     })
     @Auth
     @PutMapping("/user")
-    public ResponseEntity<String> updateUserInfo(@Valid @RequestBody UpdateUserInfoRequestDto request, @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> updateUserInfo(@Valid @RequestBody UpdateUserInfoRequestDto request, @ApiIgnore @UserId Long userId) {
         userService.updateUserInfo(request, userId);
         return SuccessResponse.OK;
     }
@@ -73,7 +73,7 @@ public class UserController {
     })
     @Auth
     @PatchMapping("/user/push")
-    public ResponseEntity<String> updateUserPushSetting(@Valid @RequestBody UpdatePushSettingRequestDto request, @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> updateUserPushSetting(@Valid @RequestBody UpdatePushSettingRequestDto request, @ApiIgnore @UserId Long userId) {
         userService.updateUserPushSetting(request, userId);
         return SuccessResponse.OK;
     }
@@ -95,7 +95,7 @@ public class UserController {
     })
     @Auth
     @PutMapping("/user/personality")
-    public ResponseEntity<String> updateUserTestScore(
+    public ResponseEntity<SuccessResponse<String>> updateUserTestScore(
             @Valid @RequestBody UpdateTestScoreRequestDto request, @ApiIgnore @UserId Long userId) {
         userService.updateUserTestScore(request, userId);
         return SuccessResponse.OK;
@@ -118,9 +118,9 @@ public class UserController {
     })
     @Auth
     @PutMapping("/user/badge/{badgeId}/represent")
-    public ResponseEntity<String> updateRepresentBadge(@ApiParam(name = "badgeId", value = "대표 배지로 설정할 badge 의 id", required = true, example = "1")
-                                                       @PathVariable Long badgeId,
-                                                       @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> updateRepresentBadge(@ApiParam(name = "badgeId", value = "대표 배지로 설정할 badge 의 id", required = true, example = "1")
+                                                                        @PathVariable Long badgeId,
+                                                                        @ApiIgnore @UserId Long userId) {
         userService.updateRepresentBadge(badgeId, userId);
         return SuccessResponse.OK;
     }
@@ -140,7 +140,7 @@ public class UserController {
     })
     @Auth
     @DeleteMapping("/user")
-    public ResponseEntity<String> deleteUser(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> deleteUser(@ApiIgnore @UserId Long userId) {
         userService.deleteUser(userId);
         return SuccessResponse.OK;
     }
@@ -160,7 +160,7 @@ public class UserController {
     })
     @Auth
     @PostMapping("/user/feedback")
-    public ResponseEntity<String> acquireFeedbackBadge(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> acquireFeedbackBadge(@ApiIgnore @UserId Long userId) {
         userService.acquireFeedbackBadge(userId);
         return SuccessResponse.OK;
     }
