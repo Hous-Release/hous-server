@@ -39,7 +39,7 @@ public class RuleRetrieveController {
     })
     @Auth
     @GetMapping("/rules")
-    public ResponseEntity<List<RuleInfoResponse>> getRulesInfo(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<List<RuleInfoResponse>>> getRulesInfo(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_RULE_INFO_SUCCESS, ruleRetrieveService.getRulesInfo(userId));
     }
 }

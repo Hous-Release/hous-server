@@ -43,7 +43,7 @@ public class UserRetrieveController {
     })
     @Auth
     @GetMapping("/user")
-    public ResponseEntity<UserInfoResponse> getUserInfo(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<UserInfoResponse>> getUserInfo(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_MY_PROFILE_INFO_SUCCESS, userRetrieveService.getUserInfo(userId));
     }
 
@@ -61,8 +61,8 @@ public class UserRetrieveController {
     })
     @Auth
     @GetMapping("/user/{homieId}")
-    public ResponseEntity<UserInfoResponse> getHomieInfo(@ApiParam(name = "homieId", value = "조회할 호미의 id", required = true, example = "1")
-                                                         @PathVariable Long homieId, @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<UserInfoResponse>> getHomieInfo(@ApiParam(name = "homieId", value = "조회할 호미의 id", required = true, example = "1")
+                                                                          @PathVariable Long homieId, @ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_HOMIE_PROFILE_INFO_SUCCESS, userRetrieveService.getHomieInfo(homieId, userId));
     }
 
@@ -79,8 +79,8 @@ public class UserRetrieveController {
     })
     @Auth
     @GetMapping("/user/personality")
-    public ResponseEntity<PersonalityInfoResponse> getPersonalityInfo(@ApiParam(name = "color", value = "조회할 성향 색깔", required = true, example = "RED")
-                                                                      @RequestParam PersonalityColor color) {
+    public ResponseEntity<SuccessResponse<PersonalityInfoResponse>> getPersonalityInfo(@ApiParam(name = "color", value = "조회할 성향 색깔", required = true, example = "RED")
+                                                                                       @RequestParam PersonalityColor color) {
         return SuccessResponse.success(SuccessCode.GET_PERSONALITY_INFO_SUCCESS, userRetrieveService.getPersonalityInfo(color));
     }
 
@@ -95,7 +95,7 @@ public class UserRetrieveController {
     })
     @Auth
     @GetMapping("/user/personality/test")
-    public ResponseEntity<List<PersonalityTestInfoResponse>> getPersonalityTestInfo() {
+    public ResponseEntity<SuccessResponse<List<PersonalityTestInfoResponse>>> getPersonalityTestInfo() {
         return SuccessResponse.success(SuccessCode.GET_PERSONALITY_TEST_INFO_SUCCESS, userRetrieveService.getPersonalityTestInfo());
     }
 
@@ -115,7 +115,7 @@ public class UserRetrieveController {
     })
     @Auth
     @GetMapping("/user/badges")
-    public ResponseEntity<MyBadgeInfoResponse> getMyBadgeList(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<MyBadgeInfoResponse>> getMyBadgeList(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_BADGE_INFO_SUCCESS, userRetrieveService.getMyBadgeList(userId));
     }
 
@@ -135,11 +135,11 @@ public class UserRetrieveController {
     })
     @Auth
     @GetMapping("/user/notifications")
-    public ResponseEntity<NotificationsInfoResponse> getNotificationsInfo(@ApiParam(name = "size", value = "스크롤 1회당 조회할 개수", required = true, example = "10")
-                                                                          @RequestParam int size,
-                                                                          @ApiParam(name = "lastNotificationId", value = "마지막으로 조회된 notificationId", required = true, example = "100")
-                                                                          @RequestParam Long lastNotificationId,
-                                                                          @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<NotificationsInfoResponse>> getNotificationsInfo(@ApiParam(name = "size", value = "스크롤 1회당 조회할 개수", required = true, example = "10")
+                                                                                           @RequestParam int size,
+                                                                                           @ApiParam(name = "lastNotificationId", value = "마지막으로 조회된 notificationId", required = true, example = "100")
+                                                                                           @RequestParam Long lastNotificationId,
+                                                                                           @ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_NOTIFICATIONS_INFO_SUCCESS, notificationRetrieveService.getNotificationsInfo(size, lastNotificationId, userId));
     }
 }

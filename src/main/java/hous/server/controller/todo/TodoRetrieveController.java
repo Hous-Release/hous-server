@@ -42,7 +42,7 @@ public class TodoRetrieveController {
     })
     @Auth
     @GetMapping("/todo")
-    public ResponseEntity<UserPersonalityInfoResponse> getUsersInfo(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<UserPersonalityInfoResponse>> getUsersInfo(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_USERS_INFO_SUCCESS, todoRetrieveService.getUsersInfo(userId));
     }
 
@@ -62,7 +62,7 @@ public class TodoRetrieveController {
     })
     @Auth
     @GetMapping("/todos")
-    public ResponseEntity<TodoMainResponse> getTodoMain(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<TodoMainResponse>> getTodoMain(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_TODO_MAIN_SUCCESS, todoRetrieveService.getTodoMain(userId));
     }
 
@@ -83,9 +83,9 @@ public class TodoRetrieveController {
     })
     @Auth
     @GetMapping("/todo/{todoId}")
-    public ResponseEntity<TodoInfoResponse> getTodoInfo(@ApiParam(name = "todoId", value = "조회할 todo 의 id", required = true, example = "1")
-                                                        @PathVariable Long todoId,
-                                                        @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<TodoInfoResponse>> getTodoInfo(@ApiParam(name = "todoId", value = "조회할 todo 의 id", required = true, example = "1")
+                                                                         @PathVariable Long todoId,
+                                                                         @ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_TODO_INFO_SUCCESS, todoRetrieveService.getTodoInfo(todoId, userId));
     }
 
@@ -105,9 +105,9 @@ public class TodoRetrieveController {
     })
     @Auth
     @GetMapping("/todo/{todoId}/summary")
-    public ResponseEntity<TodoSummaryInfoResponse> getTodoSummaryInfo(@ApiParam(name = "todoId", value = "조회할 todo 의 id", required = true, example = "1")
-                                                                      @PathVariable Long todoId,
-                                                                      @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<TodoSummaryInfoResponse>> getTodoSummaryInfo(@ApiParam(name = "todoId", value = "조회할 todo 의 id", required = true, example = "1")
+                                                                                       @PathVariable Long todoId,
+                                                                                       @ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_TODO_SUMMARY_INFO_SUCCESS, todoRetrieveService.getTodoSummaryInfo(todoId, userId));
     }
 
@@ -128,7 +128,7 @@ public class TodoRetrieveController {
     })
     @Auth
     @GetMapping("/todos/day")
-    public ResponseEntity<List<TodoAllDayResponse>> getTodoAllDayInfo(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<List<TodoAllDayResponse>>> getTodoAllDayInfo(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_TODO_ALL_DAY_SUCCESS, todoRetrieveService.getTodoAllDayInfo(userId));
     }
 
@@ -149,7 +149,7 @@ public class TodoRetrieveController {
     })
     @Auth
     @GetMapping("/todos/member")
-    public ResponseEntity<List<TodoAllMemberResponse>> getTodoAllMemberInfo(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<List<TodoAllMemberResponse>>> getTodoAllMemberInfo(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_TODO_ALL_MEMBER_SUCCESS, todoRetrieveService.getTodoAllMemberInfo(userId));
     }
 
@@ -169,7 +169,7 @@ public class TodoRetrieveController {
     })
     @Auth
     @GetMapping("/todos/me")
-    public ResponseEntity<MyTodoInfoResponse> getMyTodoInfo(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<MyTodoInfoResponse>> getMyTodoInfo(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_MY_TODO_SUCCESS, todoRetrieveService.getMyTodoInfo(userId));
     }
 }
