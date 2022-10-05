@@ -43,7 +43,7 @@ public class SlackService {
                             .attachments(attachments)
                             .text(SLACK_MESSAGE_TITLE));
         } catch (SlackApiException | IOException e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
