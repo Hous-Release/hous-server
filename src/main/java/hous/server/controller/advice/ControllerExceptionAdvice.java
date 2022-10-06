@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import hous.server.common.dto.ErrorResponse;
 import hous.server.common.exception.FeignClientException;
 import hous.server.common.exception.HousException;
+import hous.server.service.slack.SlackService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
@@ -28,7 +30,9 @@ import static hous.server.common.exception.ErrorCode.*;
 
 @Slf4j
 @RestControllerAdvice
+@AllArgsConstructor
 public class ControllerExceptionAdvice {
+    private final SlackService slackService;
 
     /**
      * Hous Custom Exception
@@ -39,6 +43,7 @@ public class ControllerExceptionAdvice {
             log.warn(exception.getMessage(), exception);
         } else {
             log.error(exception.getMessage(), exception);
+            slackService.sendSlackMessage(exception);
         }
         return ResponseEntity.status(exception.getStatus())
                 .body(ErrorResponse.error(exception.getErrorCode()));
@@ -53,6 +58,7 @@ public class ControllerExceptionAdvice {
             log.warn(exception.getMessage(), exception);
         } else {
             log.error(exception.getMessage(), exception);
+            slackService.sendSlackMessage(exception);
         }
         if (exception.getStatus() == UNAUTHORIZED_INVALID_TOKEN_EXCEPTION.getStatus()) {
             return ResponseEntity.status(UNAUTHORIZED_INVALID_TOKEN_EXCEPTION.getStatus())
@@ -171,6 +177,7 @@ public class ControllerExceptionAdvice {
     @ExceptionHandler(Exception.class)
     protected ErrorResponse handleException(final Exception exception) {
         log.error(exception.getMessage(), exception);
+        slackService.sendSlackMessage(exception);
         return ErrorResponse.error(INTERNAL_SERVER_EXCEPTION);
     }
 }

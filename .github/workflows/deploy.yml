@@ -62,6 +62,8 @@ jobs:
           echo cloud.aws.region.static=$AWS_REGION >> application.properties
           echo cloud.aws.stack.auto=false >> application.properties
           echo cloud.firebase.credentials.uri=$FIREBASE_URI >> application.properties
+          echo slack.token=$SLACK_TOKEN >> application.properties
+          echo slack.channel.monitor=$SLACK_CHANNEL_MONITOR >> application.properties
           
           mkdir firebase
           touch ./firebase/firebase_service_key.json
