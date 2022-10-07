@@ -13,8 +13,8 @@ import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.home.dto.response.HomeInfoResponse;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.todo.TodoServiceUtils;
-import hous.server.service.todo.dto.response.MyTodoInfo;
 import hous.server.service.todo.dto.response.OurTodoInfo;
+import hous.server.service.todo.dto.response.TodoDetailInfo;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,9 +40,9 @@ public class HomeRetrieveService {
         List<Todo> todos = room.getTodos();
         List<Todo> todayOurTodosList = TodoServiceUtils.filterDayOurTodos(today, todos);
         List<Todo> todayMyTodosList = TodoServiceUtils.filterDayMyTodos(today, user.getOnboarding(), todos);
-        List<MyTodoInfo> todayMyTodos = todayMyTodosList.stream()
+        List<TodoDetailInfo> todayMyTodos = todayMyTodosList.stream()
                 .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
-                .map(todo -> MyTodoInfo.of(
+                .map(todo -> TodoDetailInfo.of(
                         todo.getId(),
                         todo.getName(),
                         doneRepository.findTodayTodoCheckStatus(today, user.getOnboarding(), todo)))

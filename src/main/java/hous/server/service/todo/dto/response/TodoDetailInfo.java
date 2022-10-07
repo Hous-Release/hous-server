@@ -6,7 +6,7 @@ import lombok.*;
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MyTodoInfo extends MyTodo {
+public class TodoDetailInfo extends TodoInfo {
 
     private boolean isChecked;
 
@@ -16,13 +16,13 @@ public class MyTodoInfo extends MyTodo {
     }
 
     @Builder(access = AccessLevel.PRIVATE)
-    public MyTodoInfo(Long todoId, String todoName, boolean isChecked) {
+    public TodoDetailInfo(Long todoId, String todoName, boolean isChecked) {
         super(todoId, todoName);
         this.isChecked = isChecked;
     }
 
-    public static MyTodoInfo of(Long todoId, String todoName, boolean isChecked) {
-        return MyTodoInfo.builder()
+    public static TodoDetailInfo of(Long todoId, String todoName, boolean isChecked) {
+        return TodoDetailInfo.builder()
                 .todoId(todoId)
                 .todoName(todoName)
                 .isChecked(isChecked)

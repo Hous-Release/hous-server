@@ -7,12 +7,12 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder(access = AccessLevel.PRIVATE)
-public class MyTodo {
+public class TodoInfo {
     private Long todoId;
     private String todoName;
 
-    public static MyTodo of(Long todoId, String todoName) {
-        return MyTodo.builder()
+    public static TodoInfo of(Long todoId, String todoName) {
+        return TodoInfo.builder()
                 .todoId(todoId)
                 .todoName(todoName)
                 .build();

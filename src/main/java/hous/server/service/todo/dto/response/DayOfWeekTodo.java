@@ -12,9 +12,9 @@ import java.util.List;
 public class DayOfWeekTodo {
     private String dayOfWeek;
     private int todoCnt;
-    private List<String> dayOfWeekTodos;
+    private List<TodoInfo> dayOfWeekTodos;
 
-    public static DayOfWeekTodo of(String dayOfWeek, int todoCnt, List<String> dayOfWeekTodos) {
+    public static DayOfWeekTodo of(String dayOfWeek, int todoCnt, List<TodoInfo> dayOfWeekTodos) {
         return DayOfWeekTodo.builder()
                 .dayOfWeek(dayOfWeek)
                 .todoCnt(todoCnt)

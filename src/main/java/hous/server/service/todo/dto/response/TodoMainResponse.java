@@ -20,10 +20,10 @@ public class TodoMainResponse {
     private int progress;
     private int myTodosCnt;
     private int ourTodosCnt;
-    private List<MyTodoInfo> myTodos;
+    private List<TodoDetailInfo> myTodos;
     private List<OurTodoInfo> ourTodos;
 
-    public static TodoMainResponse of(LocalDate today, List<MyTodoInfo> myTodos, List<OurTodoInfo> ourTodos) {
+    public static TodoMainResponse of(LocalDate today, List<TodoDetailInfo> myTodos, List<OurTodoInfo> ourTodos) {
         int doneOurTodosCnt = (int) ourTodos.stream().filter(ourTodo -> ourTodo.getStatus() == OurTodoStatus.FULL_CHECK).count();
         return TodoMainResponse.builder()
                 .date(DateUtils.parseMonthAndDay(today))
