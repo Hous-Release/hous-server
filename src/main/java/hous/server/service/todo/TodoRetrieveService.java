@@ -52,7 +52,7 @@ public class TodoRetrieveService {
         List<Todo> todos = room.getTodos();
         List<Todo> todayOurTodosList = TodoServiceUtils.filterDayOurTodos(today, todos);
         List<Todo> todayMyTodosList = TodoServiceUtils.filterDayMyTodos(today, user.getOnboarding(), todos);
-        List<MyTodoInfo> todayMyTodos = todayMyTodosList.stream().sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt)).map(todo -> MyTodoInfo.of(todo.getId(), todo.getName(), doneRepository.findTodayTodoCheckStatus(today, user.getOnboarding(), todo))).collect(Collectors.toList());
+        List<TodoDetailInfo> todayMyTodos = todayMyTodosList.stream().sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt)).map(todo -> TodoDetailInfo.of(todo.getId(), todo.getName(), doneRepository.findTodayTodoCheckStatus(today, user.getOnboarding(), todo))).collect(Collectors.toList());
         List<OurTodoInfo> todayOurTodos = todayOurTodosList.stream().sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt)).map(todo -> OurTodoInfo.of(todo.getName(), doneRepository.findTodayOurTodoStatus(today, todo), todo.getTakes().stream().map(take -> take.getOnboarding().getNickname()).collect(Collectors.toSet()))).collect(Collectors.toList());
         return TodoMainResponse.of(today, todayMyTodos, todayOurTodos);
     }
@@ -95,16 +95,16 @@ public class TodoRetrieveService {
         List<TodoAllDayResponse> allDayTodosList = new ArrayList<>();
         for (int i = 1; i < 8; i++) {
             String dayOfWeek = DayOfWeek.getValueByIndex(i);
-            List<MyTodo> myTodoInfos = allDayMyTodosList[i].stream()
+            List<TodoInfo> todoInfoInfos = allDayMyTodosList[i].stream()
                     .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
-                    .map(todo -> MyTodo.of(todo.getId(), todo.getName()))
+                    .map(todo -> TodoInfo.of(todo.getId(), todo.getName()))
                     .collect(Collectors.toList());
             List<OurTodo> ourTodoInfos = allDayOurTodosList[i].stream()
                     .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
                     .map(todo -> OurTodo.of(todo.getName(), todo.getTakes().stream()
                             .map(take -> take.getOnboarding().getNickname()).collect(Collectors.toSet())))
                     .collect(Collectors.toList());
-            allDayTodosList.add(TodoAllDayResponse.of(dayOfWeek, myTodoInfos, ourTodoInfos));
+            allDayTodosList.add(TodoAllDayResponse.of(dayOfWeek, todoInfoInfos, ourTodoInfos));
         }
         return allDayTodosList;
     }
@@ -129,7 +129,9 @@ public class TodoRetrieveService {
             int totalTodoCnt = 0;
             for (int i = 1; i < allDayMemberTodos.length; i++) {
                 String dayOfWeek = DayOfWeek.getValueByIndex(i);
-                List<String> thisDayTodosName = allDayMemberTodos[i].stream().map(Todo::getName).collect(Collectors.toList());
+                List<TodoInfo> thisDayTodosName = allDayMemberTodos[i].stream()
+                        .map(todo -> TodoInfo.of(todo.getId(), todo.getName()))
+                        .collect(Collectors.toList());
                 dayOfWeekTodos.add(DayOfWeekTodo.of(dayOfWeek, thisDayTodosName.size(), thisDayTodosName));
                 totalTodoCnt += thisDayTodosName.size();
             }
