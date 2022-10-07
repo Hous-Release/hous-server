@@ -6,8 +6,8 @@ import hous.server.domain.room.Room;
 import hous.server.domain.rule.Rule;
 import hous.server.domain.todo.OurTodoStatus;
 import hous.server.domain.user.Onboarding;
-import hous.server.service.todo.dto.response.MyTodoInfo;
 import hous.server.service.todo.dto.response.OurTodoInfo;
+import hous.server.service.todo.dto.response.TodoDetailInfo;
 import lombok.*;
 
 import java.util.Comparator;
@@ -41,7 +41,7 @@ public class HomeInfoResponse {
         private PersonalityColor color;
     }
 
-    public static HomeInfoResponse of(Onboarding me, Room room, List<MyTodoInfo> myTodos,
+    public static HomeInfoResponse of(Onboarding me, Room room, List<TodoDetailInfo> myTodos,
                                       List<OurTodoInfo> ourTodos, List<Rule> rules, List<Onboarding> participants) {
         int doneOurTodosCnt = (int) ourTodos.stream().filter(ourTodo -> ourTodo.getStatus() == OurTodoStatus.FULL_CHECK).count();
         return HomeInfoResponse.builder()
@@ -52,7 +52,7 @@ public class HomeInfoResponse {
                 .myTodosCnt(myTodos.size())
                 .myTodos(myTodos.stream()
                         .limit(3)
-                        .map(MyTodoInfo::getTodoName)
+                        .map(TodoDetailInfo::getTodoName)
                         .collect(Collectors.toList()))
                 .ourRules(rules.stream()
                         .sorted(Comparator.comparing(Rule::getIdx))

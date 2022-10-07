@@ -13,14 +13,14 @@ public class TodoAllDayResponse {
 
     private String dayOfWeek;
     private int ourTodosCnt;
-    private List<MyTodo> myTodos;
+    private List<TodoInfo> todoInfos;
     private List<OurTodo> ourTodos;
 
-    public static TodoAllDayResponse of(String dayOfWeek, List<MyTodo> myTodos, List<OurTodo> ourTodos) {
+    public static TodoAllDayResponse of(String dayOfWeek, List<TodoInfo> todoInfos, List<OurTodo> ourTodos) {
         return TodoAllDayResponse.builder()
                 .dayOfWeek(dayOfWeek)
                 .ourTodosCnt(ourTodos.size())
-                .myTodos(myTodos)
+                .todoInfos(todoInfos)
                 .ourTodos(ourTodos)
                 .build();
     }
