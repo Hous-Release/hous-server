@@ -61,6 +61,6 @@ public class HomeRetrieveService {
                 .map(Participate::getOnboarding)
                 .sorted(Comparator.comparing(onboarding -> onboarding.getTestScore().getUpdatedAt()))
                 .collect(Collectors.toList());
-        return HomeInfoResponse.of(user.getOnboarding(), room, today, todayMyTodos, todayOurTodos, rules, participants);
+        return HomeInfoResponse.of(user.getOnboarding(), room, todayMyTodos, todayOurTodos, rules, participants);
     }
 }
