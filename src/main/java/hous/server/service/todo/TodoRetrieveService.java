@@ -95,7 +95,7 @@ public class TodoRetrieveService {
         List<TodoAllDayResponse> allDayTodosList = new ArrayList<>();
         for (int i = 1; i < 8; i++) {
             String dayOfWeek = DayOfWeek.getValueByIndex(i);
-            List<TodoInfo> todoInfoInfos = allDayMyTodosList[i].stream()
+            List<TodoInfo> todoInfos = allDayMyTodosList[i].stream()
                     .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
                     .map(todo -> TodoInfo.of(todo.getId(), todo.getName()))
                     .collect(Collectors.toList());
@@ -104,7 +104,7 @@ public class TodoRetrieveService {
                     .map(todo -> OurTodo.of(todo.getName(), todo.getTakes().stream()
                             .map(take -> take.getOnboarding().getNickname()).collect(Collectors.toSet())))
                     .collect(Collectors.toList());
-            allDayTodosList.add(TodoAllDayResponse.of(dayOfWeek, todoInfoInfos, ourTodoInfos));
+            allDayTodosList.add(TodoAllDayResponse.of(dayOfWeek, todoInfos, ourTodoInfos));
         }
         return allDayTodosList;
     }
