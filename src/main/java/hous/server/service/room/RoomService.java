@@ -107,6 +107,12 @@ public class RoomService {
         me.resetTestScore(me.getTestScore());
     }
 
+    public boolean existsParticipatingRoomByUserId(Long userId) {
+        User user = UserServiceUtils.findUserById(userRepository, userId);
+        List<Participate> participates = user.getOnboarding().getParticipates();
+        return !participates.isEmpty();
+    }
+
     private String createUniqueRoomCode() {
         String code;
         do {

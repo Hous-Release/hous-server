@@ -1,5 +1,6 @@
 package hous.server.controller.auth.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import hous.server.service.auth.dto.response.TokenResponse;
 import lombok.*;
 
@@ -12,11 +13,18 @@ public class LoginResponse {
 
     private Long userId;
     private TokenResponse token;
+    private boolean isJoiningRoom;
 
-    public static LoginResponse of(Long userId, TokenResponse token) {
+    @JsonProperty("isJoiningRoom")
+    public boolean isJoiningRoom() {
+        return isJoiningRoom;
+    }
+
+    public static LoginResponse of(Long userId, TokenResponse token, boolean isJoiningRoom) {
         return LoginResponse.builder()
                 .userId(userId)
                 .token(token)
+                .isJoiningRoom(isJoiningRoom)
                 .build();
     }
 }
