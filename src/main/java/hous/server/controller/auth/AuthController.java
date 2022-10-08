@@ -14,6 +14,7 @@ import hous.server.service.auth.CommonAuthService;
 import hous.server.service.auth.CreateTokenService;
 import hous.server.service.auth.dto.request.TokenRequestDto;
 import hous.server.service.auth.dto.response.TokenResponse;
+import hous.server.service.room.RoomService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -37,6 +38,7 @@ public class AuthController {
     private final AuthServiceProvider authServiceProvider;
     private final CreateTokenService createTokenService;
     private final CommonAuthService commonAuthService;
+    private final RoomService roomService;
 
     @ApiOperation(
             value = "온보딩 페이지 - 회원가입을 요청합니다.",
@@ -67,9 +69,8 @@ public class AuthController {
     public ResponseEntity<SuccessResponse<LoginResponse>> signUp(@Valid @RequestBody SignUpRequestDto request) {
         AuthService authService = authServiceProvider.getAuthService(request.getSocialType());
         Long userId = authService.signUp(request.toServiceDto());
-
         TokenResponse tokenInfo = createTokenService.createTokenInfo(userId);
-        return SuccessResponse.success(SuccessCode.SIGNUP_SUCCESS, LoginResponse.of(userId, tokenInfo));
+        return SuccessResponse.success(SuccessCode.SIGNUP_SUCCESS, LoginResponse.of(userId, tokenInfo, false));
     }
 
     @ApiOperation(
@@ -95,9 +96,9 @@ public class AuthController {
     public ResponseEntity<SuccessResponse<LoginResponse>> login(@Valid @RequestBody LoginRequestDto request) {
         AuthService authService = authServiceProvider.getAuthService(request.getSocialType());
         Long userId = authService.login(request.toServiceDto());
-
+        boolean isJoiningRoom = roomService.existsParticipatingRoomByUserId(userId);
         TokenResponse tokenInfo = createTokenService.createTokenInfo(userId);
-        return SuccessResponse.success(SuccessCode.LOGIN_SUCCESS, LoginResponse.of(userId, tokenInfo));
+        return SuccessResponse.success(SuccessCode.LOGIN_SUCCESS, LoginResponse.of(userId, tokenInfo, isJoiningRoom));
     }
 
     @ApiOperation(
