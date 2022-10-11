@@ -25,10 +25,18 @@ public class Acquire extends AuditingTimeEntity {
     @JoinColumn(name = "badge_id")
     private Badge badge;
 
+    @Column(nullable = false)
+    private boolean isRead;
+
     public static Acquire newInstance(Onboarding onboarding, Badge badge) {
         return Acquire.builder()
                 .onboarding(onboarding)
                 .badge(badge)
+                .isRead(false)
                 .build();
+    }
+
+    public void updateIsRead() {
+        this.isRead = true;
     }
 }

@@ -102,7 +102,9 @@ public class UserRetrieveController {
     @ApiOperation(
             value = "[인증] 마이 페이지(배지 목록 뷰) - 나의 배지 정보를 조회합니다.",
             notes = "대표 배지가 없는 경우, null을 보냅니다.\n" +
-                    "배지 목록에서는 모든 배지 리스트를 전달하지만. 내가 획득한 배지의 경우  acquire = true 입니다."
+                    "배지 목록에서는 모든 배지 리스트를 전달합니다.\n" +
+                    "내가 획득한 배지의 경우 isAcquired = true 입니다.\n" +
+                    "신규 배지의 경우 isRead = false 입니다."
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "나의 배지 목록 조회 성공입니다."),

@@ -67,16 +67,25 @@ public class UserRetrieveService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public MyBadgeInfoResponse getMyBadgeList(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Onboarding onboarding = user.getOnboarding();
         RoomServiceUtils.findParticipatingRoom(user);
         Represent represent = onboarding.getRepresent();
         List<Badge> badges = badgeRepository.findAllBadge();
-        List<Badge> myBadges = acquireRepository.findAllAcquireByOnboarding(onboarding).stream()
+        List<Acquire> acquires = acquireRepository.findAllAcquireByOnboarding(onboarding);
+        List<Badge> myBadges = acquires.stream()
                 .map(Acquire::getBadge)
                 .collect(Collectors.toList());
-        return MyBadgeInfoResponse.of(represent, badges, myBadges);
+        List<Badge> newBadges = acquires.stream()
+                .filter(acquire -> !acquire.isRead())
+                .map(Acquire::getBadge)
+                .collect(Collectors.toList());
+        acquires.stream()
+                .filter(acquire -> !acquire.isRead())
+                .forEach(Acquire::updateIsRead);
+        return MyBadgeInfoResponse.of(represent, badges, myBadges, newBadges);
     }
 
     private UserInfoResponse getProfileInfoByUser(User user) {
