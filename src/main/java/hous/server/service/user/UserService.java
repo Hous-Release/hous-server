@@ -100,8 +100,9 @@ public class UserService {
         TestScore testScore = me.getTestScore();
         if (testScore == null) {
             testScore = testScoreRepository.save(TestScore.newInstance());
+            me.setTestScore(testScore);
         }
-        testScore.updateScore(request.getLight(), request.getNoise(), request.getClean(), request.getSmell(), request.getIntroversion());
+        testScore.updateTestScore(request.getLight(), request.getNoise(), request.getClean(), request.getSmell(), request.getIntroversion());
         Personality personality = UserServiceUtils.getPersonalityColorByTestScore(personalityRepository, testScore);
         me.updatePersonality(personality);
         badgeService.acquireBadge(user, BadgeInfo.I_AM_SUCH_A_PERSON);

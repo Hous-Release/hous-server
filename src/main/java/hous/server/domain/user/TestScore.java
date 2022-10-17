@@ -41,7 +41,7 @@ public class TestScore extends AuditingTimeEntity {
                 .build();
     }
 
-    public void updateScore(int light, int noise, int clean, int smell, int introversion) {
+    public void updateTestScore(int light, int noise, int clean, int smell, int introversion) {
         this.light = light;
         this.noise = noise;
         this.clean = clean;

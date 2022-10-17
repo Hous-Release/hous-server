@@ -20,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
-public class Onboarding extends AuditingTimeEntity {
+public class Onboarding extends AuditingTimeEntity implements Comparable<Onboarding> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -103,6 +103,10 @@ public class Onboarding extends AuditingTimeEntity {
         this.participates.remove(participate);
     }
 
+    public void setTestScore(TestScore testScore) {
+        this.testScore = testScore;
+    }
+
     public void updateUserInfo(UpdateUserInfoRequestDto request) {
         this.nickname = request.getNickname();
         this.isPublic = request.isPublic();
@@ -123,5 +127,21 @@ public class Onboarding extends AuditingTimeEntity {
     public void resetBadge() {
         this.represent = null;
         this.acquires.clear();
+    }
+
+    @Override
+    public int compareTo(Onboarding o) {
+        TestScore t1 = getTestScore();
+        TestScore t2 = o.getTestScore();
+        if (t1 == null && t2 != null) {
+            return 1;
+        }
+        if (t1 != null && t2 == null) {
+            return -1;
+        }
+        if (t1 == null && t2 == null) {
+            return 0;
+        }
+        return t1.getCreatedAt().compareTo(t2.getCreatedAt());
     }
 }
