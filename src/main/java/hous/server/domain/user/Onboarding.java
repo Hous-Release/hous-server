@@ -57,7 +57,7 @@ public class Onboarding extends AuditingTimeEntity {
     private Represent represent;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "test_score_id", nullable = false)
+    @JoinColumn(name = "test_score_id")
     private TestScore testScore;
 
     @OneToMany(mappedBy = "onboarding", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -69,12 +69,10 @@ public class Onboarding extends AuditingTimeEntity {
     @OneToMany(mappedBy = "onboarding", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Notification> notifications = new ArrayList<>();
 
-    public static Onboarding newInstance(User user, Personality personality, TestScore testScore,
-                                         String nickname, LocalDate birthday, boolean isPublic) {
+    public static Onboarding newInstance(User user, Personality personality, String nickname, LocalDate birthday, boolean isPublic) {
         return Onboarding.builder()
                 .user(user)
                 .personality(personality)
-                .testScore(testScore)
                 .nickname(nickname)
                 .birthday(birthday)
                 .isPublic(isPublic)
@@ -119,14 +117,11 @@ public class Onboarding extends AuditingTimeEntity {
         this.mbti = null;
         this.job = null;
         this.introduction = null;
+        this.testScore = null;
     }
 
     public void resetBadge() {
         this.represent = null;
         this.acquires.clear();
-    }
-
-    public void resetTestScore(TestScore testScore) {
-        this.testScore = testScore.resetScore(testScore);
     }
 }

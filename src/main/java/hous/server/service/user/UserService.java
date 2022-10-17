@@ -70,7 +70,6 @@ public class UserService {
         Onboarding onboarding = onboardingRepository.save(Onboarding.newInstance(
                 user,
                 personalityRepository.findPersonalityByColor(PersonalityColor.GRAY),
-                testScoreRepository.save(TestScore.newInstance()),
                 request.getNickname(),
                 request.getBirthday(),
                 request.getIsPublic()));
@@ -99,6 +98,9 @@ public class UserService {
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         Onboarding me = user.getOnboarding();
         TestScore testScore = me.getTestScore();
+        if (testScore == null) {
+            testScore = testScoreRepository.save(TestScore.newInstance());
+        }
         testScore.updateScore(request.getLight(), request.getNoise(), request.getClean(), request.getSmell(), request.getIntroversion());
         Personality personality = UserServiceUtils.getPersonalityColorByTestScore(personalityRepository, testScore);
         me.updatePersonality(personality);

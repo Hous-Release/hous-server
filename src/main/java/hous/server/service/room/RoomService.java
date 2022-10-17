@@ -14,6 +14,7 @@ import hous.server.domain.todo.repository.TakeRepository;
 import hous.server.domain.todo.repository.TodoRepository;
 import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.User;
+import hous.server.domain.user.repository.TestScoreRepository;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.badge.BadgeService;
 import hous.server.service.room.dto.request.SetRoomNameRequestDto;
@@ -40,6 +41,7 @@ public class RoomService {
     private final DoneRepository doneRepository;
     private final AcquireRepository acquireRepository;
     private final RepresentRepository representRepository;
+    private final TestScoreRepository testScoreRepository;
     private final NotificationRepository notificationRepository;
 
     private final BadgeService badgeService;
@@ -102,9 +104,9 @@ public class RoomService {
         }
         acquireRepository.deleteAll(me.getAcquires());
         notificationRepository.deleteAll(me.getNotifications());
+        testScoreRepository.delete(me.getTestScore());
         me.resetUserInfo();
         me.resetBadge();
-        me.resetTestScore(me.getTestScore());
     }
 
     public boolean existsParticipatingRoomByUserId(Long userId) {
