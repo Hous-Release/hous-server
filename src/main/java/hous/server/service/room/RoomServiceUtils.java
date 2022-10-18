@@ -96,4 +96,16 @@ public class RoomServiceUtils {
             }
         });
     }
+
+    public static void deleteParticipateUser(ParticipateRepository participateRepository, RoomRepository roomRepository, Onboarding me, Room room) {
+        List<Participate> participates = room.getParticipates();
+        if (participates.size() > 1) {
+            room.deleteParticipate(participates.get(0));
+            me.deleteParticipate(participates.get(0));
+            participateRepository.delete(participates.get(0));
+        } else {
+            me.deleteParticipate(participates.get(0));
+            roomRepository.delete(room);
+        }
+    }
 }
