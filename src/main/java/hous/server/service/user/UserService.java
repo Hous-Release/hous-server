@@ -146,16 +146,14 @@ public class UserService {
     public void deleteUser(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Onboarding me = user.getOnboarding();
-        Room room = me.getParticipates().get(0).getRoom();
+        List<Participate> participates = me.getParticipates();
 
-        if (room != null) {
+        if (!participates.isEmpty()) {
+            Room room = participates.get(0).getRoom();
             List<Todo> todos = room.getTodos();
             List<Todo> myTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, me);
             RoomServiceUtils.deleteMyTodosTakeMe(takeRepository, doneRepository, todoRepository, myTodos, me, room);
             RoomServiceUtils.deleteParticipateUser(participateRepository, roomRepository, me, room);
-            if (room.getParticipates().isEmpty()) {
-                roomRepository.delete(room);
-            }
         }
 
         userRepository.delete(user);

@@ -155,7 +155,7 @@ public class TodoRetrieveController {
 
     @ApiOperation(
             value = "[인증] 마이 페이지(설정) - MY to-do 를 조회합니다.",
-            notes = "방에서 퇴사 또는 방에 참가한 유저가 방 퇴사하기 전에 탈퇴 요청 시 담당자가 '나'인 to-do 를 조회합니다."
+            notes = "방에서 퇴사 또는 탈퇴 요청 시 방에 참여하고 있을 때 담당자가 '나'인 to-do 를 조회합니다."
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "나의 todo 정보 조회 성공입니다."),
