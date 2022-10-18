@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,13 +45,12 @@ public class TodoServiceUtils {
         }
     }
 
-    public static List<UserPersonalityInfo> toUserPersonalityInfoList(Todo todo) {
-        return todo.getTakes().stream()
-                .sorted(Comparator.comparing(take -> take.getOnboarding().getTestScore().getUpdatedAt()))
-                .map(take -> UserPersonalityInfo.of(
-                        take.getOnboarding().getId(),
-                        take.getOnboarding().getPersonality().getColor(),
-                        take.getOnboarding().getNickname()))
+    public static List<UserPersonalityInfo> toUserPersonalityInfoList(List<Onboarding> onboardings) {
+        return onboardings.stream()
+                .map(onboarding -> UserPersonalityInfo.of(
+                        onboarding.getId(),
+                        onboarding.getPersonality().getColor(),
+                        onboarding.getNickname()))
                 .collect(Collectors.toList());
     }
 

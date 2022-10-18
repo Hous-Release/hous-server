@@ -23,6 +23,9 @@ import static com.slack.api.model.block.composition.BlockCompositions.markdownTe
 @Service
 @PropertySource(value = "classpath:application-slack.yml", factory = YamlPropertySourceFactory.class, ignoreResourceNotFound = true)
 public class SlackService {
+
+    @Value(value = "${spring.profiles.default}")
+    String profile;
     @Value(value = "${slack.token}")
     String token;
     @Value(value = "${slack.channel.monitor}")
@@ -35,15 +38,17 @@ public class SlackService {
     private static final String SLACK_ERROR_STACK = "*Error Stack:*\n";
 
     public void sendSlackMessage(Exception exception) {
-        try {
-            Slack slack = Slack.getInstance();
-            List<Attachment> attachments = createSlackAttachment(exception);
-            slack.methods(token).chatPostMessage(req ->
-                    req.channel(channel)
-                            .attachments(attachments)
-                            .text(SLACK_MESSAGE_TITLE));
-        } catch (SlackApiException | IOException e) {
-            log.error(e.getMessage(), e);
+        if (profile.equals("prod")) {
+            try {
+                Slack slack = Slack.getInstance();
+                List<Attachment> attachments = createSlackAttachment(exception);
+                slack.methods(token).chatPostMessage(req ->
+                        req.channel(channel)
+                                .attachments(attachments)
+                                .text(SLACK_MESSAGE_TITLE));
+            } catch (SlackApiException | IOException e) {
+                log.error(e.getMessage(), e);
+            }
         }
     }
 

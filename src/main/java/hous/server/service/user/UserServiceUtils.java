@@ -6,6 +6,7 @@ import hous.server.common.exception.ValidationException;
 import hous.server.domain.personality.Personality;
 import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.personality.repository.PersonalityRepository;
+import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.TestScore;
 import hous.server.domain.user.User;
 import hous.server.domain.user.UserSocialType;
@@ -13,6 +14,10 @@ import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.user.dto.request.UpdatePushSettingRequestDto;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static hous.server.common.exception.ErrorCode.*;
 
@@ -115,4 +120,16 @@ public class UserServiceUtils {
         return null;
     }
 
+    public static List<Onboarding> toMeFirstList(List<Onboarding> onboardings, Onboarding me) {
+        List<Onboarding> result = new ArrayList<>();
+        List<Onboarding> justMeList = onboardings.stream()
+                .filter(onboarding -> onboarding.getId().equals(me.getId()))
+                .collect(Collectors.toList());
+        List<Onboarding> exceptMeList = onboardings.stream()
+                .filter(onboarding -> !onboarding.getId().equals(me.getId()))
+                .collect(Collectors.toList());
+        result.addAll(justMeList);
+        result.addAll(exceptMeList);
+        return result;
+    }
 }

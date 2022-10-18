@@ -59,8 +59,9 @@ public class HomeRetrieveService {
         List<Rule> rules = room.getRules();
         List<Onboarding> participants = room.getParticipates().stream()
                 .map(Participate::getOnboarding)
-                .sorted(Comparator.comparing(onboarding -> onboarding.getTestScore().getUpdatedAt()))
+                .sorted(Onboarding::compareTo)
                 .collect(Collectors.toList());
-        return HomeInfoResponse.of(user.getOnboarding(), room, todayMyTodos, todayOurTodos, rules, participants);
+        List<Onboarding> meFirstList = UserServiceUtils.toMeFirstList(participants, user.getOnboarding());
+        return HomeInfoResponse.of(user.getOnboarding(), room, todayMyTodos, todayOurTodos, rules, meFirstList);
     }
 }
