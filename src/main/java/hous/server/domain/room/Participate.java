@@ -45,7 +45,9 @@ public class Participate extends AuditingTimeEntity implements Comparable<Partic
             return -1;
         }
         if (t1 == null && t2 == null) {
-            return 0;
+            Participate p1 = getOnboarding().getParticipates().get(0);
+            Participate p2 = o.getOnboarding().getParticipates().get(0);
+            return p1.getCreatedAt().compareTo(p2.getCreatedAt());
         }
         return t1.getCreatedAt().compareTo(t2.getCreatedAt());
     }
