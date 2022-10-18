@@ -176,6 +176,7 @@ public class TodoRetrieveService {
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         List<Todo> todos = room.getTodos();
         List<Todo> myTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, user.getOnboarding()).stream()
+                .filter(todo -> todo.getTakes().size() == 1)
                 .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
                 .collect(Collectors.toList());
         return MyTodoInfoResponse.of(myTodos, user.getOnboarding());
