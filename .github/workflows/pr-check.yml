@@ -21,7 +21,6 @@ jobs:
       - name: create application.properties file
         working-directory: ./src/main/resources
         env:
-          PORT: ${{ secrets.PORT }}
           MYSQL_URL: ${{ secrets.MYSQL_URL }}
           MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME}}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD}}
@@ -38,7 +37,6 @@ jobs:
 
         run: |
           touch application.properties
-          echo server.port=$PORT >> application.properties
           echo server.servlet.encoding.charset=UTF-8 >> application.properties
           echo server.servlet.encoding.force=true >> application.properties
           echo spring.profiles.default=prod >> application.properties
