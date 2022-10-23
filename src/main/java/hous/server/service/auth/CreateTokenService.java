@@ -6,7 +6,9 @@ import hous.server.domain.common.RedisKey;
 import hous.server.domain.user.User;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.auth.dto.request.TokenRequestDto;
+import hous.server.service.auth.dto.response.RefreshResponse;
 import hous.server.service.auth.dto.response.TokenResponse;
+import hous.server.service.room.RoomService;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -25,13 +27,15 @@ public class CreateTokenService {
 
     private final RedisTemplate redisTemplate;
 
+    private final RoomService roomService;
+
     @Transactional
     public TokenResponse createTokenInfo(Long userId) {
         return jwtProvider.createTokenInfo(userId);
     }
 
     @Transactional
-    public TokenResponse reissueToken(TokenRequestDto request) {
+    public RefreshResponse reissueToken(TokenRequestDto request) {
         Long userId = jwtProvider.getUserIdFromJwt(request.getAccessToken());
         User user = UserServiceUtils.findUserById(userRepository, userId);
         if (!jwtProvider.validateToken(request.getRefreshToken())) {
@@ -48,6 +52,8 @@ public class CreateTokenService {
             user.resetFcmToken();
             throw new UnAuthorizedException(String.format("해당 리프레시 토큰 (%s) 의 정보가 일치하지 않습니다.", request.getRefreshToken()));
         }
-        return jwtProvider.createTokenInfo(userId);
+        TokenResponse token = jwtProvider.createTokenInfo(userId);
+        boolean isJoiningRoom = roomService.existsParticipatingRoomByUserId(userId);
+        return RefreshResponse.of(token, isJoiningRoom);
     }
 }
