@@ -13,6 +13,7 @@ import hous.server.service.auth.AuthServiceProvider;
 import hous.server.service.auth.CommonAuthService;
 import hous.server.service.auth.CreateTokenService;
 import hous.server.service.auth.dto.request.TokenRequestDto;
+import hous.server.service.auth.dto.response.RefreshResponse;
 import hous.server.service.auth.dto.response.TokenResponse;
 import hous.server.service.room.RoomService;
 import io.swagger.annotations.Api;
@@ -118,7 +119,7 @@ public class AuthController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PostMapping("/auth/refresh")
-    public ResponseEntity<SuccessResponse<TokenResponse>> reissue(@Valid @RequestBody TokenRequestDto request) {
+    public ResponseEntity<SuccessResponse<RefreshResponse>> reissue(@Valid @RequestBody TokenRequestDto request) {
         return SuccessResponse.success(SuccessCode.REISSUE_TOKEN_SUCCESS, createTokenService.reissueToken(request));
     }
 
