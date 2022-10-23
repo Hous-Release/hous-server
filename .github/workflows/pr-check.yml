@@ -34,6 +34,8 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           FIREBASE_URI: ${{ secrets.FIREBASE_URI }}
           FIREBASE_SERVICE_JSON: ${{ secrets.FIREBASE_SERVICE_JSON }}
+          SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
+          SLACK_CHANNEL_MONITOR: ${{ secrets.SLACK_CHANNEL_MONITOR }}
 
         run: |
           touch application.properties
