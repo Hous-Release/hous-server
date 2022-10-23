@@ -104,7 +104,9 @@ public class RoomService {
         }
         acquireRepository.deleteAll(me.getAcquires());
         notificationRepository.deleteAll(me.getNotifications());
-        testScoreRepository.delete(me.getTestScore());
+        if (me.getTestScore() != null) {
+            testScoreRepository.delete(me.getTestScore());
+        }
         me.resetUserInfo();
         me.resetBadge();
     }
