@@ -38,20 +38,15 @@ public class SlackService {
     private static final String SLACK_ERROR_STACK = "*Error Stack:*\n";
 
     public void sendSlackMessage(Exception exception) {
-        log.info("함수 들어옴");
         if (profile.equals("prod")) {
-            log.info("[test] prod start");
             try {
+                log.info(channel);
                 Slack slack = Slack.getInstance();
                 List<Attachment> attachments = createSlackAttachment(exception);
                 slack.methods(token).chatPostMessage(req ->
                         req.channel(channel)
                                 .attachments(attachments)
                                 .text(SLACK_MESSAGE_TITLE));
-                log.info(token);
-                log.info(channel);
-                log.info(attachments.toString());
-                log.info("[test] prod 슬랙 전송 완료");
             } catch (SlackApiException | IOException e) {
                 log.error(e.getMessage(), e);
             }

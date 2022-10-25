@@ -21,53 +21,35 @@ jobs:
       - name: create application.properties file
         working-directory: ./src/main/resources
         env:
-          MYSQL_URL: ${{ secrets.MYSQL_URL }}
-          MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME}}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD}}
-          MYSQL_DRIVER_CLASS_NAME: ${{ secrets.MYSQL_DRIVER_CLASS_NAME}}
-          REDIS_HOST: ${{ secrets.REDIS_HOST }}
-          REDIS_PORT: ${{ secrets.REDIS_PORT }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
           AWS_S3_ACCESS_KEY: ${{ secrets.AWS_S3_ACCESS_KEY }}
           AWS_S3_SECRET_KEY: ${{ secrets.AWS_S3_SECRET_KEY }}
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
-          FIREBASE_URI: ${{ secrets.FIREBASE_URI }}
-          FIREBASE_SERVICE_JSON: ${{ secrets.FIREBASE_SERVICE_JSON }}
-          SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
-          SLACK_CHANNEL_MONITOR: ${{ secrets.SLACK_CHANNEL_MONITOR }}
+          APPLICATION_YML: ${{ secrets.APPLICATION_YML }}
+          APPLICATION_PROD_YML: ${{ secrets.APPLICATION_PROD_YML }}
+          APPLICATION_AWS_YML: ${{ secrets.APPLICATION_AWS_YML }}
+          APPLICATION_FIREBASE_YML: ${{ secrets.APPLICATION_FIREBASE_YML }}
+          APPLICATION_JWT_YML: ${{ secrets.APPLICATION_JWT_YML }}
+          APPLICATION_SLACK_YML: ${{ secrets.APPLICATION_SLACK_YML }}
+          FIREBASE_SERVICE_KEY_JSON: ${{ secrets.FIREBASE_SERVICE_KEY_JSON }}
 
         run: |
-          touch application.properties
-          echo server.servlet.encoding.charset=UTF-8 >> application.properties
-          echo server.servlet.encoding.force=true >> application.properties
-          echo spring.profiles.default=prod >> application.properties
-          echo spring.servlet.multipart.max-file-size=10MB >> application.properties
-          echo spring.servlet.multipart.max-request-size=10MB >> application.properties
-          echo logging.level.org.hibernate.type.descriptor.sql=trace >> application.properties
-          echo logging.level.com.amazonaws.util.EC2MetadataUtils=error >> application.properties
-          echo spring.datasource.url=$MYSQL_URL >> application.properties
-          echo spring.datasource.username=$MYSQL_USERNAME >> application.properties
-          echo spring.datasource.password=$MYSQL_PASSWORD >> application.properties
-          echo spring.datasource.driver-class-name=$MYSQL_DRIVER_CLASS_NAME >> application.properties
-          echo spring.jpa.hibernate.ddl-auto=update >> application.properties
-          echo spring.jpa.properties.hibernate.format_sql=true >> application.properties
-          echo spring.jpa.properties.hibernate.default_batch_fetch_size=1000 >> application.properties
-          echo spring.redis.host=$REDIS_HOST >> application.properties
-          echo spring.redis.port=$REDIS_PORT >> application.properties
-          echo jwt.secret=$JWT_SECRET >> application.properties
-          echo cloud.aws.credentials.accessKey=$AWS_S3_ACCESS_KEY >> application.properties
-          echo cloud.aws.credentials.secretKey=$AWS_S3_SECRET_KEY >> application.properties
-          echo cloud.aws.s3.bucket=$AWS_S3_BUCKET >> application.properties
-          echo cloud.aws.region.static=$AWS_REGION >> application.properties
-          echo cloud.aws.stack.auto=false >> application.properties
-          echo cloud.firebase.credentials.uri=$FIREBASE_URI >> application.properties
-          echo slack.token=$SLACK_TOKEN >> application.properties
-          echo slack.channel.monitor=$SLACK_CHANNEL_MONITOR >> application.properties
+          touch application.yml
+          touch application-prod.yml
+          touch application-aws.yml
+          touch application-firebase.yml
+          touch application-jwt.yml
+          touch application-slack.yml
+          echo $APPLICATION_YML >> application.yml
+          echo $APPLICATION_PROD_YML >> application-prod.yml
+          echo $APPLICATION_AWS_YML >> application-aws.yml
+          echo $APPLICATION_FIREBASE_YML >> application-firebase.yml
+          echo $APPLICATION_JWT_YML >> application-jwt.yml
+          echo $APPLICATION_SLACK_YML >> application-slack.yml
           
           mkdir firebase
           touch ./firebase/firebase_service_key.json
-          echo $FIREBASE_SERVICE_JSON >> ./firebase/firebase_service_key.json
+          echo $FIREBASE_SERVICE_KEY_JSON >> ./firebase/firebase_service_key.json
 
       - name: Set up JDK 11
         uses: actions/setup-java@v1
