@@ -22,10 +22,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
@@ -41,6 +38,12 @@ public class AuthController {
     private final CommonAuthService commonAuthService;
     private final RoomService roomService;
 
+    @ApiOperation(value = "test")
+    @GetMapping("/test/test")
+    public ResponseEntity<SuccessResponse<LoginResponse>> test() {
+        throw new RuntimeException("test error");
+    }
+    
     @ApiOperation(
             value = "온보딩 페이지 - 회원가입을 요청합니다.",
             notes = "카카오 회원가입, 애플 회원가입을 요청합니다.\n" +
