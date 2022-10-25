@@ -1,13 +1,12 @@
 package hous.server.service.auth.impl;
 
-import hous.server.common.exception.ConflictException;
 import hous.server.common.util.JwtUtils;
-import hous.server.domain.common.RedisKey;
 import hous.server.domain.user.User;
 import hous.server.domain.user.UserSocialType;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.external.client.apple.AppleTokenProvider;
 import hous.server.service.auth.AuthService;
+import hous.server.service.auth.CommonAuthServiceUtils;
 import hous.server.service.auth.dto.request.LoginDto;
 import hous.server.service.auth.dto.request.SignUpDto;
 import hous.server.service.user.UserService;
@@ -16,8 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static hous.server.common.exception.ErrorCode.CONFLICT_USER_EXCEPTION;
 
 @RequiredArgsConstructor
 @Service
@@ -46,15 +43,8 @@ public class AppleAuthService implements AuthService {
     public Long login(LoginDto request) {
         String socialId = appleTokenDecoder.getSocialIdFromIdToken(request.getToken());
         User user = UserServiceUtils.findUserBySocialIdAndSocialType(userRepository, socialId, socialType);
-        User conflictFcmTokenUser = userRepository.findUserByFcmToken(request.getFcmToken());
-        if (conflictFcmTokenUser != null) {
-            jwtProvider.expireRefreshToken(conflictFcmTokenUser.getId());
-            conflictFcmTokenUser.resetFcmToken();
-        }
-        String refreshToken = (String) redisTemplate.opsForValue().get(RedisKey.REFRESH_TOKEN + user.getId());
-        if (refreshToken != null) {
-            throw new ConflictException(String.format("이미 로그인된 유저 (%s) 입니다.", user.getId()), CONFLICT_USER_EXCEPTION);
-        }
+        CommonAuthServiceUtils.resetConflictFcmToken(userRepository, jwtProvider, request.getFcmToken());
+        CommonAuthServiceUtils.validateUniqueLogin(redisTemplate, user);
         user.updateFcmToken(request.getFcmToken());
         return user.getId();
     }
@@ -63,16 +53,8 @@ public class AppleAuthService implements AuthService {
     public Long forceLogin(LoginDto request) {
         String socialId = appleTokenDecoder.getSocialIdFromIdToken(request.getToken());
         User user = UserServiceUtils.findUserBySocialIdAndSocialType(userRepository, socialId, socialType);
-        User conflictFcmTokenUser = userRepository.findUserByFcmToken(request.getFcmToken());
-        if (conflictFcmTokenUser != null) {
-            jwtProvider.expireRefreshToken(conflictFcmTokenUser.getId());
-            conflictFcmTokenUser.resetFcmToken();
-        }
-        String refreshToken = (String) redisTemplate.opsForValue().get(RedisKey.REFRESH_TOKEN + user.getId());
-        if (refreshToken != null) {
-            jwtProvider.expireRefreshToken(user.getId());
-            user.resetFcmToken();
-        }
+        CommonAuthServiceUtils.resetConflictFcmToken(userRepository, jwtProvider, request.getFcmToken());
+        CommonAuthServiceUtils.forceLogoutUser(redisTemplate, jwtProvider, user);
         user.updateFcmToken(request.getFcmToken());
         return user.getId();
     }
