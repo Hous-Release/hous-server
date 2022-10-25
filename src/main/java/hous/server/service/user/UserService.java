@@ -13,6 +13,7 @@ import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.personality.repository.PersonalityRepository;
 import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
+import hous.server.domain.room.repository.ParticipateRepository;
 import hous.server.domain.room.repository.RoomRepository;
 import hous.server.domain.todo.Todo;
 import hous.server.domain.todo.repository.DoneRepository;
@@ -60,6 +61,7 @@ public class UserService {
     private final DoneRepository doneRepository;
     private final TodoRepository todoRepository;
     private final RoomRepository roomRepository;
+    private final ParticipateRepository participateRepository;
 
     private final BadgeService badgeService;
 
@@ -150,17 +152,18 @@ public class UserService {
 
     public void deleteUser(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
-        Room room = RoomServiceUtils.findParticipatingRoom(user);
         Onboarding me = user.getOnboarding();
+        List<Participate> participates = me.getParticipates();
 
-        List<Todo> todos = room.getTodos();
-        List<Todo> myTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, me);
-        RoomServiceUtils.deleteMyTodosTakeMe(takeRepository, doneRepository, todoRepository, myTodos, me, room);
+        if (!participates.isEmpty()) {
+            Room room = participates.get(0).getRoom();
+            List<Todo> todos = room.getTodos();
+            List<Todo> myTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, me);
+            RoomServiceUtils.deleteMyTodosTakeMe(takeRepository, doneRepository, todoRepository, myTodos, me, room);
+            RoomServiceUtils.deleteParticipateUser(participateRepository, roomRepository, me, room);
+        }
 
         userRepository.delete(user);
-        if (room.getParticipates().isEmpty()) {
-            roomRepository.delete(room);
-        }
     }
 
     public void acquireFeedbackBadge(Long userId) {
