@@ -22,10 +22,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
@@ -157,11 +154,7 @@ public class AuthController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "성공입니다."),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
-            @ApiResponse(
-                    code = 404,
-                    message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
-                            + "2. 참가중인 방이 존재하지 않습니다.",
-                    response = ErrorResponse.class),
+            @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
@@ -169,5 +162,11 @@ public class AuthController {
     public ResponseEntity<SuccessResponse<String>> logout(@ApiIgnore @UserId Long userId) {
         commonAuthService.logout(userId);
         return SuccessResponse.OK;
+    }
+
+    @ApiOperation(value = "test")
+    @GetMapping("/auth/test")
+    public ResponseEntity<SuccessResponse<String>> test() {
+        throw new RuntimeException("슬랙 500 에러 안울리는 건에 대하여.....");
     }
 }
