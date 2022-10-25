@@ -1,5 +1,6 @@
 package hous.server.service.user;
 
+import hous.server.common.util.JwtUtils;
 import hous.server.domain.badge.Badge;
 import hous.server.domain.badge.BadgeInfo;
 import hous.server.domain.badge.Represent;
@@ -62,6 +63,8 @@ public class UserService {
 
     private final BadgeService badgeService;
 
+    private final JwtUtils jwtProvider;
+
     public Long registerUser(CreateUserRequestDto request) {
         UserServiceUtils.validateNotExistsUser(userRepository, request.getSocialId(), request.getSocialType());
         User user = userRepository.save(User.newInstance(
@@ -73,7 +76,11 @@ public class UserService {
                 request.getNickname(),
                 request.getBirthday(),
                 request.getIsPublic()));
-        UserServiceUtils.validateUniqueFcmToken(userRepository, request.getFcmToken());
+        User conflictFcmTokenUser = userRepository.findUserByFcmToken(request.getFcmToken());
+        if (conflictFcmTokenUser != null) {
+            jwtProvider.expireRefreshToken(conflictFcmTokenUser.getId());
+            conflictFcmTokenUser.resetFcmToken();
+        }
         user.updateFcmToken(request.getFcmToken());
         user.setOnboarding(onboarding);
         return user.getId();

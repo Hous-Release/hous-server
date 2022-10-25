@@ -90,13 +90,40 @@ public class AuthController {
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "유효하지 않은 토큰입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
-            @ApiResponse(code = 409, message = "fcm token 중복입니다.", response = ErrorResponse.class),
+            @ApiResponse(code = 409, message = "이미 로그인 중인 유저입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PostMapping("/auth/login")
     public ResponseEntity<SuccessResponse<LoginResponse>> login(@Valid @RequestBody LoginRequestDto request) {
         AuthService authService = authServiceProvider.getAuthService(request.getSocialType());
         Long userId = authService.login(request.toServiceDto());
+        boolean isJoiningRoom = roomService.existsParticipatingRoomByUserId(userId);
+        TokenResponse tokenInfo = createTokenService.createTokenInfo(userId);
+        return SuccessResponse.success(SuccessCode.LOGIN_SUCCESS, LoginResponse.of(userId, tokenInfo, isJoiningRoom));
+    }
+
+    @ApiOperation(
+            value = "로그인 페이지 - 강제 로그인을 요청합니다.",
+            notes = "카카오 로그인, 애플 로그인을 요청합니다.\n" +
+                    "socialType - KAKAO (카카오), APPLE (애플)\n" +
+                    "회원가입이 완료되지 않은 사용자일 경우 404 에러를 전달합니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "로그인 성공입니다."),
+            @ApiResponse(
+                    code = 400,
+                    message = "1. 유저의 socialType 를 입력해주세요. (socialType)\n"
+                            + "2. access token 을 입력해주세요. (token)\n"
+                            + "3. fcm token 을 입력해주세요. (fcmToken)",
+                    response = ErrorResponse.class),
+            @ApiResponse(code = 401, message = "유효하지 않은 토큰입니다.", response = ErrorResponse.class),
+            @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
+            @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+    })
+    @PostMapping("/auth/login/force")
+    public ResponseEntity<SuccessResponse<LoginResponse>> forceLogin(@Valid @RequestBody LoginRequestDto request) {
+        AuthService authService = authServiceProvider.getAuthService(request.getSocialType());
+        Long userId = authService.forceLogin(request.toServiceDto());
         boolean isJoiningRoom = roomService.existsParticipatingRoomByUserId(userId);
         TokenResponse tokenInfo = createTokenService.createTokenInfo(userId);
         return SuccessResponse.success(SuccessCode.LOGIN_SUCCESS, LoginResponse.of(userId, tokenInfo, isJoiningRoom));
