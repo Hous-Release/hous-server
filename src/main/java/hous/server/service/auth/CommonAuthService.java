@@ -3,7 +3,6 @@ package hous.server.service.auth;
 import hous.server.common.util.JwtUtils;
 import hous.server.domain.user.User;
 import hous.server.domain.user.repository.UserRepository;
-import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,6 @@ public class CommonAuthService {
 
     public void logout(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
-        RoomServiceUtils.findParticipatingRoom(user);
         jwtProvider.expireRefreshToken(user.getId());
         user.resetFcmToken();
     }
