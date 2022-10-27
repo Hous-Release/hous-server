@@ -52,13 +52,23 @@ public class UserInfoResponse {
         private int introversion;
 
         public static TestScoreResponse of(TestScore testScore) {
-            return TestScoreResponse.builder()
-                    .light(testScore.getLight())
-                    .noise(testScore.getNoise())
-                    .smell(testScore.getSmell())
-                    .clean(testScore.getClean())
-                    .introversion(testScore.getIntroversion())
-                    .build();
+            if (testScore == null) {
+                return TestScoreResponse.builder()
+                        .light(0)
+                        .noise(0)
+                        .smell(0)
+                        .clean(0)
+                        .introversion(0)
+                        .build();
+            } else {
+                return TestScoreResponse.builder()
+                        .light(testScore.getLight())
+                        .noise(testScore.getNoise())
+                        .smell(testScore.getSmell())
+                        .clean(testScore.getClean())
+                        .introversion(testScore.getIntroversion())
+                        .build();
+            }
         }
     }
 
