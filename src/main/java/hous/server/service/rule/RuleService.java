@@ -15,7 +15,7 @@ import hous.server.service.badge.BadgeServiceUtils;
 import hous.server.service.notification.NotificationService;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.rule.dto.request.CreateRuleRequestDto;
-import hous.server.service.rule.dto.request.ModifyRuleReqeustDto;
+import hous.server.service.rule.dto.request.DeleteRuleReqeustDto;
 import hous.server.service.rule.dto.request.UpdateRuleRequestDto;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
@@ -87,7 +87,7 @@ public class RuleService {
         room.updateRules(rules);
     }
 
-    public void deleteRules(ModifyRuleReqeustDto request, Long userId) {
+    public void deleteRules(DeleteRuleReqeustDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         request.getRulesIdList().forEach(ruleId -> {

@@ -6,7 +6,7 @@ import hous.server.config.interceptor.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.service.rule.RuleService;
 import hous.server.service.rule.dto.request.CreateRuleRequestDto;
-import hous.server.service.rule.dto.request.ModifyRuleReqeustDto;
+import hous.server.service.rule.dto.request.DeleteRuleReqeustDto;
 import hous.server.service.rule.dto.request.UpdateRuleRequestDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -101,7 +101,7 @@ public class RuleController {
     })
     @Auth
     @DeleteMapping("/rules")
-    public ResponseEntity<SuccessResponse<String>> deleteRules(@Valid @RequestBody ModifyRuleReqeustDto request,
+    public ResponseEntity<SuccessResponse<String>> deleteRules(@Valid @RequestBody DeleteRuleReqeustDto request,
                                                                @ApiIgnore @UserId Long userId) {
         ruleService.deleteRules(request, userId);
         return SuccessResponse.OK;
