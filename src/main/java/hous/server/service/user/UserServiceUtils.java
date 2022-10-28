@@ -108,7 +108,7 @@ public class UserServiceUtils {
         } else if (totalTestScore >= 40 && totalTestScore <= 45) {
             return personalityRepository.findPersonalityByColor(PersonalityColor.GREEN);
         }
-        return null;
+        return personalityRepository.findPersonalityByColor(PersonalityColor.GRAY);
     }
 
     public static List<Onboarding> toMeFirstList(List<Onboarding> onboardings, Onboarding me) {

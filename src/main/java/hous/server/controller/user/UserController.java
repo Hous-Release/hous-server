@@ -2,12 +2,14 @@ package hous.server.controller.user;
 
 import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
+import hous.server.common.success.SuccessCode;
 import hous.server.config.interceptor.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.service.user.UserService;
 import hous.server.service.user.dto.request.UpdatePushSettingRequestDto;
 import hous.server.service.user.dto.request.UpdateTestScoreRequestDto;
 import hous.server.service.user.dto.request.UpdateUserInfoRequestDto;
+import hous.server.service.user.dto.response.UpdatePersonalityColorResponse;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -80,10 +82,10 @@ public class UserController {
 
     @ApiOperation(
             value = "[인증] 마이 페이지(Profile 뷰) - 성향테스트 결과 정보를 수정합니다.",
-            notes = "성향테스트 결과를 수정합니다."
+            notes = "성향테스트 결과를 후 변경된 성향테스트 색상을 전달합니다."
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공입니다."),
+            @ApiResponse(code = 200, message = "성향테스트 수정 성공입니다."),
             @ApiResponse(
                     code = 400, message = "성향 테스트의 각 성향 점수는 최소 3점, 최대 9점입니다. (smell, light, noise, clean, introversion)", response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
@@ -95,10 +97,9 @@ public class UserController {
     })
     @Auth
     @PutMapping("/user/personality")
-    public ResponseEntity<SuccessResponse<String>> updateUserTestScore(
+    public ResponseEntity<SuccessResponse<UpdatePersonalityColorResponse>> updateUserTestScore(
             @Valid @RequestBody UpdateTestScoreRequestDto request, @ApiIgnore @UserId Long userId) {
-        userService.updateUserTestScore(request, userId);
-        return SuccessResponse.OK;
+        return SuccessResponse.success(SuccessCode.UPDATE_PERSONALITY_TEST_SUCCESS, userService.updateUserTestScore(request, userId));
     }
 
     @ApiOperation(
