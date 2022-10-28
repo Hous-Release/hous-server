@@ -36,8 +36,11 @@ public class Rule extends AuditingTimeEntity {
     }
 
     public void updateRule(String name, int idx) {
-        this.name = name;
         this.idx = idx;
+        if (this.name.equals(name)) {
+            return;
+        }
+        this.name = name;
     }
 
 }
