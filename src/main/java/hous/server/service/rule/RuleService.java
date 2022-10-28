@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @RequiredArgsConstructor
 @Service
@@ -73,22 +74,17 @@ public class RuleService {
         usersExceptMe.forEach(userExceptMe -> notificationService.sendNewRuleNotification(userExceptMe, rules));
     }
 
-    public void updateRule(UpdateRuleRequestDto request, Long ruleId, Long userId) {
+    public void updateRule(UpdateRuleRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
-        Rule rule = RuleServiceUtils.findRuleByIdAndRoom(ruleRepository, ruleId, room);
-        rule.updateRuleName(request);
-    }
-
-    public void updateSortByRule(ModifyRuleReqeustDto request, Long userId) {
-        User user = UserServiceUtils.findUserById(userRepository, userId);
-        Room room = RoomServiceUtils.findParticipatingRoom(user);
-        RuleServiceUtils.validateRequestRuleCounts(room, request.getRulesIdList().size());
-        for (int idx = 0; idx < request.getRulesIdList().size(); idx++) {
-            Long ruleId = request.getRulesIdList().get(idx);
-            Rule rule = RuleServiceUtils.findRuleByIdAndRoom(ruleRepository, ruleId, room);
-            rule.updateRuleIndex(idx);
-        }
+        RuleServiceUtils.validateRequestRuleCounts(room, request.getRules().size());
+        List<Rule> rules = IntStream.range(0, request.getRules().size())
+                .mapToObj(idx -> {
+                    Rule rule = RuleServiceUtils.findRuleByIdAndRoom(ruleRepository, request.getRules().get(idx).getId(), room);
+                    rule.updateRule(request.getRules().get(idx).getName(), idx);
+                    return rule;
+                }).collect(Collectors.toList());
+        room.updateRules(rules);
     }
 
     public void deleteRules(ModifyRuleReqeustDto request, Long userId) {

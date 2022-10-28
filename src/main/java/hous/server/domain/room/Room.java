@@ -79,6 +79,11 @@ public class Room extends AuditingTimeEntity {
         this.rulesCnt += rules.size();
     }
 
+    public void updateRules(List<Rule> rules) {
+        this.rules.clear();
+        this.rules.addAll(rules);
+    }
+
     public void deleteRule(Rule rule) {
         this.rules.remove(rule);
         this.rulesCnt -= 1;

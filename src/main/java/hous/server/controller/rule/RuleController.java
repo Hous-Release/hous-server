@@ -8,7 +8,10 @@ import hous.server.service.rule.RuleService;
 import hous.server.service.rule.dto.request.CreateRuleRequestDto;
 import hous.server.service.rule.dto.request.ModifyRuleReqeustDto;
 import hous.server.service.rule.dto.request.UpdateRuleRequestDto;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,43 +59,14 @@ public class RuleController {
     }
 
     @ApiOperation(
-            value = "[인증] 규칙 페이지 - 규칙 1개를 수정합니다.",
-            notes = "규칙 내용 수정을 요청합니다."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공입니다."),
-            @ApiResponse(
-                    code = 400,
-                    message = "1. 규칙 내용을 입력해주세요. (name)\n"
-                            + "2. 규칙은 20 글자 이내로 입력해주세요. (name)",
-                    response = ErrorResponse.class),
-            @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
-            @ApiResponse(
-                    code = 404,
-                    message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
-                            + "2. 존재하지 않는 방입니다.\n"
-                            + "3. 존재하지 않는 규칙입니다.",
-                    response = ErrorResponse.class),
-            @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
-    })
-    @Auth
-    @PutMapping("/rule/{ruleId}")
-    public ResponseEntity<SuccessResponse<String>> updateRule(@ApiParam(name = "ruleId", value = "수정할 rule 의 id", required = true, example = "1")
-                                                              @PathVariable Long ruleId,
-                                                              @Valid @RequestBody UpdateRuleRequestDto request,
-                                                              @ApiIgnore @UserId Long userId) {
-        ruleService.updateRule(request, ruleId, userId);
-        return SuccessResponse.OK;
-    }
-
-    @ApiOperation(
-            value = "[인증] 규칙 페이지 - 규칙 여러 개의 정렬을 수정합니다.",
-            notes = "전체 규칙 id 리스트를 정렬 순서에 따라 resquest dto에 리스트 형태로 담아주세요."
+            value = "[인증] 규칙 페이지 - 규칙 여러 개의 정렬 및 내용을 수정합니다.",
+            notes = "전체 규칙 id와 내용이 담긴 리스트를 정렬 순서에 따라 resquest dto에 리스트 형태로 담아주세요."
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "성공입니다."),
             @ApiResponse(code = 400, message = "규칙 리스트는 빈 배열을 보낼 수 없습니다. (rulesIdList)", response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+            @ApiResponse(code = 403, message = "요청한 rule 의 개수와 방의 rule 의 수가 맞지 않습니다.", response = ErrorResponse.class),
             @ApiResponse(
                     code = 404,
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
@@ -103,9 +77,9 @@ public class RuleController {
     })
     @Auth
     @PutMapping("/rules")
-    public ResponseEntity<SuccessResponse<String>> updateSortByRules(@Valid @RequestBody ModifyRuleReqeustDto request,
+    public ResponseEntity<SuccessResponse<String>> updateSortByRules(@Valid @RequestBody UpdateRuleRequestDto request,
                                                                      @ApiIgnore @UserId Long userId) {
-        ruleService.updateSortByRule(request, userId);
+        ruleService.updateRule(request, userId);
         return SuccessResponse.OK;
     }
 
