@@ -48,6 +48,7 @@ public enum SuccessCode {
     // 성향
     GET_PERSONALITY_INFO_SUCCESS(OK, "성향 정보 조회 성공입니다."),
     GET_PERSONALITY_TEST_INFO_SUCCESS(OK, "성향테스트 정보 조회 성공입니다."),
+    UPDATE_PERSONALITY_TEST_SUCCESS(OK, "성향테스트 수정 성공입니다."),
 
     // 배지
     GET_BADGE_INFO_SUCCESS(OK, "나의 배지 목록 조회 성공입니다."),

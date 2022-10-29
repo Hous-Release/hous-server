@@ -35,6 +35,7 @@ import hous.server.service.user.dto.request.CreateUserRequestDto;
 import hous.server.service.user.dto.request.UpdatePushSettingRequestDto;
 import hous.server.service.user.dto.request.UpdateTestScoreRequestDto;
 import hous.server.service.user.dto.request.UpdateUserInfoRequestDto;
+import hous.server.service.user.dto.response.UpdatePersonalityColorResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -102,7 +103,7 @@ public class UserService {
         setting.updatePushSetting(request);
     }
 
-    public void updateUserTestScore(UpdateTestScoreRequestDto request, Long userId) {
+    public UpdatePersonalityColorResponse updateUserTestScore(UpdateTestScoreRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         Onboarding me = user.getOnboarding();
@@ -138,6 +139,7 @@ public class UserService {
                 badgeService.acquireBadge(onboarding.getUser(), BadgeInfo.OUR_HOUSE_HOMIES);
             });
         }
+        return UpdatePersonalityColorResponse.of(personality);
     }
 
     public void updateRepresentBadge(Long badgeId, Long userId) {
