@@ -78,12 +78,12 @@ public class RuleService {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         RuleServiceUtils.validateRequestRuleCounts(room, request.getRules().size());
-        List<Rule> rules = IntStream.range(0, request.getRules().size())
+        IntStream.range(0, request.getRules().size()).forEach(idx -> {
                 .mapToObj(idx -> {
-                    Rule rule = RuleServiceUtils.findRuleByIdAndRoom(ruleRepository, request.getRules().get(idx).getId(), room);
-                    rule.updateRule(request.getRules().get(idx).getName(), idx);
-                    return rule;
-                }).collect(Collectors.toList());
+            Rule rule = RuleServiceUtils.findRuleByIdAndRoom(ruleRepository, request.getRules().get(idx).getId(), room);
+            rule.updateRule(request.getRules().get(idx).getName(), idx);
+            room.updateRule(rule);
+        });
         room.updateRules(rules);
     }
 
