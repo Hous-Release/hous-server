@@ -44,12 +44,4 @@ public class RuleServiceUtils {
         }
         return rule;
     }
-
-    public static void validateRequestRuleCounts(Room room, int requestRuleCnt) {
-        if (room.getRulesCnt() != requestRuleCnt) {
-            throw new ForbiddenException(String.format("방 (%s) 의 rule 는 (%s) 개가 아닙니다.", room.getId(), requestRuleCnt),
-                    FORBIDDEN_REQUEST_RULE_COUNT_EXCEPTION);
-        }
-    }
-
 }

@@ -2,8 +2,8 @@ package hous.server.domain.rule;
 
 import hous.server.domain.common.AuditingTimeEntity;
 import hous.server.domain.room.Room;
-import hous.server.service.rule.dto.request.UpdateRuleRequestDto;
 import lombok.*;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 
@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
-public class Rule extends AuditingTimeEntity {
+public class Rule extends AuditingTimeEntity implements Comparable<Rule> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,12 +36,19 @@ public class Rule extends AuditingTimeEntity {
                 .build();
     }
 
-    public void updateRuleName(UpdateRuleRequestDto request) {
-        this.name = request.getName();
+    public void updateRule(String name, int idx) {
+        this.idx = idx;
+        this.name = name;
     }
 
-    public void updateRuleIndex(int ruleIdx) {
-        this.idx = ruleIdx;
+    @Override
+    public int compareTo(@NotNull Rule o) {
+        if (idx == o.idx) {
+            if (o.getCreatedAt().compareTo(getCreatedAt()) == 0) {
+                return Long.compare(id, o.id);
+            }
+            return getCreatedAt().compareTo(o.getCreatedAt());
+        }
+        return Integer.compare(idx, o.idx);
     }
-
 }

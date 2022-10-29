@@ -13,7 +13,7 @@ import java.util.List;
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ModifyRuleReqeustDto {
+public class DeleteRuleReqeustDto {
 
     @ApiModelProperty(value = "규칙 id 배열", example = "[12, 13, 14, ...]")
     @Size(min = Constraint.RULE_LIST_MIN, message = "{rule.list.min}")
