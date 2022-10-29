@@ -82,7 +82,7 @@ public class UserController {
 
     @ApiOperation(
             value = "[인증] 마이 페이지(Profile 뷰) - 성향테스트 결과 정보를 수정합니다.",
-            notes = "성향테스트 결과를 후 변경된 성향테스트 색상을 전달합니다."
+            notes = "성향테스트 결과를 수정 후 변경된 성향테스트 색상을 전달합니다."
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "성향테스트 수정 성공입니다."),
