@@ -76,8 +76,8 @@ public class RuleController {
     })
     @Auth
     @PutMapping("/rules")
-    public ResponseEntity<SuccessResponse<String>> updateSortByRules(@Valid @RequestBody UpdateRuleRequestDto request,
-                                                                     @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> updateRules(@Valid @RequestBody UpdateRuleRequestDto request,
+                                                               @ApiIgnore @UserId Long userId) {
         ruleService.updateRules(request, userId);
         return SuccessResponse.OK;
     }
