@@ -79,7 +79,7 @@ public class RuleController {
     @PutMapping("/rules")
     public ResponseEntity<SuccessResponse<String>> updateSortByRules(@Valid @RequestBody UpdateRuleRequestDto request,
                                                                      @ApiIgnore @UserId Long userId) {
-        ruleService.updateRule(request, userId);
+        ruleService.updateRules(request, userId);
         return SuccessResponse.OK;
     }
 

@@ -74,17 +74,15 @@ public class RuleService {
         usersExceptMe.forEach(userExceptMe -> notificationService.sendNewRuleNotification(userExceptMe, rules));
     }
 
-    public void updateRule(UpdateRuleRequestDto request, Long userId) {
+    public void updateRules(UpdateRuleRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         RuleServiceUtils.validateRequestRuleCounts(room, request.getRules().size());
         IntStream.range(0, request.getRules().size()).forEach(idx -> {
-                .mapToObj(idx -> {
             Rule rule = RuleServiceUtils.findRuleByIdAndRoom(ruleRepository, request.getRules().get(idx).getId(), room);
             rule.updateRule(request.getRules().get(idx).getName(), idx);
             room.updateRule(rule);
         });
-        room.updateRules(rules);
     }
 
     public void deleteRules(DeleteRuleReqeustDto request, Long userId) {
