@@ -62,6 +62,6 @@ public class HomeRetrieveService {
                 .sorted(Onboarding::compareTo)
                 .collect(Collectors.toList());
         List<Onboarding> meFirstList = UserServiceUtils.toMeFirstList(participants, user.getOnboarding());
-        return HomeInfoResponse.of(user.getOnboarding(), room, todayMyTodos, todayOurTodos, rules, meFirstList);
+        return HomeInfoResponse.of(user.getOnboarding(), room, today, todayMyTodos, todayOurTodos, rules, meFirstList);
     }
 }

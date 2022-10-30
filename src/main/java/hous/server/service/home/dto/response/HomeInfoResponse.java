@@ -1,5 +1,6 @@
 package hous.server.service.home.dto.response;
 
+import hous.server.common.util.DateUtils;
 import hous.server.common.util.MathUtils;
 import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.room.Room;
@@ -10,6 +11,7 @@ import hous.server.service.todo.dto.response.OurTodoInfo;
 import hous.server.service.todo.dto.response.TodoDetailInfo;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +26,7 @@ public class HomeInfoResponse {
     private String userNickname;
     private String roomName;
     private String roomCode;
+    private String dayOfWeek;
     private int progress;
     private int myTodosCnt;
     private List<String> myTodos;
@@ -41,13 +44,14 @@ public class HomeInfoResponse {
         private PersonalityColor color;
     }
 
-    public static HomeInfoResponse of(Onboarding me, Room room, List<TodoDetailInfo> myTodos,
+    public static HomeInfoResponse of(Onboarding me, Room room, LocalDate today, List<TodoDetailInfo> myTodos,
                                       List<OurTodoInfo> ourTodos, List<Rule> rules, List<Onboarding> participants) {
         int doneOurTodosCnt = (int) ourTodos.stream().filter(ourTodo -> ourTodo.getStatus() == OurTodoStatus.FULL_CHECK).count();
         return HomeInfoResponse.builder()
                 .userNickname(me.getNickname())
                 .roomName(room.getName())
                 .roomCode(room.getCode())
+                .dayOfWeek(DateUtils.nowDayOfWeek(today))
                 .progress(MathUtils.percent(doneOurTodosCnt, ourTodos.size()))
                 .myTodosCnt(myTodos.size())
                 .myTodos(myTodos.stream()
