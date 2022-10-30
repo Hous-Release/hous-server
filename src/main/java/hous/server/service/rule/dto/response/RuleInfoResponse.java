@@ -13,20 +13,13 @@ import java.util.stream.Collectors;
 @Builder(access = AccessLevel.PRIVATE)
 public class RuleInfoResponse {
 
-    private Long id;
+    private List<RuleInfo> rules;
 
-    private String name;
-
-    public static RuleInfoResponse of(Rule rule) {
+    public static RuleInfoResponse of(List<Rule> rules) {
         return RuleInfoResponse.builder()
-                .id(rule.getId())
-                .name(rule.getName())
+                .rules(rules.stream()
+                        .sorted(Rule::compareTo)
+                        .map(RuleInfo::of).collect(Collectors.toList()))
                 .build();
-    }
-
-    public static List<RuleInfoResponse> of(List<Rule> rules) {
-        return rules.stream()
-                .sorted(Rule::compareTo)
-                .map(RuleInfoResponse::of).collect(Collectors.toList());
     }
 }
