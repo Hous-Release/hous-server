@@ -1,9 +1,7 @@
 package hous.server.service.firebase;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
-import hous.server.common.exception.FeignClientException;
 import hous.server.common.exception.InternalServerException;
 import hous.server.common.util.HttpHeaderUtils;
 import hous.server.common.util.JwtUtils;
@@ -17,7 +15,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 
 import static hous.server.common.exception.ErrorCode.INTERNAL_SERVER_EXCEPTION;
@@ -33,14 +30,14 @@ public class FirebaseCloudMessageService {
     private final JwtUtils jwtProvider;
 
     public void sendMessageTo(User to, String title, String body) {
-        String targetToken = to.getFcmToken();
-        String message = makeMessage(targetToken, title, body);
         try {
+            String targetToken = to.getFcmToken();
+            String message = makeMessage(targetToken, title, body);
             firebaseApiCaller.requestFcmMessaging(HttpHeaderUtils.withBearerToken(getAccessToken()), message);
-        } catch (FeignClientException exception) {
+        } catch (Exception exception) {
             jwtProvider.expireRefreshToken(to.getId());
             to.resetFcmToken();
-            log.error(exception.getErrorMessage(), exception);
+            log.error(exception.getMessage(), exception);
         }
     }
 
@@ -57,7 +54,7 @@ public class FirebaseCloudMessageService {
                 .build();
         try {
             return objectMapper.writeValueAsString(fcmMessage);
-        } catch (JsonProcessingException exception) {
+        } catch (Exception exception) {
             log.error(exception.getMessage(), exception);
             throw new InternalServerException("FCM makeMessage exception", INTERNAL_SERVER_EXCEPTION);
         }
@@ -71,7 +68,7 @@ public class FirebaseCloudMessageService {
                     .createScoped(List.of("https://www.googleapis.com/auth/cloud-platform"));
             googleCredentials.refreshIfExpired();
             return googleCredentials.getAccessToken().getTokenValue();
-        } catch (IOException exception) {
+        } catch (Exception exception) {
             log.error(exception.getMessage(), exception);
             throw new InternalServerException("FCM getAccessToken exception", INTERNAL_SERVER_EXCEPTION);
         }
