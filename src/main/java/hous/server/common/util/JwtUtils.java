@@ -5,6 +5,7 @@ import hous.server.domain.common.RedisKey;
 import hous.server.service.auth.dto.response.TokenResponse;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.io.DecodingException;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,7 +71,7 @@ public class JwtUtils {
         try {
             Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
             return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException | DecodingException e) {
             log.warn("Invalid JWT Token", e);
         } catch (ExpiredJwtException e) {
             log.warn("Expired JWT Token", e);
@@ -78,6 +79,8 @@ public class JwtUtils {
             log.warn("Unsupported JWT Token", e);
         } catch (IllegalArgumentException e) {
             log.warn("JWT claims string is empty.", e);
+        } catch (Exception e) {
+            log.error("Unhandled JWT exception", e);
         }
         return false;
     }
