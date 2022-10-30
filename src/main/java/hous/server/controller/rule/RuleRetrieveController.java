@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.util.List;
-
 @Api(tags = "Rule")
 @RequiredArgsConstructor
 @RestController
@@ -39,7 +37,7 @@ public class RuleRetrieveController {
     })
     @Auth
     @GetMapping("/rules")
-    public ResponseEntity<SuccessResponse<List<RuleInfoResponse>>> getRulesInfo(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<RuleInfoResponse>> getRulesInfo(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_RULE_INFO_SUCCESS, ruleRetrieveService.getRulesInfo(userId));
     }
 }
