@@ -15,14 +15,51 @@ public class FcmMessage {
     @AllArgsConstructor
     @Getter
     public static class Message {
-        private Notification notification;
+        private Android android;
+        private Apns apns;
         private String token;
     }
 
     @Builder
     @AllArgsConstructor
     @Getter
-    public static class Notification {
+    public static class Android {
+        private Data data;
+    }
+
+    @Builder
+    @AllArgsConstructor
+    @Getter
+    public static class Data {
+        private String title;
+        private String body;
+    }
+
+    @Builder
+    @AllArgsConstructor
+    @Getter
+    public static class Apns {
+        private Payload payload;
+    }
+
+    @Builder
+    @AllArgsConstructor
+    @Getter
+    public static class Payload {
+        private Aps aps;
+    }
+
+    @Builder
+    @AllArgsConstructor
+    @Getter
+    public static class Aps {
+        private Alert alert;
+    }
+
+    @Builder
+    @AllArgsConstructor
+    @Getter
+    public static class Alert {
         private String title;
         private String body;
     }
