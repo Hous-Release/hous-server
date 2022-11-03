@@ -9,7 +9,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import static hous.server.common.exception.ErrorCode.CONFLICT_USER_EXCEPTION;
+import static hous.server.common.exception.ErrorCode.CONFLICT_LOGIN_EXCEPTION;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommonAuthServiceUtils {
@@ -25,7 +25,7 @@ public class CommonAuthServiceUtils {
     public static void validateUniqueLogin(RedisTemplate<String, Object> redisTemplate, User user) {
         String refreshToken = (String) redisTemplate.opsForValue().get(RedisKey.REFRESH_TOKEN + user.getId());
         if (refreshToken != null) {
-            throw new ConflictException(String.format("이미 로그인된 유저 (%s) 입니다.", user.getId()), CONFLICT_USER_EXCEPTION);
+            throw new ConflictException(String.format("이미 로그인된 유저 (%s) 입니다.", user.getId()), CONFLICT_LOGIN_EXCEPTION);
         }
     }
 

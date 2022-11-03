@@ -9,10 +9,7 @@ import hous.server.domain.personality.PersonalityColor;
 import hous.server.service.notification.NotificationRetrieveService;
 import hous.server.service.notification.dto.response.NotificationsInfoResponse;
 import hous.server.service.user.UserRetrieveService;
-import hous.server.service.user.dto.response.MyBadgeInfoResponse;
-import hous.server.service.user.dto.response.PersonalityInfoResponse;
-import hous.server.service.user.dto.response.PersonalityTestInfoResponse;
-import hous.server.service.user.dto.response.UserInfoResponse;
+import hous.server.service.user.dto.response.*;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -64,6 +61,24 @@ public class UserRetrieveController {
     public ResponseEntity<SuccessResponse<UserInfoResponse>> getHomieInfo(@ApiParam(name = "homieId", value = "조회할 호미의 id", required = true, example = "1")
                                                                           @PathVariable Long homieId, @ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_HOMIE_PROFILE_INFO_SUCCESS, userRetrieveService.getHomieInfo(homieId, userId));
+    }
+
+    @ApiOperation(
+            value = "[인증] 마이 페이지(설정) - 나의 푸시 알림 설정 정보를 조회합니다.",
+            notes = "푸시 알림 설정 정보를 조회합니다.\n" +
+                    "Rules, Badge 설정으로는 ON, OFF 상태가 있습니다.\n" +
+                    "Todo 관련 설정으로는 ON_ALL, ON_MY, OFF 상태가 있습니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "푸시 알림 설정 정보 조회 성공입니다."),
+            @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+            @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
+            @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+    })
+    @Auth
+    @GetMapping("/user/push")
+    public ResponseEntity<SuccessResponse<PushSettingResponse>> getUserPushSetting(@ApiIgnore @UserId Long userId) {
+        return SuccessResponse.success(SuccessCode.GET_USER_PUSH_SETTING_SUCCESS, userRetrieveService.getUserPushSetting(userId));
     }
 
     @ApiOperation(

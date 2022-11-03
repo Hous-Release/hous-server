@@ -56,6 +56,9 @@ public enum SuccessCode {
     // 알림
     GET_NOTIFICATIONS_INFO_SUCCESS(OK, "알림 목록 조회 성공입니다."),
 
+    // 설정
+    GET_USER_PUSH_SETTING_SUCCESS(OK, "푸시 알림 설정 정보 조회 성공입니다."),
+
     /**
      * 201 CREATED
      */
