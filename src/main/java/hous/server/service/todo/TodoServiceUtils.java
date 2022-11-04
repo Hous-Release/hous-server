@@ -17,7 +17,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static hous.server.common.exception.ErrorCode.*;
@@ -55,35 +57,35 @@ public class TodoServiceUtils {
     }
 
     public static List<Todo> filterDayOurTodos(LocalDate day, List<Todo> todos) {
-        List<Todo> dayOurTodosList = new ArrayList<>();
+        Set<Todo> dayOurTodosSet = new HashSet<>();
         todos.forEach(todo -> {
             todo.getTakes().forEach(take -> {
                 take.getRedos().forEach(redo -> {
                     if (redo.getDayOfWeek().toString().equals(DateUtils.nowDayOfWeek(day))) {
-                        dayOurTodosList.add(todo);
+                        dayOurTodosSet.add(todo);
                     }
                 });
             });
         });
-        return dayOurTodosList;
+        return new ArrayList<>(dayOurTodosSet);
     }
 
     public static List<Todo> filterAllDaysOurTodos(List<Todo> todos) {
-        List<Todo> allDaysOurTodosList = new ArrayList<>();
+        Set<Todo> allDaysOurTodosSet = new HashSet<>();
         todos.forEach(todo -> todo.getTakes().forEach(take ->
                 take.getRedos().forEach(redo ->
-                        allDaysOurTodosList.add(todo))));
-        return allDaysOurTodosList;
+                        allDaysOurTodosSet.add(todo))));
+        return new ArrayList<>(allDaysOurTodosSet);
     }
 
     public static List<Todo> filterAllDaysUserTodos(List<Todo> todos, Onboarding onboarding) {
-        List<Todo> userTodosList = new ArrayList<>();
+        Set<Todo> userTodosSet = new HashSet<>();
         todos.forEach(todo -> todo.getTakes().forEach(take -> {
             if (take.getOnboarding().getId().equals(onboarding.getId())) {
-                userTodosList.add(todo);
+                userTodosSet.add(todo);
             }
         }));
-        return userTodosList;
+        return new ArrayList<>(userTodosSet);
     }
 
     public static List<Done> filterAllDaysMyDones(Onboarding me, List<Done> dones) {
@@ -109,15 +111,15 @@ public class TodoServiceUtils {
     }
 
     public static List<Todo> filterDayMyTodos(LocalDate day, Onboarding me, List<Todo> todos) {
-        List<Todo> dayMyTodosList = new ArrayList<>();
+        Set<Todo> dayMyTodosSet = new HashSet<>();
         List<Todo> dayOurTodosList = filterDayOurTodos(day, todos);
         dayOurTodosList.forEach(todo -> {
             todo.getTakes().forEach(take -> {
                 if (take.getOnboarding().getId().equals(me.getId())) {
-                    dayMyTodosList.add(todo);
+                    dayMyTodosSet.add(todo);
                 }
             });
         });
-        return dayMyTodosList;
+        return new ArrayList<>(dayMyTodosSet);
     }
 }

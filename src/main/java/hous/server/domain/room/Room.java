@@ -93,6 +93,10 @@ public class Room extends AuditingTimeEntity {
         this.todosCnt += 1;
     }
 
+    public void updateTodo(Todo todo) {
+        this.todos.set(todos.indexOf(todo), todo);
+    }
+
     public void deleteTodo(Todo todo) {
         this.todos.remove(todo);
         this.todosCnt -= 1;

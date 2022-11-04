@@ -71,6 +71,7 @@ public class TodoService {
 
     public void updateTodo(Long todoId, TodoInfoRequestDto request) {
         Todo todo = TodoServiceUtils.findTodoById(todoRepository, todoId);
+        Room room = todo.getRoom();
         todo.getTakes().forEach(take -> {
             redoRepository.deleteAll(take.getRedos());
             takeRepository.delete(take);
@@ -86,6 +87,7 @@ public class TodoService {
             takes.add(take);
         });
         todo.updateTodo(request.getName(), request.isPushNotification(), takes);
+        room.updateTodo(todo);
     }
 
     public void checkTodo(Long todoId, CheckTodoRequestDto request, Long userId) {

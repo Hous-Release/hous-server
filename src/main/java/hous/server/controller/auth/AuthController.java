@@ -59,11 +59,7 @@ public class AuthController {
                             + "7. 생년월일을 공개 여부를 체크해주세요. (isPublic)",
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "유효하지 않은 토큰입니다.", response = ErrorResponse.class),
-            @ApiResponse(
-                    code = 409,
-                    message = "1. 이미 해당 계정으로 회원가입하셨습니다.\n   로그인 해주세요.\n"
-                            + "2. fcm token 중복입니다.",
-                    response = ErrorResponse.class),
+            @ApiResponse(code = 409, message = "이미 해당 계정으로 회원가입하셨습니다.\n   로그인 해주세요.\n", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PostMapping("/auth/signup")
