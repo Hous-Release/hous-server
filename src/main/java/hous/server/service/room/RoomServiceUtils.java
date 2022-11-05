@@ -97,14 +97,15 @@ public class RoomServiceUtils {
         });
     }
 
-    public static void deleteParticipateUser(ParticipateRepository participateRepository, RoomRepository roomRepository, Onboarding me, Room room) {
+    public static void deleteParticipateUser(ParticipateRepository participateRepository, RoomRepository roomRepository,
+                                             Onboarding me, Room room, Participate participate) {
         List<Participate> participates = room.getParticipates();
         if (participates.size() > 1) {
-            room.deleteParticipate(participates.get(0));
-            me.deleteParticipate(participates.get(0));
-            participateRepository.delete(participates.get(0));
+            room.deleteParticipate(participate);
+            me.deleteParticipate(participate);
+            participateRepository.delete(participate);
         } else {
-            me.deleteParticipate(participates.get(0));
+            me.deleteParticipate(participate);
             roomRepository.delete(room);
         }
     }
