@@ -17,5 +17,5 @@ public class DeleteUserRequestDto {
     private FeedbackType feedbackType;
 
     @ApiModelProperty(value = "의견", example = "흠냐링 제법 괜찮았으나 안쓰게 되네요.")
-    private String conmment;
+    private String comment;
 }
