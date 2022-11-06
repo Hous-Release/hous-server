@@ -166,7 +166,9 @@ public class UserService {
             RoomServiceUtils.deleteParticipateUser(participateRepository, roomRepository, me, room, participate);
         }
 
-        feedbackRepository.save(Feedback.newInstance(request.getFeedbackType(), request.getComment()));
+        if (request.getFeedbackType() != null || request.getComment() != null) {
+            feedbackRepository.save(Feedback.newInstance(request.getFeedbackType(), request.getComment()));
+        }
         userRepository.delete(user);
     }
 

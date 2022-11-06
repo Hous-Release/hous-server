@@ -16,7 +16,7 @@ public class Feedback extends AuditingTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 30)
+    @Column(length = 30)
     @Enumerated(EnumType.STRING)
     private FeedbackType feedbackType;
 
