@@ -151,6 +151,7 @@ public class TodoRetrieveService {
                     for (int i = 1; i < allDayMemberTodos.length; i++) {
                         String dayOfWeek = DayOfWeek.getValueByIndex(i);
                         List<TodoInfo> thisDayTodosName = allDayMemberTodos[i].stream()
+                                .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
                                 .map(todo -> TodoInfo.of(todo.getId(), todo.getName()))
                                 .collect(Collectors.toList());
                         dayOfWeekTodos.add(DayOfWeekTodo.of(dayOfWeek, thisDayTodosName.size(), thisDayTodosName));

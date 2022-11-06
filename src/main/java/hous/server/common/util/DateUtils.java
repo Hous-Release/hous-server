@@ -31,7 +31,7 @@ public class DateUtils {
     }
 
     public static String parseYearAndMonthAndDay(LocalDate date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy.MM.dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
         return date.format(formatter);
     }
 
