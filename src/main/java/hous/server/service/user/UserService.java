@@ -158,11 +158,12 @@ public class UserService {
         List<Participate> participates = me.getParticipates();
 
         if (!participates.isEmpty()) {
-            Room room = participates.get(0).getRoom();
+            Participate participate = participates.get(0);
+            Room room = participate.getRoom();
             List<Todo> todos = room.getTodos();
             List<Todo> myTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, me);
             RoomServiceUtils.deleteMyTodosTakeMe(takeRepository, doneRepository, todoRepository, myTodos, me, room);
-            RoomServiceUtils.deleteParticipateUser(participateRepository, roomRepository, me, room);
+            RoomServiceUtils.deleteParticipateUser(participateRepository, roomRepository, me, room, participate);
         }
 
         userRepository.delete(user);

@@ -81,13 +81,14 @@ public class RoomService {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         Onboarding me = user.getOnboarding();
+        Participate participate = me.getParticipates().get(0);
 
         List<Todo> todos = room.getTodos();
         List<Todo> myTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, me);
 
         RoomServiceUtils.deleteMyTodosTakeMe(takeRepository, doneRepository, todoRepository, myTodos, me, room);
-        RoomServiceUtils.deleteParticipateUser(participateRepository, roomRepository, me, room);
-        
+        RoomServiceUtils.deleteParticipateUser(participateRepository, roomRepository, me, room, participate);
+
         // 내 배지, 알림 목록, 프로필 작성 내역, 테스트 결과 초기화
         if (me.getRepresent() != null) {
             representRepository.delete(me.getRepresent());
