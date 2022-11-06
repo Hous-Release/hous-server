@@ -6,6 +6,7 @@ import hous.server.common.success.SuccessCode;
 import hous.server.config.interceptor.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.service.user.UserService;
+import hous.server.service.user.dto.request.DeleteUserRequestDto;
 import hous.server.service.user.dto.request.UpdatePushSettingRequestDto;
 import hous.server.service.user.dto.request.UpdateTestScoreRequestDto;
 import hous.server.service.user.dto.request.UpdateUserInfoRequestDto;
@@ -128,18 +129,19 @@ public class UserController {
 
     @ApiOperation(
             value = "[인증] 마이 페이지(설정) - 회원 정보를 삭제합니다.",
-            notes = "회원 정보 탈퇴 요청 시 해당 유저의 모든 정보를 삭제합니다."
+            notes = "회원 정보 탈퇴 요청 시 해당 유저의 모든 정보를 삭제합니다. FeedbackType은 필수로 명시해야 합니다."
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "성공입니다."),
+            @ApiResponse(code = 400, message = "사유는 빈 값을 보낼 수 없습니다. (FeedbackType)", response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
     @DeleteMapping("/user")
-    public ResponseEntity<SuccessResponse<String>> deleteUser(@ApiIgnore @UserId Long userId) {
-        userService.deleteUser(userId);
+    public ResponseEntity<SuccessResponse<String>> deleteUser(@RequestBody DeleteUserRequestDto request, @ApiIgnore @UserId Long userId) {
+        userService.deleteUser(request, userId);
         return SuccessResponse.OK;
     }
 

@@ -8,6 +8,8 @@ import hous.server.domain.badge.repository.AcquireRepository;
 import hous.server.domain.badge.repository.BadgeRepository;
 import hous.server.domain.badge.repository.RepresentRepository;
 import hous.server.domain.common.RedisKey;
+import hous.server.domain.feedback.Feedback;
+import hous.server.domain.feedback.repository.FeedbackRepository;
 import hous.server.domain.personality.Personality;
 import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.personality.repository.PersonalityRepository;
@@ -31,10 +33,7 @@ import hous.server.service.badge.BadgeService;
 import hous.server.service.badge.BadgeServiceUtils;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.todo.TodoServiceUtils;
-import hous.server.service.user.dto.request.CreateUserRequestDto;
-import hous.server.service.user.dto.request.UpdatePushSettingRequestDto;
-import hous.server.service.user.dto.request.UpdateTestScoreRequestDto;
-import hous.server.service.user.dto.request.UpdateUserInfoRequestDto;
+import hous.server.service.user.dto.request.*;
 import hous.server.service.user.dto.response.UpdatePersonalityColorResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -63,6 +62,7 @@ public class UserService {
     private final TodoRepository todoRepository;
     private final RoomRepository roomRepository;
     private final ParticipateRepository participateRepository;
+    private final FeedbackRepository feedbackRepository;
 
     private final BadgeService badgeService;
 
@@ -152,7 +152,7 @@ public class UserService {
         me.updateRepresent(represent);
     }
 
-    public void deleteUser(Long userId) {
+    public void deleteUser(DeleteUserRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Onboarding me = user.getOnboarding();
         List<Participate> participates = me.getParticipates();
@@ -166,6 +166,7 @@ public class UserService {
             RoomServiceUtils.deleteParticipateUser(participateRepository, roomRepository, me, room, participate);
         }
 
+        feedbackRepository.save(Feedback.newInstance(request.getFeedbackType(), request.getComment()));
         userRepository.delete(user);
     }
 
