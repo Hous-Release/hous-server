@@ -30,6 +30,11 @@ public class DateUtils {
         return date.format(formatter);
     }
 
+    public static String parseYearAndMonthAndDay(LocalDate date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy.MM.dd");
+        return date.format(formatter);
+    }
+
     public static String nowDayOfWeek(LocalDate now) {
         return now.getDayOfWeek().toString();
     }

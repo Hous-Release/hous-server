@@ -29,8 +29,7 @@ public class UserRetrieveController {
 
     @ApiOperation(
             value = "[인증] 마이 페이지(프로필 뷰) - 나의 프로필 정보를 확인합니다.",
-            notes = "성공 시, 생년월일 공개 여부(birthdayPublic) false 일 경우, 생년월일(birthday)은 null 입니다.\n" +
-                    "사용자가 아직 입력하지 않은 데이터의 경우 null 이 전달됩니다."
+            notes = "사용자가 아직 입력하지 않은 데이터의 경우 null 이 전달됩니다."
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "나의 프로필 정보 조회 성공입니다."),
