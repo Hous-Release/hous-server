@@ -8,6 +8,7 @@ import hous.server.domain.user.repository.UserRepository;
 import hous.server.external.client.kakao.KakaoApiClient;
 import hous.server.external.client.kakao.dto.response.KakaoProfileResponse;
 import hous.server.service.auth.AuthService;
+import hous.server.service.auth.CommonAuthService;
 import hous.server.service.auth.CommonAuthServiceUtils;
 import hous.server.service.auth.dto.request.LoginDto;
 import hous.server.service.auth.dto.request.SignUpDto;
@@ -31,6 +32,8 @@ public class KakaoAuthService implements AuthService {
 
     private final UserService userService;
 
+    private final CommonAuthService commonAuthService;
+
     private final JwtUtils jwtProvider;
 
     private final RedisTemplate<String, Object> redisTemplate;
@@ -45,7 +48,7 @@ public class KakaoAuthService implements AuthService {
     public Long login(LoginDto request) {
         KakaoProfileResponse response = kakaoApiCaller.getProfileInfo(HttpHeaderUtils.withBearerToken(request.getToken()));
         User user = UserServiceUtils.findUserBySocialIdAndSocialType(userRepository, response.getId(), socialType);
-        CommonAuthServiceUtils.resetConflictFcmToken(userRepository, jwtProvider, request.getFcmToken());
+        commonAuthService.resetConflictFcmToken(request.getFcmToken());
         CommonAuthServiceUtils.validateUniqueLogin(redisTemplate, user);
         user.updateFcmToken(request.getFcmToken());
         return user.getId();
@@ -55,7 +58,7 @@ public class KakaoAuthService implements AuthService {
     public Long forceLogin(LoginDto request) {
         KakaoProfileResponse response = kakaoApiCaller.getProfileInfo(HttpHeaderUtils.withBearerToken(request.getToken()));
         User user = UserServiceUtils.findUserBySocialIdAndSocialType(userRepository, response.getId(), socialType);
-        CommonAuthServiceUtils.resetConflictFcmToken(userRepository, jwtProvider, request.getFcmToken());
+        commonAuthService.resetConflictFcmToken(request.getFcmToken());
         CommonAuthServiceUtils.forceLogoutUser(redisTemplate, jwtProvider, user);
         user.updateFcmToken(request.getFcmToken());
         return user.getId();

@@ -6,6 +6,7 @@ import hous.server.domain.user.UserSocialType;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.external.client.apple.AppleTokenProvider;
 import hous.server.service.auth.AuthService;
+import hous.server.service.auth.CommonAuthService;
 import hous.server.service.auth.CommonAuthServiceUtils;
 import hous.server.service.auth.dto.request.LoginDto;
 import hous.server.service.auth.dto.request.SignUpDto;
@@ -29,6 +30,8 @@ public class AppleAuthService implements AuthService {
 
     private final UserService userService;
 
+    private final CommonAuthService commonAuthService;
+
     private final JwtUtils jwtProvider;
 
     private final RedisTemplate<String, Object> redisTemplate;
@@ -43,7 +46,7 @@ public class AppleAuthService implements AuthService {
     public Long login(LoginDto request) {
         String socialId = appleTokenDecoder.getSocialIdFromIdToken(request.getToken());
         User user = UserServiceUtils.findUserBySocialIdAndSocialType(userRepository, socialId, socialType);
-        CommonAuthServiceUtils.resetConflictFcmToken(userRepository, jwtProvider, request.getFcmToken());
+        commonAuthService.resetConflictFcmToken(request.getFcmToken());
         CommonAuthServiceUtils.validateUniqueLogin(redisTemplate, user);
         user.updateFcmToken(request.getFcmToken());
         return user.getId();
@@ -53,7 +56,7 @@ public class AppleAuthService implements AuthService {
     public Long forceLogin(LoginDto request) {
         String socialId = appleTokenDecoder.getSocialIdFromIdToken(request.getToken());
         User user = UserServiceUtils.findUserBySocialIdAndSocialType(userRepository, socialId, socialType);
-        CommonAuthServiceUtils.resetConflictFcmToken(userRepository, jwtProvider, request.getFcmToken());
+        commonAuthService.resetConflictFcmToken(request.getFcmToken());
         CommonAuthServiceUtils.forceLogoutUser(redisTemplate, jwtProvider, user);
         user.updateFcmToken(request.getFcmToken());
         return user.getId();
