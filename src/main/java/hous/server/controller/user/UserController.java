@@ -39,12 +39,9 @@ public class UserController {
                             + "2. 닉네임은 최대 5글자까지 가능합니다. (nickname)\n"
                             + "3. 생년월일을 입력해주세요. (birthday)\n"
                             + "4. 생년월일을 공개 여부를 체크해주세요. (isPublic)\n"
-                            + "5. mbti 를 입력해주세요. (mbti)\n"
-                            + "6. mbti 는 4 글자 이내로 입력해주세요. (mbti)\n"
-                            + "7. 직업을 입력해주세요. (job)\n"
-                            + "8. 직업은 3 글자 이내로 입력해주세요. (job)\n"
-                            + "9. 자기소개를 입력해주세요.(introduction)\n"
-                            + "10. 자기소개는 40 글자 이내로 입력해주세요. (introduction)",
+                            + "5. mbti 는 4 글자 이내로 입력해주세요. (mbti)\n"
+                            + "6. 직업은 3 글자 이내로 입력해주세요. (job)\n"
+                            + "7. 자기소개는 40 글자 이내로 입력해주세요. (introduction)",
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 404,

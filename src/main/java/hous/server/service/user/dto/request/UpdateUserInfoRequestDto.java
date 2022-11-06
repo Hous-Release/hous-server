@@ -35,17 +35,14 @@ public class UpdateUserInfoRequestDto {
     private Boolean isPublic;
 
     @ApiModelProperty(value = "MBTI", example = "CUTE")
-    @NotBlank(message = "{onboarding.mbti.notBlank}")
     @Size(max = Constraint.ONBOARDING_MBTI_MAX, message = "{onboarding.mbti.max}")
     private String mbti;
 
     @ApiModelProperty(value = "직업", example = "대학생")
-    @NotBlank(message = "{onboarding.job.notBlank}")
     @Size(max = Constraint.ONBOARDING_JOB_MAX, message = "{onboarding.job.max}")
     private String job;
 
     @ApiModelProperty(value = "자기소개", example = "안녕하세요. 저는 혜조니입니다~")
-    @NotBlank(message = "{onboarding.introduction.notBlank}")
     @Size(max = Constraint.ONBOARDING_INTRODUCTION_MAX, message = "{onboarding.introduction.max}")
     private String introduction;
 
