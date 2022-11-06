@@ -79,7 +79,7 @@ public class UserInfoResponse {
                 .nickname(onboarding.getNickname())
                 .birthdayPublic(onboarding.isPublic())
                 .age(MathUtils.getAge(onboarding.getBirthday()) + "세")
-                .birthday(onboarding.isPublic() ? DateUtils.parseMonthAndDay(onboarding.getBirthday()) : null)
+                .birthday(DateUtils.parseYearAndMonthAndDay(onboarding.getBirthday()))
                 .mbti(onboarding.getMbti())
                 .job(onboarding.getJob())
                 .mbti(onboarding.getMbti())
