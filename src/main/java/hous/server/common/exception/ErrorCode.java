@@ -1,10 +1,21 @@
 package hous.server.common.exception;
 
+import static hous.server.common.exception.ErrorStatusCode.BAD_GATEWAY;
+import static hous.server.common.exception.ErrorStatusCode.BAD_REQUEST;
+import static hous.server.common.exception.ErrorStatusCode.CONFLICT;
+import static hous.server.common.exception.ErrorStatusCode.FORBIDDEN;
+import static hous.server.common.exception.ErrorStatusCode.INTERNAL_SERVER;
+import static hous.server.common.exception.ErrorStatusCode.METHOD_NOT_ALLOWED;
+import static hous.server.common.exception.ErrorStatusCode.NOT_ACCEPTABLE;
+import static hous.server.common.exception.ErrorStatusCode.NOT_FOUND;
+import static hous.server.common.exception.ErrorStatusCode.SERVICE_UNAVAILABLE;
+import static hous.server.common.exception.ErrorStatusCode.UNAUTHORIZED;
+import static hous.server.common.exception.ErrorStatusCode.UNSUPPORTED_MEDIA_TYPE;
+import static hous.server.common.exception.ErrorStatusCode.UPGRADE_REQUIRED;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import static hous.server.common.exception.ErrorStatusCode.*;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -19,6 +30,8 @@ public enum ErrorCode {
     VALIDATION_WRONG_TYPE_EXCEPTION(BAD_REQUEST, "잘못된 타입이 입력되었습니다."),
     VALIDATION_SOCIAL_TYPE_EXCEPTION(BAD_REQUEST, "잘못된 소셜 프로바이더 입니다."),
     VALIDATION_SORT_TYPE_EXCEPTION(BAD_REQUEST, "허용하지 않는 정렬기준을 입력했습니다."),
+    VALIDATION_OS_EXCEPTION(BAD_REQUEST, "잘못된 OS 타입 요청입니다."),
+    VALIDATION_VERSION_EXCEPTION(BAD_REQUEST, "잘못된 버전 형식입니다."),
     VALIDATION_STATUS_EXCEPTION(BAD_REQUEST, "잘못된 상태로 요청했습니다."),
     VALIDATION_RULE_MAX_LENGTH_EXCEPTION(BAD_REQUEST, "규칙은 20 글자 이내로 입력해주세요."),
     VALIDATION_RULE_MIN_LENGTH_EXCEPTION(BAD_REQUEST, "규칙 내용을 입력해주세요."),
@@ -45,6 +58,7 @@ public enum ErrorCode {
      * 404 Not Found
      */
     NOT_FOUND_EXCEPTION(NOT_FOUND, "존재하지 않습니다."),
+    NOT_FOUND_OS_EXCEPTION(NOT_FOUND, "배포되지 않은 OS 입니다."),
     NOT_FOUND_USER_EXCEPTION(NOT_FOUND, "탈퇴했거나 존재하지 않는 유저입니다."),
     NOT_FOUND_REFRESH_TOKEN_EXCEPTION(NOT_FOUND, "만료된 리프레시 토큰입니다."),
     NOT_FOUND_ONBOARDING_EXCEPTION(NOT_FOUND, "유저의 온보딩 정보가 존재하지 않습니다."),
@@ -77,6 +91,11 @@ public enum ErrorCode {
      * 415 Unsupported Media Type
      */
     UNSUPPORTED_MEDIA_TYPE_EXCEPTION(UNSUPPORTED_MEDIA_TYPE, "해당하는 미디어 타입을 지원하지 않습니다."),
+
+    /**
+     * 426 Upgrade Required
+     */
+    UPGRADE_REQUIRED_EXCEPTION(UPGRADE_REQUIRED, "최신 버전으로 업그레이드가 필요합니다."),
 
     /**
      * 500 Internal Server Exception
