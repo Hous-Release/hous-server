@@ -4,6 +4,8 @@ import hous.server.domain.feedback.FeedbackType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
+
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -11,6 +13,7 @@ import lombok.*;
 public class DeleteUserRequestDto {
 
     @ApiModelProperty(value = "사유", example = "DONE_LIVING_TOGETHER")
+    @NotNull(message = "{user.feedbackType.notNull}")
     private FeedbackType feedbackType;
 
     @ApiModelProperty(value = "의견", example = "흠냐링 제법 괜찮았으나 안쓰게 되네요.")

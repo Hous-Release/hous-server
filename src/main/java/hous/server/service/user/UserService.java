@@ -9,6 +9,7 @@ import hous.server.domain.badge.repository.BadgeRepository;
 import hous.server.domain.badge.repository.RepresentRepository;
 import hous.server.domain.common.RedisKey;
 import hous.server.domain.feedback.Feedback;
+import hous.server.domain.feedback.FeedbackType;
 import hous.server.domain.feedback.repository.FeedbackRepository;
 import hous.server.domain.personality.Personality;
 import hous.server.domain.personality.PersonalityColor;
@@ -166,7 +167,7 @@ public class UserService {
             RoomServiceUtils.deleteParticipateUser(participateRepository, roomRepository, me, room, participate);
         }
 
-        if (request.getFeedbackType() != null || request.getComment() != null) {
+        if (!request.getFeedbackType().equals(FeedbackType.NO) || request.getComment() != null) {
             feedbackRepository.save(Feedback.newInstance(request.getFeedbackType(), request.getComment()));
         }
         userRepository.delete(user);
