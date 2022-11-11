@@ -41,6 +41,7 @@ public class KakaoAuthService implements AuthService {
     @Override
     public Long signUp(SignUpDto request) {
         KakaoProfileResponse response = kakaoApiCaller.getProfileInfo(HttpHeaderUtils.withBearerToken(request.getToken()));
+        commonAuthService.resetConflictFcmToken(request.getFcmToken());
         return userService.registerUser(request.toCreateUserDto(response.getId()));
     }
 

@@ -39,6 +39,7 @@ public class AppleAuthService implements AuthService {
     @Override
     public Long signUp(SignUpDto request) {
         String socialId = appleTokenDecoder.getSocialIdFromIdToken(request.getToken());
+        commonAuthService.resetConflictFcmToken(request.getFcmToken());
         return userService.registerUser(request.toCreateUserDto(socialId));
     }
 
