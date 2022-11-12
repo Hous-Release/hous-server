@@ -65,7 +65,7 @@ public class HomeInfoResponse {
                         .collect(Collectors.toList()))
                 .homies(participants.stream()
                         .map(onboarding -> HomieInfo.builder()
-                                .homieId(onboarding.getId())
+                                .homieId(onboarding.getUser().getId())
                                 .userNickname(onboarding.getNickname())
                                 .color(onboarding.getPersonality().getColor())
                                 .build())
