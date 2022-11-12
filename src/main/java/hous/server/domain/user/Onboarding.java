@@ -37,7 +37,7 @@ public class Onboarding extends AuditingTimeEntity implements Comparable<Onboard
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate birthday;
 
-    @Column(length = 30)
+    @Column(length = 100)
     private String introduction;
 
     @Column(length = 30)
