@@ -46,7 +46,7 @@ public class TodoInfoResponse {
                             .filter(take -> take.getOnboarding().getId().equals(onboarding.getId()))
                             .findFirst();
                     return TodoUserInfo.of(
-                            onboarding.getId(),
+                            onboarding.getUser().getId(),
                             onboarding.getPersonality().getColor(),
                             onboarding.getNickname(),
                             myTake.isPresent(),
