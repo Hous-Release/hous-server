@@ -36,7 +36,7 @@ public class UserController {
             @ApiResponse(
                     code = 400,
                     message = "1. 닉네임을 입력해주세요. (nickname)\n"
-                            + "2. 닉네임은 최대 5글자까지 가능합니다. (nickname)\n"
+                            + "2. 닉네임은 최대 3글자까지 가능합니다. (nickname)\n"
                             + "3. 생년월일을 입력해주세요. (birthday)\n"
                             + "4. 생년월일을 공개 여부를 체크해주세요. (isPublic)\n"
                             + "5. mbti 는 4 글자 이내로 입력해주세요. (mbti)\n"
