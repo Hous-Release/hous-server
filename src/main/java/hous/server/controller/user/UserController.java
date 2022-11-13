@@ -29,7 +29,7 @@ public class UserController {
 
     @ApiOperation(
             value = "[인증] 마이 페이지(Profile 뷰) - 나의 프로필 정보를 수정합니다.",
-            notes = "프로필 정보 수정을 요청합니다."
+            notes = "프로필 정보 수정을 요청합니다. 자기소개에서 줄바꿈을 포함할 경우, ' '(공백)으로 변환하여 저장합니다."
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "성공입니다."),
