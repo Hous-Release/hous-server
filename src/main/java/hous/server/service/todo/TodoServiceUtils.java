@@ -16,10 +16,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static hous.server.common.exception.ErrorCode.*;
@@ -94,17 +91,17 @@ public class TodoServiceUtils {
                 .collect(Collectors.toList());
     }
 
-    public static List<Todo>[] mapByDayOfWeekToList(List<Todo> todos) {
-        List<Todo>[] todosList = new ArrayList[8];
+    public static Map<Integer, Set<Todo>> mapByDayOfWeekToList(List<Todo> todos) {
+        Map<Integer, Set<Todo>> todosList = new HashMap<>();
         for (int index = 0; index < 8; index++) {
-            todosList[index] = new ArrayList<>();
+            todosList.put(index, new HashSet<>());
         }
         todos.forEach(todo -> todo.getTakes().forEach(take ->
                 take.getRedos().forEach(redo ->
                 {
-                    if (!todosList[redo.getDayOfWeek().getIndex()].contains(todo)) {
-                        todosList[redo.getDayOfWeek().getIndex()].add(todo);
-                    }
+                    Set<Todo> todosByDayOfWeek = todosList.get(redo.getDayOfWeek().getIndex());
+                    todosByDayOfWeek.add(todo);
+                    todosList.put(redo.getDayOfWeek().getIndex(), todosByDayOfWeek);
                 })
         ));
         return todosList;

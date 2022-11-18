@@ -21,9 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -109,18 +107,18 @@ public class TodoRetrieveService {
         List<Todo> myTodosList = TodoServiceUtils.filterAllDaysUserTodos(todos, user.getOnboarding());
 
         // 요일별(index) todo list 형태로 가공
-        List<Todo>[] allDayOurTodosList = TodoServiceUtils.mapByDayOfWeekToList(ourTodosList);
-        List<Todo>[] allDayMyTodosList = TodoServiceUtils.mapByDayOfWeekToList(myTodosList);
+        Map<Integer, Set<Todo>> allDayOurTodosList = TodoServiceUtils.mapByDayOfWeekToList(ourTodosList);
+        Map<Integer, Set<Todo>> allDayMyTodosList = TodoServiceUtils.mapByDayOfWeekToList(myTodosList);
 
         // List<TodoAllDayResponse> response dto 형태로 가공
         List<TodoAllDayResponse> allDayTodosList = new ArrayList<>();
-        for (int i = 1; i < 8; i++) {
-            String dayOfWeek = DayOfWeek.getValueByIndex(i);
-            List<TodoInfo> todoInfos = allDayMyTodosList[i].stream()
+        for (int day = DayOfWeek.MONDAY.getIndex(); day <= DayOfWeek.FRIDAY.getIndex(); day++) {
+            String dayOfWeek = DayOfWeek.getValueByIndex(day);
+            List<TodoInfo> todoInfos = allDayMyTodosList.get(day).stream()
                     .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
                     .map(todo -> TodoInfo.of(todo.getId(), todo.getName()))
                     .collect(Collectors.toList());
-            List<OurTodo> ourTodoInfos = allDayOurTodosList[i].stream()
+            List<OurTodo> ourTodoInfos = allDayOurTodosList.get(day).stream()
                     .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
                     .map(todo -> OurTodo.of(todo.getName(), todo.getTakes().stream()
                             .map(take -> take.getOnboarding().getNickname()).collect(Collectors.toSet())))
@@ -144,13 +142,13 @@ public class TodoRetrieveService {
                 .forEach(participate -> {
                     List<Todo> memberTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, participate.getOnboarding());
 
-                    List<Todo>[] allDayMemberTodos = TodoServiceUtils.mapByDayOfWeekToList(memberTodos);
+                    Map<Integer, Set<Todo>> allDayMemberTodos = TodoServiceUtils.mapByDayOfWeekToList(memberTodos);
 
                     List<DayOfWeekTodo> dayOfWeekTodos = new ArrayList<>();
                     int totalTodoCnt = 0;
-                    for (int i = 1; i < allDayMemberTodos.length; i++) {
-                        String dayOfWeek = DayOfWeek.getValueByIndex(i);
-                        List<TodoInfo> thisDayTodosName = allDayMemberTodos[i].stream()
+                    for (int day = DayOfWeek.MONDAY.getIndex(); day <= DayOfWeek.FRIDAY.getIndex(); day++) {
+                        String dayOfWeek = DayOfWeek.getValueByIndex(day);
+                        List<TodoInfo> thisDayTodosName = allDayMemberTodos.get(day).stream()
                                 .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
                                 .map(todo -> TodoInfo.of(todo.getId(), todo.getName()))
                                 .collect(Collectors.toList());
