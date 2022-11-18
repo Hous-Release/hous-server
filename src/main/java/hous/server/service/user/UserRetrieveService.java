@@ -14,6 +14,7 @@ import hous.server.domain.personality.repository.PersonalityTestRepository;
 import hous.server.domain.room.Room;
 import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.User;
+import hous.server.domain.user.repository.OnboardingRepository;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.user.dto.response.*;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 public class UserRetrieveService {
 
     private final UserRepository userRepository;
+    private final OnboardingRepository onboardingRepository;
     private final PersonalityRepository personalityRepository;
     private final PersonalityTestRepository personalityTestRepository;
     private final RepresentRepository representRepository;
@@ -42,13 +44,13 @@ public class UserRetrieveService {
         return getProfileInfoByUser(user);
     }
 
-    public UserInfoResponse getHomieInfo(Long homieId, Long userId) {
+    public UserInfoResponse getHomieInfo(Long homieOnboardingId, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
-        User homie = UserServiceUtils.findUserById(userRepository, homieId);
+        Onboarding homieOnboarding = UserServiceUtils.findOnboardingById(onboardingRepository, homieOnboardingId);
         Room userRoom = RoomServiceUtils.findParticipatingRoom(user);
-        Room homieRoom = RoomServiceUtils.findParticipatingRoom(homie);
+        Room homieRoom = RoomServiceUtils.findParticipatingRoom(homieOnboarding.getUser());
         RoomServiceUtils.checkParticipatingRoom(userRoom, homieRoom);
-        return getProfileInfoByUser(homie);
+        return getProfileInfoByUser(homieOnboarding.getUser());
     }
 
     public PushSettingResponse getUserPushSetting(Long userId) {

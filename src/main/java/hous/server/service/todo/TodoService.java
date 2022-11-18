@@ -50,7 +50,7 @@ public class TodoService {
         TodoServiceUtils.validateTodoCounts(room);
         Todo todo = todoRepository.save(Todo.newInstance(room, request.getName(), request.isPushNotification()));
         request.getTodoUsers().forEach(todoUser -> {
-            Onboarding onboarding = onboardingRepository.findOnboardingById(todoUser.getOnboardingId());
+            Onboarding onboarding = UserServiceUtils.findOnboardingById(onboardingRepository, todoUser.getOnboardingId());
             Take take = takeRepository.save(Take.newInstance(todo, onboarding));
             todoUser.getDayOfWeeks().forEach(dayOfWeek -> {
                 Redo redo = redoRepository.save(Redo.newInstance(take, dayOfWeek));
@@ -78,7 +78,7 @@ public class TodoService {
         });
         List<Take> takes = new ArrayList<>();
         request.getTodoUsers().forEach(todoUser -> {
-            Onboarding onboarding = onboardingRepository.findOnboardingById(todoUser.getOnboardingId());
+            Onboarding onboarding = UserServiceUtils.findOnboardingById(onboardingRepository, todoUser.getOnboardingId());
             Take take = takeRepository.save(Take.newInstance(todo, onboarding));
             todoUser.getDayOfWeeks().forEach(dayOfWeek -> {
                 Redo redo = redoRepository.save(Redo.newInstance(take, dayOfWeek));
