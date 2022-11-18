@@ -19,7 +19,7 @@ public class UserPersonalityInfoResponse {
         return UserPersonalityInfoResponse.builder()
                 .users(onboardings.stream()
                         .map(onboarding -> UserPersonalityInfo.of(
-                                onboarding.getUser().getId(),
+                                onboarding.getId(),
                                 onboarding.getPersonality().getColor(),
                                 onboarding.getNickname()))
                         .collect(Collectors.toList()))

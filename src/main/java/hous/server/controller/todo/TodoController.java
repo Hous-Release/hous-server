@@ -43,7 +43,8 @@ public class TodoController {
             @ApiResponse(
                     code = 404,
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
-                            + "2. 참가중인 방이 존재하지 않습니다.",
+                            + "2. 참가중인 방이 존재하지 않습니다.\n"
+                            + "3. 유저의 온보딩 정보가 존재하지 않습니다.",
                     response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
@@ -70,7 +71,13 @@ public class TodoController {
                             + "5. todo 의 푸쉬 알림 여부를 입력해주세요. (isPushNotification)",
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
-            @ApiResponse(code = 404, message = "존재하지 않는 todo 입니다.", response = ErrorResponse.class),
+            @ApiResponse(
+                    code = 404,
+                    message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
+                            + "2. 참가중인 방이 존재하지 않습니다.\n"
+                            + "3. 유저의 온보딩 정보가 존재하지 않습니다.\n"
+                            + "4. 존재하지 않는 todo 입니다.",
+                    response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth

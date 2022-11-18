@@ -48,8 +48,7 @@ public class UserRetrieveController {
 
     @ApiOperation(
             value = "[인증] 룸메이트 정보 페이지(Hous 뷰에서 호미 카드 클릭) - 룸메이트 프로필 정보를 확인합니다.",
-            notes = "성공 시, 생년월일 공개 여부(birthdayPublic) false 일 경우, 생년월일(birthday)은 null 입니다.\n" +
-                    "사용자가 아직 입력하지 않은 데이터의 경우 null 이 전달됩니다."
+            notes = "사용자가 아직 입력하지 않은 데이터의 경우 null 이 전달됩니다."
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "룸메이트 프로필 정보 조회 성공입니다."),
@@ -59,10 +58,10 @@ public class UserRetrieveController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
-    @GetMapping("/user/{homieId}")
-    public ResponseEntity<SuccessResponse<UserInfoResponse>> getHomieInfo(@ApiParam(name = "homieId", value = "조회할 호미의 id", required = true, example = "1")
-                                                                          @PathVariable Long homieId, @ApiIgnore @UserId Long userId) {
-        return SuccessResponse.success(SuccessCode.GET_HOMIE_PROFILE_INFO_SUCCESS, userRetrieveService.getHomieInfo(homieId, userId));
+    @GetMapping("/user/{onboardingId}")
+    public ResponseEntity<SuccessResponse<UserInfoResponse>> getHomieInfo(@ApiParam(name = "onboardingId", value = "조회할 호미의 id", required = true, example = "1")
+                                                                          @PathVariable Long onboardingId, @ApiIgnore @UserId Long userId) {
+        return SuccessResponse.success(SuccessCode.GET_HOMIE_PROFILE_INFO_SUCCESS, userRetrieveService.getHomieInfo(onboardingId, userId));
     }
 
     @ApiOperation(
@@ -74,7 +73,10 @@ public class UserRetrieveController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "푸시 알림 설정 정보 조회 성공입니다."),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
-            @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
+            @ApiResponse(code = 404,
+                    message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
+                            + "2. 유저의 온보딩 정보가 존재하지 않습니다.",
+                    response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth

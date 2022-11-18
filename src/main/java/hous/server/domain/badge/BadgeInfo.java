@@ -18,7 +18,7 @@ public enum BadgeInfo implements EnumModel {
     GOOD_JOB("참 잘했어요", "1주 동안 to-do\n모두 완료"),
     SINCERITY_KING_HOMIE("성실왕 호미", "2주 동안\nto-do 모두 완료"),
     TODO_MASTER("to-do 마스터", "3주 동안\nto-do 모두 완료"),
-    LETS_BUILD_A_POLE("기둥을 세우자", "우리 집 규칙에서\n집 Rules 등록"),
+    LETS_BUILD_A_POLE("기둥을 세우자", "우리 집 규칙에서\n첫 Rules 등록"),
     OUR_HOUSE_PILLAR_HOMIE("우리 집 기둥 호미", "우리 집 Rules\n5개 이상 등록"),
     FEEDBACK_ONE_STEP("피드백 한 걸음", "좋은 의견을\n호미 나라에 전달");
 

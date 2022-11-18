@@ -39,7 +39,7 @@ public class HomeInfoResponse {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Builder(access = AccessLevel.PRIVATE)
     public static class HomieInfo {
-        private Long homieId;
+        private Long onboardingId;
         private String userNickname;
         private PersonalityColor color;
     }
@@ -65,7 +65,7 @@ public class HomeInfoResponse {
                         .collect(Collectors.toList()))
                 .homies(participants.stream()
                         .map(onboarding -> HomieInfo.builder()
-                                .homieId(onboarding.getUser().getId())
+                                .onboardingId(onboarding.getId())
                                 .userNickname(onboarding.getNickname())
                                 .color(onboarding.getPersonality().getColor())
                                 .build())

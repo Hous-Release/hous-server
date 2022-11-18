@@ -10,6 +10,7 @@ import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.TestScore;
 import hous.server.domain.user.User;
 import hous.server.domain.user.UserSocialType;
+import hous.server.domain.user.repository.OnboardingRepository;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.user.dto.request.UpdatePushSettingRequestDto;
 import lombok.AccessLevel;
@@ -44,6 +45,14 @@ public class UserServiceUtils {
             throw new NotFoundException(String.format("존재하지 않는 유저 (%s) 입니다", userId), NOT_FOUND_USER_EXCEPTION);
         }
         return user;
+    }
+
+    public static Onboarding findOnboardingById(OnboardingRepository onboardingRepository, Long onboardingId) {
+        Onboarding onboarding = onboardingRepository.findOnboardingById(onboardingId);
+        if (onboarding == null) {
+            throw new NotFoundException(String.format("존재하지 않는 온보딩 정보 (%s) 입니다", onboardingId), NOT_FOUND_ONBOARDING_EXCEPTION);
+        }
+        return onboarding;
     }
 
     public static void validatePushSettingRequest(UpdatePushSettingRequestDto request, User user) {
