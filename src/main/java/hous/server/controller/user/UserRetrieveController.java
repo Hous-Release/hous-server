@@ -59,10 +59,10 @@ public class UserRetrieveController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Auth
-    @GetMapping("/user/{homieId}")
-    public ResponseEntity<SuccessResponse<UserInfoResponse>> getHomieInfo(@ApiParam(name = "homieId", value = "조회할 호미의 id", required = true, example = "1")
-                                                                          @PathVariable Long homieId, @ApiIgnore @UserId Long userId) {
-        return SuccessResponse.success(SuccessCode.GET_HOMIE_PROFILE_INFO_SUCCESS, userRetrieveService.getHomieInfo(homieId, userId));
+    @GetMapping("/user/{onboardingId}")
+    public ResponseEntity<SuccessResponse<UserInfoResponse>> getHomieInfo(@ApiParam(name = "onboardingId", value = "조회할 호미의 id", required = true, example = "1")
+                                                                          @PathVariable Long onboardingId, @ApiIgnore @UserId Long userId) {
+        return SuccessResponse.success(SuccessCode.GET_HOMIE_PROFILE_INFO_SUCCESS, userRetrieveService.getHomieInfo(onboardingId, userId));
     }
 
     @ApiOperation(
