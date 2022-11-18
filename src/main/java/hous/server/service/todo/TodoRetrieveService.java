@@ -112,7 +112,7 @@ public class TodoRetrieveService {
 
         // List<TodoAllDayResponse> response dto 형태로 가공
         List<TodoAllDayResponse> allDayTodosList = new ArrayList<>();
-        for (int day = DayOfWeek.MONDAY.getIndex(); day <= DayOfWeek.FRIDAY.getIndex(); day++) {
+        for (int day = DayOfWeek.MONDAY.getIndex(); day <= DayOfWeek.SUNDAY.getIndex(); day++) {
             String dayOfWeek = DayOfWeek.getValueByIndex(day);
             List<TodoInfo> todoInfos = allDayMyTodosList.get(day).stream()
                     .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
@@ -146,7 +146,7 @@ public class TodoRetrieveService {
 
                     List<DayOfWeekTodo> dayOfWeekTodos = new ArrayList<>();
                     int totalTodoCnt = 0;
-                    for (int day = DayOfWeek.MONDAY.getIndex(); day <= DayOfWeek.FRIDAY.getIndex(); day++) {
+                    for (int day = DayOfWeek.MONDAY.getIndex(); day <= DayOfWeek.SUNDAY.getIndex(); day++) {
                         String dayOfWeek = DayOfWeek.getValueByIndex(day);
                         List<TodoInfo> thisDayTodosName = allDayMemberTodos.get(day).stream()
                                 .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
