@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @RequiredArgsConstructor
 @Service
@@ -77,11 +76,11 @@ public class RuleService {
     public void updateRules(UpdateRuleRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
-        IntStream.range(0, request.getRules().size()).forEach(idx -> {
+        for (int idx = 0; idx < request.getRules().size(); idx++) {
             Rule rule = RuleServiceUtils.findRuleByIdAndRoom(ruleRepository, request.getRules().get(idx).getId(), room);
             rule.updateRule(request.getRules().get(idx).getName(), idx);
             room.updateRule(rule);
-        });
+        }
     }
 
     public void deleteRules(DeleteRuleReqeustDto request, Long userId) {
