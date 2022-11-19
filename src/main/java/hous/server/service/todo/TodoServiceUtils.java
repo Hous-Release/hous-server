@@ -6,6 +6,7 @@ import hous.server.common.exception.ValidationException;
 import hous.server.common.util.DateUtils;
 import hous.server.domain.common.Constraint;
 import hous.server.domain.room.Room;
+import hous.server.domain.todo.DayOfWeek;
 import hous.server.domain.todo.Done;
 import hous.server.domain.todo.Todo;
 import hous.server.domain.todo.repository.DoneRepository;
@@ -93,10 +94,13 @@ public class TodoServiceUtils {
 
     public static Map<Integer, Set<Todo>> mapByDayOfWeekToList(List<Todo> todos) {
         Map<Integer, Set<Todo>> todosMapByDayOfWeek = new HashMap<>();
+        for (int i = DayOfWeek.MONDAY.getIndex(); i <= DayOfWeek.SUNDAY.getIndex(); i++) {
+            todosMapByDayOfWeek.put(i, new HashSet<>());
+        }
         todos.forEach(todo -> todo.getTakes().forEach(take ->
                 take.getRedos().forEach(redo ->
                 {
-                    Set<Todo> todosByDayOfWeek = todosMapByDayOfWeek.getOrDefault(redo.getDayOfWeek().getIndex(), new HashSet<>());
+                    Set<Todo> todosByDayOfWeek = todosMapByDayOfWeek.get(redo.getDayOfWeek().getIndex());
                     todosByDayOfWeek.add(todo);
                     todosMapByDayOfWeek.put(redo.getDayOfWeek().getIndex(), todosByDayOfWeek);
                 })
