@@ -113,7 +113,9 @@ public class Onboarding extends AuditingTimeEntity implements Comparable<Onboard
         this.birthday = request.getBirthday();
         this.mbti = request.getMbti();
         this.job = request.getJob();
-        this.introduction = request.getIntroduction().replaceAll("(\r\n|\r|\n|\n\r)", " ");
+        if (request.getIntroduction() != null) {
+            this.introduction = request.getIntroduction().replaceAll("(\r\n|\r|\n|\n\r)", " ");
+        }
     }
 
     public void resetUserInfo() {
