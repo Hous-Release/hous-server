@@ -43,7 +43,7 @@ public class ControllerExceptionAdvice {
             log.warn(exception.getMessage(), exception);
         } else {
             log.error(exception.getMessage(), exception);
-            slackService.sendSlackMessage(exception);
+            slackService.sendSlackMessageProductError(exception);
         }
         return ResponseEntity.status(exception.getStatus())
                 .body(ErrorResponse.error(exception.getErrorCode()));
@@ -58,7 +58,7 @@ public class ControllerExceptionAdvice {
             log.warn(exception.getMessage(), exception);
         } else {
             log.error(exception.getMessage(), exception);
-            slackService.sendSlackMessage(exception);
+            slackService.sendSlackMessageProductError(exception);
         }
         if (exception.getStatus() == UNAUTHORIZED_INVALID_TOKEN_EXCEPTION.getStatus()) {
             return ResponseEntity.status(UNAUTHORIZED_INVALID_TOKEN_EXCEPTION.getStatus())
@@ -177,7 +177,7 @@ public class ControllerExceptionAdvice {
     @ExceptionHandler(Exception.class)
     protected ErrorResponse handleException(final Exception exception) {
         log.error(exception.getMessage(), exception);
-        slackService.sendSlackMessage(exception);
+        slackService.sendSlackMessageProductError(exception);
         return ErrorResponse.error(INTERNAL_SERVER_EXCEPTION);
     }
 }
