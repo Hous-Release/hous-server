@@ -6,6 +6,9 @@ import hous.server.domain.badge.Represent;
 import hous.server.domain.badge.repository.AcquireRepository;
 import hous.server.domain.badge.repository.BadgeRepository;
 import hous.server.domain.badge.repository.RepresentRepository;
+import hous.server.domain.feedback.Feedback;
+import hous.server.domain.feedback.FeedbackType;
+import hous.server.domain.feedback.repository.FeedbackRepository;
 import hous.server.domain.personality.Personality;
 import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.personality.PersonalityTest;
@@ -17,12 +20,16 @@ import hous.server.domain.user.User;
 import hous.server.domain.user.repository.OnboardingRepository;
 import hous.server.domain.user.repository.UserRepository;
 import hous.server.service.room.RoomServiceUtils;
+import hous.server.service.slack.dto.response.UserDelete;
+import hous.server.service.slack.dto.response.UserDeleteResponse;
 import hous.server.service.user.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -37,6 +44,7 @@ public class UserRetrieveService {
     private final RepresentRepository representRepository;
     private final BadgeRepository badgeRepository;
     private final AcquireRepository acquireRepository;
+    private final FeedbackRepository feedbackRepository;
 
     public UserInfoResponse getUserInfo(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
@@ -90,6 +98,18 @@ public class UserRetrieveService {
                 .filter(acquire -> !acquire.isRead())
                 .forEach(Acquire::updateIsRead);
         return MyBadgeInfoResponse.of(represent, badges, myBadges, newBadges);
+    }
+
+    public UserDeleteResponse getFeedback() {
+        Map<FeedbackType, List<Feedback>> users = feedbackRepository.findAll().stream()
+                .collect(Collectors.groupingBy(Feedback::getFeedbackType));
+        List<UserDelete> userDeletes = new ArrayList<>();
+        long totalCount = 0;
+        for (FeedbackType feedbackType : users.keySet()) {
+            totalCount += users.get(feedbackType).size();
+            userDeletes.add(UserDelete.of(users.get(feedbackType).size(), feedbackType.getValue()));
+        }
+        return UserDeleteResponse.of(totalCount, userDeletes);
     }
 
     private UserInfoResponse getProfileInfoByUser(User user) {

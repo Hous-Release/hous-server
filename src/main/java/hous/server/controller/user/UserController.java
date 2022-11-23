@@ -5,6 +5,8 @@ import hous.server.common.dto.SuccessResponse;
 import hous.server.common.success.SuccessCode;
 import hous.server.config.interceptor.Auth;
 import hous.server.config.resolver.UserId;
+import hous.server.service.slack.SlackService;
+import hous.server.service.user.UserRetrieveService;
 import hous.server.service.user.UserService;
 import hous.server.service.user.dto.request.DeleteUserRequestDto;
 import hous.server.service.user.dto.request.UpdatePushSettingRequestDto;
@@ -26,6 +28,8 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
+    private final UserRetrieveService userRetrieveService;
+    private final SlackService slackService;
 
     @ApiOperation(
             value = "[인증] 마이 페이지(Profile 뷰) - 나의 프로필 정보를 수정합니다.",
@@ -143,6 +147,7 @@ public class UserController {
     @DeleteMapping("/user")
     public ResponseEntity<SuccessResponse<String>> deleteUser(@RequestBody DeleteUserRequestDto request, @ApiIgnore @UserId Long userId) {
         userService.deleteUser(request, userId);
+        slackService.sendSlackMessageDeleteUser(userRetrieveService.getFeedback());
         return SuccessResponse.OK;
     }
 
