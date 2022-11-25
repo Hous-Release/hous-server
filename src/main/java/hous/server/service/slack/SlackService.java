@@ -34,7 +34,7 @@ public class SlackService {
     private static final String ATTACHMENTS_NOTIFICATION_COLOR = "#36a64f";
 
     public void sendSlackMessageDeleteUser(UserDeleteResponse userDeleteResponse) {
-        if (profile.equals("prod")) {
+        if (profile.equals("prod") && userDeleteResponse.getTotalDeleteUserList().isEmpty()) {
             try {
                 Slack slack = Slack.getInstance();
                 List<LayoutBlock> layoutBlocks = SlackServiceUtils.createUserDeleteMessage(userDeleteResponse);
