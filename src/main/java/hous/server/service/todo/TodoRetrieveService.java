@@ -141,11 +141,11 @@ public class TodoRetrieveService {
                 .sorted(Participate::compareTo)
                 .forEach(participate -> {
                     List<Todo> memberTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, participate.getOnboarding());
+                    List<Todo> memberUniqueTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, participate.getOnboarding());
 
                     Map<Integer, Set<Todo>> allDayMemberTodos = TodoServiceUtils.mapByDayOfWeekToList(memberTodos);
 
                     List<DayOfWeekTodo> dayOfWeekTodos = new ArrayList<>();
-                    int totalTodoCnt = 0;
                     for (int day = DayOfWeek.MONDAY.getIndex(); day <= DayOfWeek.SUNDAY.getIndex(); day++) {
                         String dayOfWeek = DayOfWeek.getValueByIndex(day);
                         List<TodoInfo> thisDayTodosName = allDayMemberTodos.get(day).stream()
@@ -153,16 +153,15 @@ public class TodoRetrieveService {
                                 .map(todo -> TodoInfo.of(todo.getId(), todo.getName()))
                                 .collect(Collectors.toList());
                         dayOfWeekTodos.add(DayOfWeekTodo.of(dayOfWeek, thisDayTodosName.size(), thisDayTodosName));
-                        totalTodoCnt += thisDayTodosName.size();
                     }
 
                     String userName = participate.getOnboarding().getNickname();
                     PersonalityColor color = participate.getOnboarding().getPersonality().getColor();
 
                     if (user.getOnboarding().equals(participate.getOnboarding())) {
-                        allMemberTodos.add(TodoAllMemberResponse.of(userName, color, totalTodoCnt, dayOfWeekTodos));
+                        allMemberTodos.add(TodoAllMemberResponse.of(userName, color, memberUniqueTodos.size(), dayOfWeekTodos));
                     } else {
-                        otherMemberTodos.add(TodoAllMemberResponse.of(userName, color, totalTodoCnt, dayOfWeekTodos));
+                        otherMemberTodos.add(TodoAllMemberResponse.of(userName, color, memberUniqueTodos.size(), dayOfWeekTodos));
                     }
                 });
         allMemberTodos.addAll(otherMemberTodos);
