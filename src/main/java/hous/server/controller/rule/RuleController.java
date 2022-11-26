@@ -67,8 +67,10 @@ public class RuleController {
             @ApiResponse(code = 200, message = "성공입니다."),
             @ApiResponse(
                     code = 400,
-                    message = "1. 규칙 리스트를 입력해주세요. (rules)\n"
-                            + "2. 규칙 리스트는 빈 배열을 보낼 수 없습니다. (rules)",
+                    message = "1. 규칙 내용을 입력해주세요.\n"
+                            + "2. 규칙은 20 글자 이내로 입력해주세요.\n"
+                            + "3. 규칙 리스트를 입력해주세요. (rules)\n"
+                            + "4. 규칙 리스트는 빈 배열을 보낼 수 없습니다. (rules)",
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(
