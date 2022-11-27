@@ -5,6 +5,7 @@ import hous.server.domain.common.AuditingTimeEntity;
 import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
 import hous.server.domain.rule.Rule;
+import hous.server.domain.todo.Take;
 import hous.server.domain.todo.Todo;
 import hous.server.domain.todo.repository.DoneRepository;
 import hous.server.domain.user.Onboarding;
@@ -53,7 +54,7 @@ public class HomeRetrieveService {
                         todo.getName(),
                         doneRepository.findTodayOurTodoStatus(today, todo),
                         todo.getTakes().stream()
-                                .map(take -> take.getOnboarding().getNickname())
+                                .map(Take::getOnboarding)
                                 .collect(Collectors.toSet())))
                 .collect(Collectors.toList());
         List<Rule> rules = room.getRules();

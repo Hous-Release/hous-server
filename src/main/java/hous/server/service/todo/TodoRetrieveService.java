@@ -58,9 +58,10 @@ public class TodoRetrieveService {
                 .collect(Collectors.toList());
         List<OurTodoInfo> todayOurTodos = todayOurTodosList.stream()
                 .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
-                .map(todo -> OurTodoInfo.of(todo.getName(), doneRepository.findTodayOurTodoStatus(today, todo), todo.getTakes().stream()
-                        .map(take -> take.getOnboarding().getNickname())
-                        .collect(Collectors.toSet())))
+                .map(todo -> OurTodoInfo.of(todo.getName(), doneRepository.findTodayOurTodoStatus(today, todo),
+                        todo.getTakes().stream()
+                                .map(Take::getOnboarding)
+                                .collect(Collectors.toSet())))
                 .collect(Collectors.toList());
         return TodoMainResponse.of(today, todayMyTodos, todayOurTodos);
     }
