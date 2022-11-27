@@ -51,9 +51,7 @@ public class HomeRetrieveService {
                 .collect(Collectors.toList());
         List<OurTodoInfo> todayOurTodos = todayOurTodosList.stream()
                 .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
-                .map(todo -> OurTodoInfo.of(
-                        todo.getName(),
-                        doneRepository.findTodayOurTodoStatus(today, todo),
+                .map(todo -> OurTodoInfo.of(todo.getName(), doneRepository.findTodayOurTodoStatus(today, todo),
                         todo.getTakes().stream()
                                 .map(Take::getOnboarding)
                                 .collect(Collectors.toSet()),

@@ -123,7 +123,7 @@ public class TodoRetrieveService {
                     .collect(Collectors.toList());
             List<OurTodo> ourTodoInfos = allDayOurTodosList.get(day).stream()
                     .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
-                    .map(todo -> OurTodo.of(todo.getName(), todo.getTakes().stream()
+                    .map(todo -> OurTodo.of(todo.getId(), todo.getName(), todo.getTakes().stream()
                             .map(Take::getOnboarding)
                             .collect(Collectors.toSet()), onboarding))
                     .collect(Collectors.toList());
