@@ -47,20 +47,22 @@ public class TodoRetrieveService {
 
     public TodoMainResponse getTodoMain(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
+        Onboarding onboarding = user.getOnboarding();
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         LocalDate today = DateUtils.todayLocalDate();
         List<Todo> todos = room.getTodos();
         List<Todo> todayOurTodosList = TodoServiceUtils.filterDayOurTodos(today, todos);
-        List<Todo> todayMyTodosList = TodoServiceUtils.filterDayMyTodos(today, user.getOnboarding(), todos);
+        List<Todo> todayMyTodosList = TodoServiceUtils.filterDayMyTodos(today, onboarding, todos);
         List<TodoDetailInfo> todayMyTodos = todayMyTodosList.stream()
                 .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
-                .map(todo -> TodoDetailInfo.of(todo.getId(), todo.getName(), doneRepository.findTodayTodoCheckStatus(today, user.getOnboarding(), todo)))
+                .map(todo -> TodoDetailInfo.of(todo.getId(), todo.getName(), doneRepository.findTodayTodoCheckStatus(today, onboarding, todo)))
                 .collect(Collectors.toList());
         List<OurTodoInfo> todayOurTodos = todayOurTodosList.stream()
                 .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
-                .map(todo -> OurTodoInfo.of(todo.getName(), doneRepository.findTodayOurTodoStatus(today, todo), todo.getTakes().stream()
-                        .map(take -> take.getOnboarding().getNickname())
-                        .collect(Collectors.toSet())))
+                .map(todo -> OurTodoInfo.of(todo.getName(), doneRepository.findTodayOurTodoStatus(today, todo),
+                        todo.getTakes().stream()
+                                .map(Take::getOnboarding)
+                                .collect(Collectors.toSet()), onboarding))
                 .collect(Collectors.toList());
         return TodoMainResponse.of(today, todayMyTodos, todayOurTodos);
     }
@@ -99,12 +101,13 @@ public class TodoRetrieveService {
 
     public List<TodoAllDayResponse> getTodoAllDayInfo(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
+        Onboarding onboarding = user.getOnboarding();
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         List<Todo> todos = room.getTodos();
 
         // 이 방의 모든 요일의 todo list 조회
         List<Todo> ourTodosList = TodoServiceUtils.filterAllDaysOurTodos(todos);
-        List<Todo> myTodosList = TodoServiceUtils.filterAllDaysUserTodos(todos, user.getOnboarding());
+        List<Todo> myTodosList = TodoServiceUtils.filterAllDaysUserTodos(todos, onboarding);
 
         // 요일별(index) todo list 형태로 가공
         Map<Integer, Set<Todo>> allDayOurTodosList = TodoServiceUtils.mapByDayOfWeekToList(ourTodosList);
@@ -121,7 +124,8 @@ public class TodoRetrieveService {
             List<OurTodo> ourTodoInfos = allDayOurTodosList.get(day).stream()
                     .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
                     .map(todo -> OurTodo.of(todo.getName(), todo.getTakes().stream()
-                            .map(take -> take.getOnboarding().getNickname()).collect(Collectors.toSet())))
+                            .map(Take::getOnboarding)
+                            .collect(Collectors.toSet()), onboarding))
                     .collect(Collectors.toList());
             allDayTodosList.add(TodoAllDayResponse.of(dayOfWeek, todoInfos, ourTodoInfos));
         }
