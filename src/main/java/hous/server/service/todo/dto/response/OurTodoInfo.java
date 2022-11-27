@@ -12,15 +12,13 @@ import java.util.stream.Collectors;
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class OurTodoInfo extends OurTodo {
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
+public class OurTodoInfo {
 
+    private String todoName;
+    List<String> nicknames;
     private OurTodoStatus status;
-
-    @Builder(access = AccessLevel.PRIVATE)
-    public OurTodoInfo(String todoName, List<String> nicknames, OurTodoStatus status) {
-        super(todoName, nicknames);
-        this.status = status;
-    }
 
     public static OurTodoInfo of(String todoName, OurTodoStatus status, Set<Onboarding> onboardings, Onboarding me) {
         List<Onboarding> sortByTestScore = onboardings.stream().sorted(Onboarding::compareTo).collect(Collectors.toList());

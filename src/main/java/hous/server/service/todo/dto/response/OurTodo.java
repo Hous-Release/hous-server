@@ -15,13 +15,15 @@ import java.util.stream.Collectors;
 @Builder(access = AccessLevel.PRIVATE)
 public class OurTodo {
 
+    private Long todoId;
     private String todoName;
     private List<String> nicknames;
 
-    public static OurTodo of(String todoName, Set<Onboarding> onboardings, Onboarding me) {
+    public static OurTodo of(Long todoId, String todoName, Set<Onboarding> onboardings, Onboarding me) {
         List<Onboarding> sortByTestScore = onboardings.stream().sorted(Onboarding::compareTo).collect(Collectors.toList());
         List<Onboarding> meFirstList = UserServiceUtils.toMeFirstList(sortByTestScore, me);
         return OurTodo.builder()
+                .todoId(todoId)
                 .todoName(todoName)
                 .nicknames(meFirstList.stream()
                         .map(Onboarding::getNickname)
