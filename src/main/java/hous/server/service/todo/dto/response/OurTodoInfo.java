@@ -2,6 +2,7 @@ package hous.server.service.todo.dto.response;
 
 import hous.server.domain.todo.OurTodoStatus;
 import hous.server.domain.user.Onboarding;
+import hous.server.service.user.UserServiceUtils;
 import lombok.*;
 
 import java.util.List;
@@ -21,12 +22,13 @@ public class OurTodoInfo extends OurTodo {
         this.status = status;
     }
 
-    public static OurTodoInfo of(String todoName, OurTodoStatus status, Set<Onboarding> onboardings) {
+    public static OurTodoInfo of(String todoName, OurTodoStatus status, Set<Onboarding> onboardings, Onboarding me) {
+        List<Onboarding> sortByTestScore = onboardings.stream().sorted(Onboarding::compareTo).collect(Collectors.toList());
+        List<Onboarding> meFirstList = UserServiceUtils.toMeFirstList(sortByTestScore, me);
         return OurTodoInfo.builder()
                 .todoName(todoName)
                 .status(status)
-                .nicknames(onboardings.stream()
-                        .sorted(Onboarding::compareTo)
+                .nicknames(meFirstList.stream()
                         .map(Onboarding::getNickname)
                         .collect(Collectors.toList()))
                 .build();

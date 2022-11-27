@@ -36,17 +36,18 @@ public class HomeRetrieveService {
 
     public HomeInfoResponse getHomeInfo(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
+        Onboarding onboarding = user.getOnboarding();
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         LocalDate today = DateUtils.todayLocalDate();
         List<Todo> todos = room.getTodos();
         List<Todo> todayOurTodosList = TodoServiceUtils.filterDayOurTodos(today, todos);
-        List<Todo> todayMyTodosList = TodoServiceUtils.filterDayMyTodos(today, user.getOnboarding(), todos);
+        List<Todo> todayMyTodosList = TodoServiceUtils.filterDayMyTodos(today, onboarding, todos);
         List<TodoDetailInfo> todayMyTodos = todayMyTodosList.stream()
                 .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
                 .map(todo -> TodoDetailInfo.of(
                         todo.getId(),
                         todo.getName(),
-                        doneRepository.findTodayTodoCheckStatus(today, user.getOnboarding(), todo)))
+                        doneRepository.findTodayTodoCheckStatus(today, onboarding, todo)))
                 .collect(Collectors.toList());
         List<OurTodoInfo> todayOurTodos = todayOurTodosList.stream()
                 .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
@@ -55,14 +56,15 @@ public class HomeRetrieveService {
                         doneRepository.findTodayOurTodoStatus(today, todo),
                         todo.getTakes().stream()
                                 .map(Take::getOnboarding)
-                                .collect(Collectors.toSet())))
+                                .collect(Collectors.toSet()),
+                        onboarding))
                 .collect(Collectors.toList());
         List<Rule> rules = room.getRules();
         List<Onboarding> participants = room.getParticipates().stream()
                 .map(Participate::getOnboarding)
                 .sorted(Onboarding::compareTo)
                 .collect(Collectors.toList());
-        List<Onboarding> meFirstList = UserServiceUtils.toMeFirstList(participants, user.getOnboarding());
-        return HomeInfoResponse.of(user.getOnboarding(), room, today, todayMyTodos, todayOurTodos, rules, meFirstList);
+        List<Onboarding> meFirstList = UserServiceUtils.toMeFirstList(participants, onboarding);
+        return HomeInfoResponse.of(onboarding, room, today, todayMyTodos, todayOurTodos, rules, meFirstList);
     }
 }
