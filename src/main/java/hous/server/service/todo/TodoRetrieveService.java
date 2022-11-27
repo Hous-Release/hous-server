@@ -121,7 +121,8 @@ public class TodoRetrieveService {
             List<OurTodo> ourTodoInfos = allDayOurTodosList.get(day).stream()
                     .sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
                     .map(todo -> OurTodo.of(todo.getName(), todo.getTakes().stream()
-                            .map(take -> take.getOnboarding().getNickname()).collect(Collectors.toSet())))
+                            .map(Take::getOnboarding)
+                            .collect(Collectors.toSet())))
                     .collect(Collectors.toList());
             allDayTodosList.add(TodoAllDayResponse.of(dayOfWeek, todoInfos, ourTodoInfos));
         }

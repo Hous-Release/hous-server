@@ -1,8 +1,11 @@
 package hous.server.service.todo.dto.response;
 
+import hous.server.domain.user.Onboarding;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @ToString
 @Getter
@@ -12,12 +15,15 @@ import java.util.Set;
 public class OurTodo {
 
     private String todoName;
-    private Set<String> nicknames;
+    private List<String> nicknames;
 
-    public static OurTodo of(String todoName, Set<String> nicknames) {
+    public static OurTodo of(String todoName, Set<Onboarding> onboardings) {
         return OurTodo.builder()
                 .todoName(todoName)
-                .nicknames(nicknames)
+                .nicknames(onboardings.stream()
+                        .sorted(Onboarding::compareTo)
+                        .map(Onboarding::getNickname)
+                        .collect(Collectors.toList()))
                 .build();
     }
 }
