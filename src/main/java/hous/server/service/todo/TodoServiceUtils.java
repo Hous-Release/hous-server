@@ -68,6 +68,20 @@ public class TodoServiceUtils {
         return new ArrayList<>(dayOurTodosSet);
     }
 
+    public static List<Todo> filterDayOurTodosByIsPushNotification(LocalDate day, List<Todo> todos) {
+        Set<Todo> dayOurTodosSet = new HashSet<>();
+        todos.stream().filter(Todo::isPushNotification).forEach(todo ->
+                todo.getTakes().forEach(take ->
+                        take.getRedos().forEach(redo -> {
+                            if (redo.getDayOfWeek().toString().equals(DateUtils.nowDayOfWeek(day))) {
+                                dayOurTodosSet.add(todo);
+                            }
+                        })
+                )
+        );
+        return new ArrayList<>(dayOurTodosSet);
+    }
+
     public static List<Todo> filterAllDaysOurTodos(List<Todo> todos) {
         Set<Todo> allDaysOurTodosSet = new HashSet<>();
         todos.forEach(todo -> todo.getTakes().forEach(take ->
@@ -118,6 +132,17 @@ public class TodoServiceUtils {
                 }
             });
         });
+        return new ArrayList<>(dayMyTodosSet);
+    }
+
+    public static List<Todo> filterDayMyTodosByIsPushNotification(LocalDate day, Onboarding me, List<Todo> todos) {
+        Set<Todo> dayMyTodosSet = new HashSet<>();
+        List<Todo> dayOurTodosList = filterDayOurTodosByIsPushNotification(day, todos);
+        dayOurTodosList.forEach(todo -> todo.getTakes().forEach(take -> {
+            if (take.getOnboarding().getId().equals(me.getId())) {
+                dayMyTodosSet.add(todo);
+            }
+        }));
         return new ArrayList<>(dayMyTodosSet);
     }
 }

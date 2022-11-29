@@ -97,8 +97,8 @@ public class TodoScheduledService {
             if (participates.size() != 0) {
                 LocalDate today = DateUtils.todayLocalDate();
                 Room room = participates.get(0).getRoom();
-                List<Todo> todayOurTodos = TodoServiceUtils.filterDayOurTodos(today, room.getTodos());
-                List<Todo> todayMyTodos = TodoServiceUtils.filterDayMyTodos(today, onboarding, room.getTodos());
+                List<Todo> todayOurTodos = TodoServiceUtils.filterDayOurTodosByIsPushNotification(today, room.getTodos());
+                List<Todo> todayMyTodos = TodoServiceUtils.filterDayMyTodosByIsPushNotification(today, onboarding, room.getTodos());
                 if (!todayOurTodos.isEmpty()) {
                     notificationService.sendTodayTodoNotification(user, !todayMyTodos.isEmpty());
                 }
@@ -118,8 +118,8 @@ public class TodoScheduledService {
             if (participates.size() != 0) {
                 LocalDate today = DateUtils.todayLocalDate();
                 Room room = participates.get(0).getRoom();
-                List<Todo> todayOurTodos = TodoServiceUtils.filterDayOurTodos(today, room.getTodos());
-                List<Todo> todayMyTodos = TodoServiceUtils.filterDayMyTodos(today, onboarding, room.getTodos());
+                List<Todo> todayOurTodos = TodoServiceUtils.filterDayOurTodosByIsPushNotification(today, room.getTodos());
+                List<Todo> todayMyTodos = TodoServiceUtils.filterDayMyTodosByIsPushNotification(today, onboarding, room.getTodos());
                 List<Todo> undoneTodayOurTodos = todayOurTodos.stream()
                         .filter(todayOurTodo -> doneRepository.findTodayOurTodoStatus(today, todayOurTodo) != OurTodoStatus.FULL_CHECK)
                         .collect(Collectors.toList());

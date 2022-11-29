@@ -30,10 +30,10 @@ public class NotificationService {
     public void sendNewTodoNotification(User to, Todo todo, boolean isTake) {
         Notification notification = notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.TODO, newTodoNotification(todo, isTake), false));
         to.getOnboarding().addNotification(notification);
-        if (to.getSetting().isPushNotification() && to.getSetting().getNewTodoPushStatus() == TodoPushStatus.ON_ALL) {
+        if (todo.isPushNotification() && to.getSetting().isPushNotification() && to.getSetting().getNewTodoPushStatus() == TodoPushStatus.ON_ALL) {
             firebaseCloudMessageService.sendMessageTo(to, PushMessage.NEW_TODO.getTitle(), PushMessage.NEW_TODO.getBody());
         }
-        if (to.getSetting().isPushNotification() && to.getSetting().getNewTodoPushStatus() == TodoPushStatus.ON_MY && isTake) {
+        if (todo.isPushNotification() && to.getSetting().isPushNotification() && to.getSetting().getNewTodoPushStatus() == TodoPushStatus.ON_MY && isTake) {
             firebaseCloudMessageService.sendMessageTo(to, PushMessage.NEW_TODO_TAKE.getTitle(), PushMessage.NEW_TODO_TAKE.getBody());
         }
     }
