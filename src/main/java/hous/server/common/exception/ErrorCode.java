@@ -76,6 +76,7 @@ public enum ErrorCode {
     CONFLICT_LOGIN_EXCEPTION(CONFLICT, "이미 로그인 중인 유저입니다."),
     CONFLICT_JOINED_ROOM_EXCEPTION(CONFLICT, "이미 참가중인 방이 있습니다."),
     CONFLICT_RULE_EXCEPTION(CONFLICT, "이미 존재하는 규칙입니다."),
+    CONFLICT_TODO_EXCEPTION(CONFLICT, "이미 존재하는 todo 입니다."),
 
     /**
      * 415 Unsupported Media Type
