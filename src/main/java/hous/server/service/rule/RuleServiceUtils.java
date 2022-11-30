@@ -1,5 +1,6 @@
 package hous.server.service.rule;
 
+import hous.server.common.exception.ConflictException;
 import hous.server.common.exception.ForbiddenException;
 import hous.server.common.exception.NotFoundException;
 import hous.server.common.exception.ValidationException;
@@ -9,6 +10,9 @@ import hous.server.domain.rule.Rule;
 import hous.server.domain.rule.repository.RuleRepository;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static hous.server.common.exception.ErrorCode.*;
 
@@ -43,5 +47,14 @@ public class RuleServiceUtils {
             throw new NotFoundException(String.format("존재하지 않는 규칙 (%s) 입니다", ruleId), NOT_FOUND_RULE_EXCEPTION);
         }
         return rule;
+    }
+
+    public static void existsRuleByRoomRules(Room room, List<String> requestRules) {
+        List<String> rules = room.getRules().stream().map(Rule::getName).collect(Collectors.toList());
+        for (String ruleName : requestRules) {
+            if (rules.contains(ruleName)) {
+                throw new ConflictException(String.format("방 (%s) 에 이미 존재하는 todo (%s) 입니다.", room.getId(), ruleName), CONFLICT_RULE_EXCEPTION);
+            }
+        }
     }
 }
