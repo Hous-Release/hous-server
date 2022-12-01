@@ -1,21 +1,10 @@
 package hous.server.common.exception;
 
-import static hous.server.common.exception.ErrorStatusCode.BAD_GATEWAY;
-import static hous.server.common.exception.ErrorStatusCode.BAD_REQUEST;
-import static hous.server.common.exception.ErrorStatusCode.CONFLICT;
-import static hous.server.common.exception.ErrorStatusCode.FORBIDDEN;
-import static hous.server.common.exception.ErrorStatusCode.INTERNAL_SERVER;
-import static hous.server.common.exception.ErrorStatusCode.METHOD_NOT_ALLOWED;
-import static hous.server.common.exception.ErrorStatusCode.NOT_ACCEPTABLE;
-import static hous.server.common.exception.ErrorStatusCode.NOT_FOUND;
-import static hous.server.common.exception.ErrorStatusCode.SERVICE_UNAVAILABLE;
-import static hous.server.common.exception.ErrorStatusCode.UNAUTHORIZED;
-import static hous.server.common.exception.ErrorStatusCode.UNSUPPORTED_MEDIA_TYPE;
-import static hous.server.common.exception.ErrorStatusCode.UPGRADE_REQUIRED;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import static hous.server.common.exception.ErrorStatusCode.*;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -86,6 +75,8 @@ public enum ErrorCode {
     CONFLICT_USER_EXCEPTION(CONFLICT, "이미 해당 계정으로 회원가입하셨습니다.\n로그인 해주세요."),
     CONFLICT_LOGIN_EXCEPTION(CONFLICT, "이미 로그인 중인 유저입니다."),
     CONFLICT_JOINED_ROOM_EXCEPTION(CONFLICT, "이미 참가중인 방이 있습니다."),
+    CONFLICT_RULE_EXCEPTION(CONFLICT, "이미 존재하는 규칙입니다."),
+    CONFLICT_TODO_EXCEPTION(CONFLICT, "이미 존재하는 todo 입니다."),
 
     /**
      * 415 Unsupported Media Type

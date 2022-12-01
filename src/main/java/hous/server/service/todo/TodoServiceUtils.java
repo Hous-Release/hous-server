@@ -1,5 +1,6 @@
 package hous.server.service.todo;
 
+import hous.server.common.exception.ConflictException;
 import hous.server.common.exception.ForbiddenException;
 import hous.server.common.exception.NotFoundException;
 import hous.server.common.exception.ValidationException;
@@ -42,6 +43,13 @@ public class TodoServiceUtils {
     public static void validateTodoStatus(DoneRepository doneRepository, boolean status, Onboarding onboarding, Todo todo) {
         if (status == doneRepository.findTodayTodoCheckStatus(DateUtils.todayLocalDate(), onboarding, todo)) {
             throw new ValidationException(String.format("(%s) 유저의 todo (%s) 상태는 이미 (%s) 입니다.", onboarding.getId(), todo.getId(), status), VALIDATION_STATUS_EXCEPTION);
+        }
+    }
+
+    public static void existsTodoByRoomTodos(Room room, String requestTodo) {
+        List<String> todos = room.getTodos().stream().map(Todo::getName).collect(Collectors.toList());
+        if (todos.contains(requestTodo)) {
+            throw new ConflictException(String.format("방 (%s) 에 이미 존재하는 todo (%s) 입니다.", room.getId(), requestTodo), CONFLICT_TODO_EXCEPTION);
         }
     }
 

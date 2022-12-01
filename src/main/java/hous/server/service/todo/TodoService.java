@@ -48,6 +48,7 @@ public class TodoService {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         TodoServiceUtils.validateTodoCounts(room);
+        TodoServiceUtils.existsTodoByRoomTodos(room, request.getName());
         Todo todo = todoRepository.save(Todo.newInstance(room, request.getName(), request.isPushNotification()));
         request.getTodoUsers().forEach(todoUser -> {
             Onboarding onboarding = UserServiceUtils.findOnboardingById(onboardingRepository, todoUser.getOnboardingId());
@@ -72,6 +73,7 @@ public class TodoService {
     public void updateTodo(Long todoId, TodoInfoRequestDto request) {
         Todo todo = TodoServiceUtils.findTodoById(todoRepository, todoId);
         Room room = todo.getRoom();
+        TodoServiceUtils.existsTodoByRoomTodos(room, request.getName());
         todo.getTakes().forEach(take -> {
             redoRepository.deleteAll(take.getRedos());
             takeRepository.delete(take);
