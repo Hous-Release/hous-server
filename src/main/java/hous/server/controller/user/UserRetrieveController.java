@@ -3,7 +3,7 @@ package hous.server.controller.user;
 import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
 import hous.server.common.success.SuccessCode;
-import hous.server.config.interceptor.Auth;
+import hous.server.config.interceptor.auth.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.domain.personality.PersonalityColor;
 import hous.server.service.notification.NotificationRetrieveService;

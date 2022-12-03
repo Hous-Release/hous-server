@@ -1,4 +1,4 @@
-package hous.server.config.interceptor;
+package hous.server.config.interceptor.version;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,9 +1,10 @@
 package hous.server.controller.user;
 
+import hous.server.common.aspect.PreventDuplicateRequest;
 import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
 import hous.server.common.success.SuccessCode;
-import hous.server.config.interceptor.Auth;
+import hous.server.config.interceptor.auth.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.service.slack.SlackService;
 import hous.server.service.user.UserRetrieveService;
@@ -52,11 +53,14 @@ public class UserController {
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다. \n"
                             + "2. 존재하지 않는 방입니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @PreventDuplicateRequest
     @Auth
     @PutMapping("/user")
-    public ResponseEntity<SuccessResponse<String>> updateUserInfo(@Valid @RequestBody UpdateUserInfoRequestDto request, @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> updateUserInfo(@ApiIgnore @UserId Long userId,
+                                                                  @Valid @RequestBody UpdateUserInfoRequestDto request) {
         userService.updateUserInfo(request, userId);
         return SuccessResponse.OK;
     }
@@ -73,11 +77,14 @@ public class UserController {
             @ApiResponse(code = 400, message = "잘못된 상태로 요청했습니다.", response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
+            @ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @PreventDuplicateRequest
     @Auth
     @PatchMapping("/user/push")
-    public ResponseEntity<SuccessResponse<String>> updateUserPushSetting(@Valid @RequestBody UpdatePushSettingRequestDto request, @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> updateUserPushSetting(@ApiIgnore @UserId Long userId,
+                                                                         @Valid @RequestBody UpdatePushSettingRequestDto request) {
         userService.updateUserPushSetting(request, userId);
         return SuccessResponse.OK;
     }
@@ -95,12 +102,14 @@ public class UserController {
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다. \n"
                             + "2. 같은 방에 참가하고 있지 않습니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @PreventDuplicateRequest
     @Auth
     @PutMapping("/user/personality")
-    public ResponseEntity<SuccessResponse<UpdatePersonalityColorResponse>> updateUserTestScore(
-            @Valid @RequestBody UpdateTestScoreRequestDto request, @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<UpdatePersonalityColorResponse>> updateUserTestScore(@ApiIgnore @UserId Long userId,
+                                                                                               @Valid @RequestBody UpdateTestScoreRequestDto request) {
         return SuccessResponse.success(SuccessCode.UPDATE_PERSONALITY_TEST_SUCCESS, userService.updateUserTestScore(request, userId));
     }
 
@@ -117,13 +126,15 @@ public class UserController {
                             + "2. 참가중인 방이 존재하지 않습니다. \n"
                             + "3. 존재하지 않는 배지 입니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @PreventDuplicateRequest
     @Auth
     @PutMapping("/user/badge/{badgeId}/represent")
-    public ResponseEntity<SuccessResponse<String>> updateRepresentBadge(@ApiParam(name = "badgeId", value = "대표 배지로 설정할 badge 의 id", required = true, example = "1")
-                                                                        @PathVariable Long badgeId,
-                                                                        @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> updateRepresentBadge(@ApiIgnore @UserId Long userId,
+                                                                        @ApiParam(name = "badgeId", value = "대표 배지로 설정할 badge 의 id", required = true, example = "1")
+                                                                        @PathVariable Long badgeId) {
         userService.updateRepresentBadge(badgeId, userId);
         return SuccessResponse.OK;
     }
@@ -141,11 +152,14 @@ public class UserController {
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
+            @ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @PreventDuplicateRequest
     @Auth
     @DeleteMapping("/user")
-    public ResponseEntity<SuccessResponse<String>> deleteUser(@RequestBody DeleteUserRequestDto request, @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> deleteUser(@ApiIgnore @UserId Long userId,
+                                                              @RequestBody DeleteUserRequestDto request) {
         userService.deleteUser(request, userId);
         slackService.sendSlackMessageDeleteUser(userRetrieveService.getFeedback());
         return SuccessResponse.OK;
@@ -162,8 +176,10 @@ public class UserController {
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
                             + "2. 참가중인 방이 존재하지 않습니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @PreventDuplicateRequest
     @Auth
     @PostMapping("/user/feedback")
     public ResponseEntity<SuccessResponse<String>> acquireFeedbackBadge(@ApiIgnore @UserId Long userId) {

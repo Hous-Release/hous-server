@@ -1,9 +1,10 @@
 package hous.server.controller.auth;
 
+import hous.server.common.aspect.PreventDuplicateRequest;
 import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
 import hous.server.common.success.SuccessCode;
-import hous.server.config.interceptor.Auth;
+import hous.server.config.interceptor.auth.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.controller.auth.dto.request.LoginRequestDto;
 import hous.server.controller.auth.dto.request.SignUpRequestDto;
@@ -154,8 +155,10 @@ public class AuthController {
             @ApiResponse(code = 200, message = "성공입니다."),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
+            @ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @PreventDuplicateRequest
     @Auth
     @PostMapping("/auth/logout")
     public ResponseEntity<SuccessResponse<String>> logout(@ApiIgnore @UserId Long userId) {

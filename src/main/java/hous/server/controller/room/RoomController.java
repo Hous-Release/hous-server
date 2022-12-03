@@ -1,9 +1,10 @@
 package hous.server.controller.room;
 
+import hous.server.common.aspect.PreventDuplicateRequest;
 import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
 import hous.server.common.success.SuccessCode;
-import hous.server.config.interceptor.Auth;
+import hous.server.config.interceptor.auth.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.service.room.RoomService;
 import hous.server.service.room.dto.request.SetRoomNameRequestDto;
@@ -39,13 +40,19 @@ public class RoomController {
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
-            @ApiResponse(code = 409, message = "이미 참가중인 방이 있습니다.", response = ErrorResponse.class),
+            @ApiResponse(
+                    code = 409,
+                    message = "1. 처리중인 요청입니다.\n"
+                            + "2. 이미 참가중인 방이 있습니다.",
+                    response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @PreventDuplicateRequest
     @Auth
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/room")
-    public ResponseEntity<SuccessResponse<RoomInfoResponse>> createRoom(@Valid @RequestBody SetRoomNameRequestDto request, @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<RoomInfoResponse>> createRoom(@ApiIgnore @UserId Long userId,
+                                                                        @Valid @RequestBody SetRoomNameRequestDto request) {
         return SuccessResponse.success(SuccessCode.CREATE_ROOM_SUCCESS, roomService.createRoom(request, userId));
     }
 
@@ -63,14 +70,19 @@ public class RoomController {
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
                             + "2. 존재하지 않는 방입니다.",
                     response = ErrorResponse.class),
-            @ApiResponse(code = 409, message = "이미 참가중인 방이 있습니다.", response = ErrorResponse.class),
+            @ApiResponse(
+                    code = 409,
+                    message = "1. 처리중인 요청입니다.\n"
+                            + "2. 이미 참가중인 방이 있습니다.",
+                    response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @PreventDuplicateRequest
     @Auth
     @PostMapping("/room/{roomId}/join")
-    public ResponseEntity<SuccessResponse<RoomInfoResponse>> joinRoom(@ApiParam(name = "roomId", value = "참가할 room 의 id", required = true, example = "1")
-                                                                      @PathVariable Long roomId,
-                                                                      @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<RoomInfoResponse>> joinRoom(@ApiIgnore @UserId Long userId,
+                                                                      @ApiParam(name = "roomId", value = "참가할 room 의 id", required = true, example = "1")
+                                                                      @PathVariable Long roomId) {
         return SuccessResponse.success(SuccessCode.JOIN_ROOM_SUCCESS, roomService.joinRoom(roomId, userId));
     }
 
@@ -91,11 +103,14 @@ public class RoomController {
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
                             + "2. 참가중인 방이 존재하지 않습니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @PreventDuplicateRequest
     @Auth
     @PutMapping("/room/name")
-    public ResponseEntity<SuccessResponse<String>> updateRoomName(@Valid @RequestBody SetRoomNameRequestDto request, @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> updateRoomName(@ApiIgnore @UserId Long userId,
+                                                                  @Valid @RequestBody SetRoomNameRequestDto request) {
         roomService.updateRoomName(request, userId);
         return SuccessResponse.OK;
     }
@@ -112,8 +127,10 @@ public class RoomController {
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
                             + "2. 참가중인 방이 존재하지 않습니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @PreventDuplicateRequest
     @Auth
     @DeleteMapping("/room/leave")
     public ResponseEntity<SuccessResponse<String>> leaveRoom(@ApiIgnore @UserId Long userId) {

@@ -1,8 +1,9 @@
 package hous.server.controller.todo;
 
+import hous.server.common.aspect.PreventDuplicateRequest;
 import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
-import hous.server.config.interceptor.Auth;
+import hous.server.config.interceptor.auth.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.service.todo.TodoService;
 import hous.server.service.todo.dto.request.CheckTodoRequestDto;
@@ -46,13 +47,19 @@ public class TodoController {
                             + "2. 참가중인 방이 존재하지 않습니다.\n"
                             + "3. 유저의 온보딩 정보가 존재하지 않습니다.",
                     response = ErrorResponse.class),
-            @ApiResponse(code = 409, message = "이미 존재하는 todo 입니다.", response = ErrorResponse.class),
+            @ApiResponse(
+                    code = 409,
+                    message = "1. 처리중인 요청입니다.\n"
+                            + "2. 이미 존재하는 todo 입니다.",
+                    response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @PreventDuplicateRequest
     @Auth
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/todo")
-    public ResponseEntity<SuccessResponse<String>> createTodo(@Valid @RequestBody TodoInfoRequestDto request, @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> createTodo(@ApiIgnore @UserId Long userId,
+                                                              @Valid @RequestBody TodoInfoRequestDto request) {
         todoService.createTodo(request, userId);
         return SuccessResponse.CREATED;
     }
@@ -79,15 +86,21 @@ public class TodoController {
                             + "3. 유저의 온보딩 정보가 존재하지 않습니다.\n"
                             + "4. 존재하지 않는 todo 입니다.",
                     response = ErrorResponse.class),
-            @ApiResponse(code = 409, message = "이미 존재하는 todo 입니다.", response = ErrorResponse.class),
+            @ApiResponse(
+                    code = 409,
+                    message = "1. 처리중인 요청입니다.\n"
+                            + "2. 이미 존재하는 todo 입니다.",
+                    response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @PreventDuplicateRequest
     @Auth
     @PutMapping("/todo/{todoId}")
-    public ResponseEntity<SuccessResponse<String>> updateTodo(@ApiParam(name = "todoId", value = "수정할 todo 의 id", required = true, example = "1")
+    public ResponseEntity<SuccessResponse<String>> updateTodo(@ApiIgnore @UserId Long userId,
+                                                              @ApiParam(name = "todoId", value = "수정할 todo 의 id", required = true, example = "1")
                                                               @PathVariable Long todoId,
                                                               @Valid @RequestBody TodoInfoRequestDto request) {
-        todoService.updateTodo(todoId, request);
+        todoService.updateTodo(todoId, request, userId);
         return SuccessResponse.OK;
     }
 
@@ -109,14 +122,16 @@ public class TodoController {
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
                             + "2. 존재하지 않는 todo 입니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @PreventDuplicateRequest
     @Auth
     @PostMapping("/todo/{todoId}/check")
-    public ResponseEntity<SuccessResponse<String>> checkTodo(@ApiParam(name = "todoId", value = "체크할 todo 의 id", required = true, example = "1")
+    public ResponseEntity<SuccessResponse<String>> checkTodo(@ApiIgnore @UserId Long userId,
+                                                             @ApiParam(name = "todoId", value = "체크할 todo 의 id", required = true, example = "1")
                                                              @PathVariable Long todoId,
-                                                             @Valid @RequestBody CheckTodoRequestDto request,
-                                                             @ApiIgnore @UserId Long userId) {
+                                                             @Valid @RequestBody CheckTodoRequestDto request) {
         todoService.checkTodo(todoId, request, userId);
         return SuccessResponse.OK;
     }
@@ -128,14 +143,21 @@ public class TodoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "성공입니다."),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
-            @ApiResponse(code = 404, message = "존재하지 않는 todo 입니다.", response = ErrorResponse.class),
+            @ApiResponse(
+                    code = 404,
+                    message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
+                            + "2. 존재하지 않는 todo 입니다.",
+                    response = ErrorResponse.class),
+            @ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @PreventDuplicateRequest
     @Auth
     @DeleteMapping("/todo/{todoId}")
-    public ResponseEntity<SuccessResponse<String>> deleteTodo(@ApiParam(name = "todoId", value = "삭제할 todo 의 id", required = true, example = "1")
+    public ResponseEntity<SuccessResponse<String>> deleteTodo(@ApiIgnore @UserId Long userId,
+                                                              @ApiParam(name = "todoId", value = "삭제할 todo 의 id", required = true, example = "1")
                                                               @PathVariable Long todoId) {
-        todoService.deleteTodo(todoId);
+        todoService.deleteTodo(todoId, userId);
         return SuccessResponse.OK;
     }
 }

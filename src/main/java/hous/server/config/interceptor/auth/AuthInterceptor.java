@@ -1,4 +1,4 @@
-package hous.server.config.interceptor;
+package hous.server.config.interceptor.auth;
 
 import hous.server.config.security.JwtConstants;
 import lombok.RequiredArgsConstructor;
