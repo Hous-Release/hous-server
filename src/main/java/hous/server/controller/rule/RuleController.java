@@ -1,5 +1,6 @@
 package hous.server.controller.rule;
 
+import hous.server.common.aspect.PreventDuplicateRequest;
 import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
 import hous.server.config.interceptor.auth.Auth;
@@ -51,11 +52,12 @@ public class RuleController {
 //            @ApiResponse(code = 409, message = "이미 존재하는 규칙입니다.", response = ErrorResponse.class), //TODO 다음 릴리즈 때 클라에서 추가할 예정이라 우선 주석 처리
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @PreventDuplicateRequest
     @Auth
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/rules")
-    public ResponseEntity<SuccessResponse<String>> createRule(@Valid @RequestBody CreateRuleRequestDto request,
-                                                              @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> createRule(@ApiIgnore @UserId Long userId,
+                                                              @Valid @RequestBody CreateRuleRequestDto request) {
         ruleService.createRule(request, userId);
         return SuccessResponse.CREATED;
     }
@@ -83,10 +85,11 @@ public class RuleController {
 //            @ApiResponse(code = 409, message = "이미 존재하는 규칙입니다.", response = ErrorResponse.class), //TODO 다음 릴리즈 때 클라에서 추가할 예정이라 우선 주석 처리
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @PreventDuplicateRequest
     @Auth
     @PutMapping("/rules")
-    public ResponseEntity<SuccessResponse<String>> updateRules(@Valid @RequestBody UpdateRuleRequestDto request,
-                                                               @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> updateRules(@ApiIgnore @UserId Long userId,
+                                                               @Valid @RequestBody UpdateRuleRequestDto request) {
         ruleService.updateRules(request, userId);
         return SuccessResponse.OK;
     }
@@ -111,10 +114,11 @@ public class RuleController {
                     response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @PreventDuplicateRequest
     @Auth
     @DeleteMapping("/rules")
-    public ResponseEntity<SuccessResponse<String>> deleteRules(@Valid @RequestBody DeleteRuleReqeustDto request,
-                                                               @ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<String>> deleteRules(@ApiIgnore @UserId Long userId,
+                                                               @Valid @RequestBody DeleteRuleReqeustDto request) {
         ruleService.deleteRules(request, userId);
         return SuccessResponse.OK;
     }

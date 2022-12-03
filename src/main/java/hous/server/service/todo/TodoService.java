@@ -70,7 +70,8 @@ public class TodoService {
         });
     }
 
-    public void updateTodo(Long todoId, TodoInfoRequestDto request) {
+    public void updateTodo(Long todoId, TodoInfoRequestDto request, Long userId) {
+        UserServiceUtils.findUserById(userRepository, userId);
         Todo todo = TodoServiceUtils.findTodoById(todoRepository, todoId);
         Room room = todo.getRoom();
         TodoServiceUtils.existsTodoByRoomTodos(room, request.getName());
@@ -109,7 +110,8 @@ public class TodoService {
         }
     }
 
-    public void deleteTodo(Long todoId) {
+    public void deleteTodo(Long todoId, Long userId) {
+        UserServiceUtils.findUserById(userRepository, userId);
         Todo todo = TodoServiceUtils.findTodoById(todoRepository, todoId);
         Room room = todo.getRoom();
         todo.getTakes().forEach(take -> {

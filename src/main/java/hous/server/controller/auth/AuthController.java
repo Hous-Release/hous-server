@@ -1,5 +1,6 @@
 package hous.server.controller.auth;
 
+import hous.server.common.aspect.PreventDuplicateRequest;
 import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
 import hous.server.common.success.SuccessCode;
@@ -156,6 +157,7 @@ public class AuthController {
             @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @PreventDuplicateRequest
     @Auth
     @PostMapping("/auth/logout")
     public ResponseEntity<SuccessResponse<String>> logout(@ApiIgnore @UserId Long userId) {
