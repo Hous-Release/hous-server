@@ -50,6 +50,7 @@ public class RuleController {
                             + "2. 참가중인 방이 존재하지 않습니다.",
                     response = ErrorResponse.class),
 //            @ApiResponse(code = 409, message = "이미 존재하는 규칙입니다.", response = ErrorResponse.class), //TODO 다음 릴리즈 때 클라에서 추가할 예정이라 우선 주석 처리
+            @ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
@@ -83,6 +84,7 @@ public class RuleController {
                             + "3. 존재하지 않는 규칙입니다.",
                     response = ErrorResponse.class),
 //            @ApiResponse(code = 409, message = "이미 존재하는 규칙입니다.", response = ErrorResponse.class), //TODO 다음 릴리즈 때 클라에서 추가할 예정이라 우선 주석 처리
+            @ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
@@ -112,6 +114,7 @@ public class RuleController {
                             + "2. 존재하지 않는 방입니다.\n"
                             + "3. 존재하지 않는 규칙입니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
