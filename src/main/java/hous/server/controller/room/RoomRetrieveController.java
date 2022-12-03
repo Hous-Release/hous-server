@@ -3,7 +3,7 @@ package hous.server.controller.room;
 import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
 import hous.server.common.success.SuccessCode;
-import hous.server.config.interceptor.Auth;
+import hous.server.config.interceptor.auth.Auth;
 import hous.server.config.resolver.UserId;
 import hous.server.service.room.RoomRetrieveService;
 import hous.server.service.room.dto.response.GetRoomInfoResponse;

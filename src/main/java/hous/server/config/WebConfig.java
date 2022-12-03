@@ -1,6 +1,6 @@
 package hous.server.config;
 
-import hous.server.config.interceptor.AuthInterceptor;
+import hous.server.config.interceptor.auth.AuthInterceptor;
 import hous.server.config.resolver.UserIdResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;

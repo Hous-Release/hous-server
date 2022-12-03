@@ -1,4 +1,4 @@
-package hous.server.config.interceptor;
+package hous.server.config.interceptor.version;
 
 import hous.server.common.exception.ErrorCode;
 import hous.server.common.exception.NotFoundException;
@@ -6,9 +6,10 @@ import hous.server.common.exception.UpgradeRequiredException;
 import hous.server.common.exception.ValidationException;
 import hous.server.domain.deploy.Deploy;
 import hous.server.domain.deploy.repository.DeployRepository;
-import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RequiredArgsConstructor
 @Component

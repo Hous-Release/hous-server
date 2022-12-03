@@ -1,4 +1,4 @@
-package hous.server.config.interceptor;
+package hous.server.config.interceptor.auth;
 
 import hous.server.common.exception.UnAuthorizedException;
 import hous.server.common.util.JwtUtils;

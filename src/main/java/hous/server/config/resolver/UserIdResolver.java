@@ -1,7 +1,7 @@
 package hous.server.config.resolver;
 
 import hous.server.common.exception.InternalServerException;
-import hous.server.config.interceptor.Auth;
+import hous.server.config.interceptor.auth.Auth;
 import hous.server.config.security.JwtConstants;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.MethodParameter;
