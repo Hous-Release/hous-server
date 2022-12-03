@@ -4,6 +4,8 @@ import hous.server.domain.badge.BadgeInfo;
 import hous.server.domain.badge.repository.AcquireRepository;
 import hous.server.domain.badge.repository.RepresentRepository;
 import hous.server.domain.notification.repository.NotificationRepository;
+import hous.server.domain.personality.PersonalityColor;
+import hous.server.domain.personality.repository.PersonalityRepository;
 import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
 import hous.server.domain.room.repository.ParticipateRepository;
@@ -43,6 +45,7 @@ public class RoomService {
     private final RepresentRepository representRepository;
     private final TestScoreRepository testScoreRepository;
     private final NotificationRepository notificationRepository;
+    private final PersonalityRepository personalityRepository;
 
     private final BadgeService badgeService;
 
@@ -97,6 +100,7 @@ public class RoomService {
         notificationRepository.deleteAll(me.getNotifications());
         if (me.getTestScore() != null) {
             testScoreRepository.delete(me.getTestScore());
+            me.updatePersonality(personalityRepository.findPersonalityByColor(PersonalityColor.GRAY));
         }
         me.resetUserInfo();
         me.resetBadge();

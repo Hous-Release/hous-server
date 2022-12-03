@@ -75,24 +75,22 @@ public class RoomServiceUtils {
     public static void deleteMyTodosTakeMe(TakeRepository takeRepository, DoneRepository doneRepository, TodoRepository todoRepository,
                                            List<Todo> myTodos, Onboarding me, Room room) {
         myTodos.forEach(todo -> {
-            // todo 담당자가 여러명이면 나의 담당 해제
-            if (todo.getTakes().size() > 1) {
-                Optional<Take> myTake = todo.getTakes().stream()
-                        .filter(take -> take.getOnboarding().getId().equals(me.getId()))
-                        .findFirst();
-                if (myTake.isPresent()) {
-                    List<Done> myDones = TodoServiceUtils.filterAllDaysMyDones(me, todo.getDones());
-                    takeRepository.delete(myTake.get());
-                    myDones.forEach(todo::deleteDone);
-                    doneRepository.deleteAll(myDones);
-                    todo.deleteTake(myTake.get());
-                }
-            }
-            // todo 담당자가 나뿐이면 todo 삭제
-            else {
+            if (todo.getTakes().size() == 1) {
                 Todo myTodo = myTodos.get(0);
                 room.deleteTodo(myTodo);
                 todoRepository.delete(myTodo);
+                return;
+            }
+            // todo 담당자가 여러명이면 나의 담당 해제
+            Optional<Take> myTake = todo.getTakes().stream()
+                    .filter(take -> take.getOnboarding().getId().equals(me.getId()))
+                    .findFirst();
+            if (myTake.isPresent()) {
+                List<Done> myDones = TodoServiceUtils.filterAllDaysMyDones(me, todo.getDones());
+                takeRepository.delete(myTake.get());
+                myDones.forEach(todo::deleteDone);
+                doneRepository.deleteAll(myDones);
+                todo.deleteTake(myTake.get());
             }
         });
     }
@@ -100,13 +98,13 @@ public class RoomServiceUtils {
     public static void deleteParticipateUser(ParticipateRepository participateRepository, RoomRepository roomRepository,
                                              Onboarding me, Room room, Participate participate) {
         List<Participate> participates = room.getParticipates();
-        if (participates.size() > 1) {
-            room.deleteParticipate(participate);
-            me.deleteParticipate(participate);
-            participateRepository.delete(participate);
-        } else {
+        if (participates.size() == 1) {
             me.deleteParticipate(participate);
             roomRepository.delete(room);
+            return;
         }
+        room.deleteParticipate(participate);
+        me.deleteParticipate(participate);
+        participateRepository.delete(participate);
     }
 }
