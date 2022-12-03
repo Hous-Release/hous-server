@@ -72,6 +72,7 @@ public enum ErrorCode {
      * 409 Conflict
      */
     CONFLICT_EXCEPTION(CONFLICT, "이미 존재합니다."),
+    CONFLICT_REQUEST_EXCEPTION(CONFLICT, "처리중인 요청입니다."),
     CONFLICT_USER_EXCEPTION(CONFLICT, "이미 해당 계정으로 회원가입하셨습니다.\n로그인 해주세요."),
     CONFLICT_LOGIN_EXCEPTION(CONFLICT, "이미 로그인 중인 유저입니다."),
     CONFLICT_JOINED_ROOM_EXCEPTION(CONFLICT, "이미 참가중인 방이 있습니다."),

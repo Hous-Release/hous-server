@@ -3,6 +3,7 @@ package hous.server.controller.todo;
 import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
 import hous.server.config.interceptor.auth.Auth;
+import hous.server.config.interceptor.request.DuplicateRequest;
 import hous.server.config.resolver.UserId;
 import hous.server.service.todo.TodoService;
 import hous.server.service.todo.dto.request.CheckTodoRequestDto;
@@ -49,11 +50,12 @@ public class TodoController {
             @ApiResponse(code = 409, message = "이미 존재하는 todo 입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @DuplicateRequest
     @Auth
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/todo")
     public ResponseEntity<SuccessResponse<String>> createTodo(@Valid @RequestBody TodoInfoRequestDto request, @ApiIgnore @UserId Long userId) {
-        todoService.createTodo(request, userId);
+//        todoService.createTodo(request, userId);
         return SuccessResponse.CREATED;
     }
 
