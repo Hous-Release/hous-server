@@ -46,8 +46,11 @@ public class TodoServiceUtils {
         }
     }
 
-    public static void existsTodoByRoomTodos(Room room, String requestTodo) {
+    public static void existsTodoByRoomTodos(Room room, String requestTodo, Todo todo) {
         List<String> todos = room.getTodos().stream().map(Todo::getName).collect(Collectors.toList());
+        if (todo != null) {
+            todos.remove(todo.getName());
+        }
         if (todos.contains(requestTodo)) {
             throw new ConflictException(String.format("방 (%s) 에 이미 존재하는 todo (%s) 입니다.", room.getId(), requestTodo), CONFLICT_TODO_EXCEPTION);
         }
