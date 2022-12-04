@@ -1,6 +1,5 @@
 package hous.server.service.todo.dto.response;
 
-import hous.server.domain.personality.PersonalityColor;
 import lombok.*;
 
 import java.util.List;
@@ -12,17 +11,13 @@ import java.util.List;
 @Builder(access = AccessLevel.PRIVATE)
 public class TodoAllMemberResponse {
 
-    private String userName;
-    private PersonalityColor color;
-    private int totalTodoCnt;
-    private List<DayOfWeekTodo> dayOfWeekTodos;
+    private int totalRoomTodoCnt;
+    private List<TodoAllMemberInfo> todos;
 
-    public static TodoAllMemberResponse of(String userName, PersonalityColor color, int totalTodoCnt, List<DayOfWeekTodo> dayOfWeekTodos) {
+    public static TodoAllMemberResponse of(int totalRoomTodoCnt, List<TodoAllMemberInfo> todos) {
         return TodoAllMemberResponse.builder()
-                .userName(userName)
-                .color(color)
-                .totalTodoCnt(totalTodoCnt)
-                .dayOfWeekTodos(dayOfWeekTodos)
+                .totalRoomTodoCnt(totalRoomTodoCnt)
+                .todos(todos)
                 .build();
     }
 }

@@ -99,7 +99,7 @@ public class TodoRetrieveService {
         return TodoSummaryInfoResponse.of(todo, userPersonalityInfos, user.getOnboarding());
     }
 
-    public List<TodoAllDayResponse> getTodoAllDayInfo(Long userId) {
+    public TodoAllDayResponse getTodoAllDayInfo(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Onboarding onboarding = user.getOnboarding();
         Room room = RoomServiceUtils.findParticipatingRoom(user);
@@ -114,7 +114,7 @@ public class TodoRetrieveService {
         Map<Integer, Set<Todo>> allDayMyTodosList = TodoServiceUtils.mapByDayOfWeekToList(myTodosList);
 
         // List<TodoAllDayResponse> response dto 형태로 가공
-        List<TodoAllDayResponse> allDayTodosList = new ArrayList<>();
+        List<TodoAllDayInfo> allDayTodosList = new ArrayList<>();
         for (int day = DayOfWeek.MONDAY.getIndex(); day <= DayOfWeek.SUNDAY.getIndex(); day++) {
             String dayOfWeek = DayOfWeek.getValueByIndex(day);
             List<TodoInfo> todoInfos = allDayMyTodosList.get(day).stream()
@@ -127,18 +127,18 @@ public class TodoRetrieveService {
                             .map(Take::getOnboarding)
                             .collect(Collectors.toSet()), onboarding))
                     .collect(Collectors.toList());
-            allDayTodosList.add(TodoAllDayResponse.of(dayOfWeek, todoInfos, ourTodoInfos));
+            allDayTodosList.add(TodoAllDayInfo.of(dayOfWeek, todoInfos, ourTodoInfos));
         }
-        return allDayTodosList;
+        return TodoAllDayResponse.of(room.getTodosCnt(), allDayTodosList);
     }
 
-    public List<TodoAllMemberResponse> getTodoAllMemberInfo(Long userId) {
+    public TodoAllMemberResponse getTodoAllMemberInfo(Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         List<Todo> todos = room.getTodos();
 
-        List<TodoAllMemberResponse> allMemberTodos = new ArrayList<>();
-        List<TodoAllMemberResponse> otherMemberTodos = new ArrayList<>();
+        List<TodoAllMemberInfo> allMemberTodos = new ArrayList<>();
+        List<TodoAllMemberInfo> otherMemberTodos = new ArrayList<>();
 
         // 성향테스트 참여 순서로 정렬
         room.getParticipates().stream()
@@ -163,14 +163,14 @@ public class TodoRetrieveService {
                     PersonalityColor color = participate.getOnboarding().getPersonality().getColor();
 
                     if (user.getOnboarding().equals(participate.getOnboarding())) {
-                        allMemberTodos.add(TodoAllMemberResponse.of(userName, color, memberUniqueTodos.size(), dayOfWeekTodos));
+                        allMemberTodos.add(TodoAllMemberInfo.of(userName, color, memberUniqueTodos.size(), dayOfWeekTodos));
                     } else {
-                        otherMemberTodos.add(TodoAllMemberResponse.of(userName, color, memberUniqueTodos.size(), dayOfWeekTodos));
+                        otherMemberTodos.add(TodoAllMemberInfo.of(userName, color, memberUniqueTodos.size(), dayOfWeekTodos));
                     }
                 });
         allMemberTodos.addAll(otherMemberTodos);
 
-        return allMemberTodos;
+        return TodoAllMemberResponse.of(room.getTodosCnt(), allMemberTodos);
     }
 
     public MyTodoInfoResponse getMyTodoInfo(Long userId) {
