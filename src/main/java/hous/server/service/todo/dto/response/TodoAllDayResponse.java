@@ -11,17 +11,13 @@ import java.util.List;
 @Builder(access = AccessLevel.PRIVATE)
 public class TodoAllDayResponse {
 
-    private String dayOfWeek;
-    private int ourTodosCnt;
-    private List<TodoInfo> myTodos;
-    private List<OurTodo> ourTodos;
+    private int totalRoomTodoCnt;
+    private List<TodoAllDayInfo> todos;
 
-    public static TodoAllDayResponse of(String dayOfWeek, List<TodoInfo> myTodos, List<OurTodo> ourTodos) {
+    public static TodoAllDayResponse of(int totalRoomTodoCnt, List<TodoAllDayInfo> todos) {
         return TodoAllDayResponse.builder()
-                .dayOfWeek(dayOfWeek)
-                .ourTodosCnt(ourTodos.size())
-                .myTodos(myTodos)
-                .ourTodos(ourTodos)
+                .totalRoomTodoCnt(totalRoomTodoCnt)
+                .todos(todos)
                 .build();
     }
 }

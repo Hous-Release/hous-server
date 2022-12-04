@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.util.List;
-
 @Api(tags = "Todo")
 @RestController
 @RequestMapping("/v1")
@@ -128,7 +126,7 @@ public class TodoRetrieveController {
     })
     @Auth
     @GetMapping("/todos/day")
-    public ResponseEntity<SuccessResponse<List<TodoAllDayResponse>>> getTodoAllDayInfo(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<TodoAllDayResponse>> getTodoAllDayInfo(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_TODO_ALL_DAY_SUCCESS, todoRetrieveService.getTodoAllDayInfo(userId));
     }
 
@@ -149,7 +147,7 @@ public class TodoRetrieveController {
     })
     @Auth
     @GetMapping("/todos/member")
-    public ResponseEntity<SuccessResponse<List<TodoAllMemberResponse>>> getTodoAllMemberInfo(@ApiIgnore @UserId Long userId) {
+    public ResponseEntity<SuccessResponse<TodoAllMemberResponse>> getTodoAllMemberInfo(@ApiIgnore @UserId Long userId) {
         return SuccessResponse.success(SuccessCode.GET_TODO_ALL_MEMBER_SUCCESS, todoRetrieveService.getTodoAllMemberInfo(userId));
     }
 
