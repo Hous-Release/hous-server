@@ -4,7 +4,7 @@ import hous.server.common.exception.ConflictException;
 import hous.server.domain.common.RedisKey;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -29,7 +29,7 @@ public class RequestAspect {
         redisTemplate.opsForValue().set(RedisKey.DUPLICATE_REQUEST + userId, Long.toString(userId));
     }
 
-    @AfterReturning("@annotation(hous.server.common.aspect.PreventDuplicateRequest)")
+    @After("@annotation(hous.server.common.aspect.PreventDuplicateRequest)")
     public void afterReturningRequest(final JoinPoint joinPoint) {
         Long userId = (Long) joinPoint.getArgs()[0];
         redisTemplate.opsForValue().getAndDelete(RedisKey.DUPLICATE_REQUEST + userId);
