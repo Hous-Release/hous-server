@@ -16,6 +16,9 @@ public enum SuccessCode {
      */
     OK_SUCCESS(OK, "성공입니다."),
 
+    // 버전
+    GET_VERSION_INFO_SUCCESS(OK, "강제 업데이트 필요 여부 조회 성공입니다."),
+
     // 인증
     SIGNUP_SUCCESS(OK, "회원가입 성공입니다."),
     LOGIN_SUCCESS(OK, "로그인 성공입니다."),
