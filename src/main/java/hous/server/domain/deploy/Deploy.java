@@ -1,14 +1,11 @@
 package hous.server.domain.deploy;
 
 import hous.server.domain.common.AuditingTimeEntity;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Getter
 @Entity
@@ -24,4 +21,7 @@ public class Deploy extends AuditingTimeEntity {
 
     @Column(nullable = false, length = 30)
     private String version;
+
+    @Column(nullable = false, length = 300)
+    private String marketUrl;
 }
