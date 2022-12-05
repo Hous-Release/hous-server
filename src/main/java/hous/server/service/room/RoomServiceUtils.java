@@ -76,9 +76,8 @@ public class RoomServiceUtils {
                                            List<Todo> myTodos, Onboarding me, Room room) {
         myTodos.forEach(todo -> {
             if (todo.getTakes().size() == 1) {
-                Todo myTodo = myTodos.get(0);
-                room.deleteTodo(myTodo);
-                todoRepository.delete(myTodo);
+                room.deleteTodo(todo);
+                todoRepository.delete(todo);
                 return;
             }
             // todo 담당자가 여러명이면 나의 담당 해제
