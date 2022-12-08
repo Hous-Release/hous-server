@@ -39,11 +39,8 @@ out/
 /src/main/resources/firebase/firebase_service_key.json
 application.yml
 application-local.yml
+application-dev.yml
 application-prod.yml
-application-aws.yml
-application-jwt.yml
-application-firebase.yml
-application-slack.yml
 
 ### log 파일 ###
 logs

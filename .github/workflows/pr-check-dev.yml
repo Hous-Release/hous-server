@@ -7,9 +7,6 @@ on:
  pull_request:
   branches: [ develop ]
 
-env:
- S3_BUCKET_NAME: hous-build
-
 jobs:
  build:
   runs-on: ubuntu-18.04
@@ -20,25 +17,11 @@ jobs:
 
    - name: create secret files
      working-directory: ./src/main/resources
-     env:
-      AWS_S3_ACCESS_KEY: ${{ secrets.AWS_S3_ACCESS_KEY }}
-      AWS_S3_SECRET_KEY: ${{ secrets.AWS_S3_SECRET_KEY }}
-      AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-
      run: |
       touch application.yml
-      touch application-prod.yml
-      touch application-aws.yml
-      touch application-firebase.yml
-      touch application-jwt.yml
-      touch application-slack.yml
+      touch application-dev.yml
       echo "${{ secrets.APPLICATION_YML }}" >> application.yml
-      echo "${{ secrets.APPLICATION_PROD_YML }}" >> application-prod.yml
-      echo "${{ secrets.APPLICATION_AWS_YML }}" >> application-aws.yml
-      echo "${{ secrets.APPLICATION_FIREBASE_YML }}" >> application-firebase.yml
-      echo "${{ secrets.APPLICATION_JWT_YML }}" >> application-jwt.yml
-      echo "${{ secrets.APPLICATION_SLACK_YML }}" >> application-slack.yml
+      echo "${{ secrets.APPLICATION_DEV_YML }}" >> application-dev.yml
       
       mkdir firebase
       touch ./firebase/firebase_service_key.json

@@ -5,14 +5,12 @@ import com.google.auth.oauth2.GoogleCredentials;
 import hous.server.common.exception.InternalServerException;
 import hous.server.common.util.HttpHeaderUtils;
 import hous.server.common.util.JwtUtils;
-import hous.server.common.util.YamlPropertySourceFactory;
 import hous.server.domain.user.User;
 import hous.server.external.client.firebase.FirebaseApiClient;
 import hous.server.service.firebase.dto.request.FcmMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +21,6 @@ import static hous.server.common.exception.ErrorCode.INTERNAL_SERVER_EXCEPTION;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-@PropertySource(value = "classpath:application-firebase.yml", factory = YamlPropertySourceFactory.class, ignoreResourceNotFound = true)
 public class FirebaseCloudMessageService {
 
     @Value("${cloud.firebase.config.path}")
