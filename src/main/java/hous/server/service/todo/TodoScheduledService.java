@@ -50,7 +50,7 @@ public class TodoScheduledService {
         users.forEach(user -> {
             Onboarding onboarding = user.getOnboarding();
             List<Participate> participates = onboarding.getParticipates();
-            if (participates.size() != 0) {
+            if (!participates.isEmpty()) {
                 LocalDate yesterday = DateUtils.yesterdayLocalDate();
                 Room room = participates.get(0).getRoom();
                 if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.TODO_MASTER, onboarding)) {
@@ -60,7 +60,7 @@ public class TodoScheduledService {
                     int yesterdayDoneMyTodosCnt = (int) yesterdayMyTodos.stream()
                             .filter(todo -> doneRepository.existsDayDoneByOnboardingAndTodo(yesterday, onboarding, todo))
                             .count();
-                    if (allDayMyTodos.size() > 0 && yesterdayMyTodos.size() == yesterdayDoneMyTodosCnt) {
+                    if (!allDayMyTodos.isEmpty() && yesterdayMyTodos.size() == yesterdayDoneMyTodosCnt) {
                         String todoCompleteCountString = (String) redisTemplate.opsForValue().get(RedisKey.TODO_COMPLETE_COUNT + user.getId());
                         if (todoCompleteCountString == null) {
                             redisTemplate.opsForValue().set(RedisKey.TODO_COMPLETE_COUNT + user.getId(), Integer.toString(1));
@@ -94,7 +94,7 @@ public class TodoScheduledService {
         users.forEach(user -> {
             Onboarding onboarding = user.getOnboarding();
             List<Participate> participates = onboarding.getParticipates();
-            if (participates.size() != 0) {
+            if (!participates.isEmpty()) {
                 LocalDate today = DateUtils.todayLocalDate();
                 Room room = participates.get(0).getRoom();
                 List<Todo> todayOurTodos = TodoServiceUtils.filterDayOurTodosByIsPushNotification(today, room.getTodos());
@@ -115,7 +115,7 @@ public class TodoScheduledService {
         users.forEach(user -> {
             Onboarding onboarding = user.getOnboarding();
             List<Participate> participates = onboarding.getParticipates();
-            if (participates.size() != 0) {
+            if (!participates.isEmpty()) {
                 LocalDate today = DateUtils.todayLocalDate();
                 Room room = participates.get(0).getRoom();
                 List<Todo> todayOurTodos = TodoServiceUtils.filterDayOurTodosByIsPushNotification(today, room.getTodos());
