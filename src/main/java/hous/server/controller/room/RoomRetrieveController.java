@@ -4,6 +4,7 @@ import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
 import hous.server.common.success.SuccessCode;
 import hous.server.config.interceptor.auth.Auth;
+import hous.server.config.interceptor.version.Version;
 import hous.server.config.resolver.UserId;
 import hous.server.service.room.RoomRetrieveService;
 import hous.server.service.room.dto.response.GetRoomInfoResponse;
@@ -36,6 +37,7 @@ public class RoomRetrieveController {
             @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @Auth
     @GetMapping("/room")
     public ResponseEntity<SuccessResponse<GetRoomResponse>> getRoom(@ApiIgnore @UserId Long userId) {
@@ -52,6 +54,7 @@ public class RoomRetrieveController {
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @Auth
     @GetMapping("/room/info")
     public ResponseEntity<SuccessResponse<GetRoomInfoResponse>> getRoomInfo(@ApiParam(name = "code", value = "참가하려는 방 코드", required = true, example = "PNO6VN6A")

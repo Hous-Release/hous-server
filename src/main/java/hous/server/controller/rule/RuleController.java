@@ -4,6 +4,7 @@ import hous.server.common.aspect.PreventDuplicateRequest;
 import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
 import hous.server.config.interceptor.auth.Auth;
+import hous.server.config.interceptor.version.Version;
 import hous.server.config.resolver.UserId;
 import hous.server.service.rule.RuleService;
 import hous.server.service.rule.dto.request.CreateRuleRequestDto;
@@ -54,6 +55,7 @@ public class RuleController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/rules")
@@ -88,6 +90,7 @@ public class RuleController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @PutMapping("/rules")
     public ResponseEntity<SuccessResponse<String>> updateRules(@ApiIgnore @UserId Long userId,
@@ -118,6 +121,7 @@ public class RuleController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @DeleteMapping("/rules")
     public ResponseEntity<SuccessResponse<String>> deleteRules(@ApiIgnore @UserId Long userId,

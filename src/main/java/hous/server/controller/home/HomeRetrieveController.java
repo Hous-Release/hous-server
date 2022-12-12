@@ -4,6 +4,7 @@ import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
 import hous.server.common.success.SuccessCode;
 import hous.server.config.interceptor.auth.Auth;
+import hous.server.config.interceptor.version.Version;
 import hous.server.config.resolver.UserId;
 import hous.server.service.home.HomeRetrieveService;
 import hous.server.service.home.dto.response.HomeInfoResponse;
@@ -40,6 +41,7 @@ public class HomeRetrieveController {
                     response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @Auth
     @GetMapping("/home")
     public ResponseEntity<SuccessResponse<HomeInfoResponse>> getHomeInfo(@ApiIgnore @UserId Long userId) {

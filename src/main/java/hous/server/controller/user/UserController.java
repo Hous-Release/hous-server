@@ -5,6 +5,7 @@ import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
 import hous.server.common.success.SuccessCode;
 import hous.server.config.interceptor.auth.Auth;
+import hous.server.config.interceptor.version.Version;
 import hous.server.config.resolver.UserId;
 import hous.server.service.slack.SlackService;
 import hous.server.service.user.UserRetrieveService;
@@ -57,6 +58,7 @@ public class UserController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @PutMapping("/user")
     public ResponseEntity<SuccessResponse<String>> updateUserInfo(@ApiIgnore @UserId Long userId,
@@ -81,6 +83,7 @@ public class UserController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @PatchMapping("/user/push")
     public ResponseEntity<SuccessResponse<String>> updateUserPushSetting(@ApiIgnore @UserId Long userId,
@@ -106,6 +109,7 @@ public class UserController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @PutMapping("/user/personality")
     public ResponseEntity<SuccessResponse<UpdatePersonalityColorResponse>> updateUserTestScore(@ApiIgnore @UserId Long userId,
@@ -130,6 +134,7 @@ public class UserController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @PutMapping("/user/badge/{badgeId}/represent")
     public ResponseEntity<SuccessResponse<String>> updateRepresentBadge(@ApiIgnore @UserId Long userId,
@@ -156,6 +161,7 @@ public class UserController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @DeleteMapping("/user")
     public ResponseEntity<SuccessResponse<String>> deleteUser(@ApiIgnore @UserId Long userId,
@@ -180,6 +186,7 @@ public class UserController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @PostMapping("/user/feedback")
     public ResponseEntity<SuccessResponse<String>> acquireFeedbackBadge(@ApiIgnore @UserId Long userId) {

@@ -4,6 +4,7 @@ import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
 import hous.server.common.success.SuccessCode;
 import hous.server.config.interceptor.auth.Auth;
+import hous.server.config.interceptor.version.Version;
 import hous.server.config.resolver.UserId;
 import hous.server.service.todo.TodoRetrieveService;
 import hous.server.service.todo.dto.response.*;
@@ -38,6 +39,7 @@ public class TodoRetrieveController {
                     response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @Auth
     @GetMapping("/todo")
     public ResponseEntity<SuccessResponse<UserPersonalityInfoResponse>> getUsersInfo(@ApiIgnore @UserId Long userId) {
@@ -58,6 +60,7 @@ public class TodoRetrieveController {
                     response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @Auth
     @GetMapping("/todos")
     public ResponseEntity<SuccessResponse<TodoMainResponse>> getTodoMain(@ApiIgnore @UserId Long userId) {
@@ -79,6 +82,7 @@ public class TodoRetrieveController {
                     response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @Auth
     @GetMapping("/todo/{todoId}")
     public ResponseEntity<SuccessResponse<TodoInfoResponse>> getTodoInfo(@ApiParam(name = "todoId", value = "조회할 todo 의 id", required = true, example = "1")
@@ -101,6 +105,7 @@ public class TodoRetrieveController {
                     response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @Auth
     @GetMapping("/todo/{todoId}/summary")
     public ResponseEntity<SuccessResponse<TodoSummaryInfoResponse>> getTodoSummaryInfo(@ApiParam(name = "todoId", value = "조회할 todo 의 id", required = true, example = "1")
@@ -124,6 +129,7 @@ public class TodoRetrieveController {
                     response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @Auth
     @GetMapping("/todos/day")
     public ResponseEntity<SuccessResponse<TodoAllDayResponse>> getTodoAllDayInfo(@ApiIgnore @UserId Long userId) {
@@ -145,6 +151,7 @@ public class TodoRetrieveController {
                     response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @Auth
     @GetMapping("/todos/member")
     public ResponseEntity<SuccessResponse<TodoAllMemberResponse>> getTodoAllMemberInfo(@ApiIgnore @UserId Long userId) {
@@ -165,6 +172,7 @@ public class TodoRetrieveController {
                     response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @Auth
     @GetMapping("/todos/me")
     public ResponseEntity<SuccessResponse<MyTodoInfoResponse>> getMyTodoInfo(@ApiIgnore @UserId Long userId) {

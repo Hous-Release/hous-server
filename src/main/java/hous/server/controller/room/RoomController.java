@@ -5,6 +5,7 @@ import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
 import hous.server.common.success.SuccessCode;
 import hous.server.config.interceptor.auth.Auth;
+import hous.server.config.interceptor.version.Version;
 import hous.server.config.resolver.UserId;
 import hous.server.service.room.RoomService;
 import hous.server.service.room.dto.request.SetRoomNameRequestDto;
@@ -48,6 +49,7 @@ public class RoomController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/room")
@@ -78,6 +80,7 @@ public class RoomController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @PostMapping("/room/{roomId}/join")
     public ResponseEntity<SuccessResponse<RoomInfoResponse>> joinRoom(@ApiIgnore @UserId Long userId,
@@ -107,6 +110,7 @@ public class RoomController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @PutMapping("/room/name")
     public ResponseEntity<SuccessResponse<String>> updateRoomName(@ApiIgnore @UserId Long userId,
@@ -131,6 +135,7 @@ public class RoomController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @DeleteMapping("/room/leave")
     public ResponseEntity<SuccessResponse<String>> leaveRoom(@ApiIgnore @UserId Long userId) {

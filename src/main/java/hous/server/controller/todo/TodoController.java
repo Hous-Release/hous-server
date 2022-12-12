@@ -4,6 +4,7 @@ import hous.server.common.aspect.PreventDuplicateRequest;
 import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
 import hous.server.config.interceptor.auth.Auth;
+import hous.server.config.interceptor.version.Version;
 import hous.server.config.resolver.UserId;
 import hous.server.service.todo.TodoService;
 import hous.server.service.todo.dto.request.CheckTodoRequestDto;
@@ -55,6 +56,7 @@ public class TodoController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/todo")
@@ -94,6 +96,7 @@ public class TodoController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @PutMapping("/todo/{todoId}")
     public ResponseEntity<SuccessResponse<String>> updateTodo(@ApiIgnore @UserId Long userId,
@@ -126,6 +129,7 @@ public class TodoController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @PostMapping("/todo/{todoId}/check")
     public ResponseEntity<SuccessResponse<String>> checkTodo(@ApiIgnore @UserId Long userId,
@@ -152,6 +156,7 @@ public class TodoController {
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @DeleteMapping("/todo/{todoId}")
     public ResponseEntity<SuccessResponse<String>> deleteTodo(@ApiIgnore @UserId Long userId,
