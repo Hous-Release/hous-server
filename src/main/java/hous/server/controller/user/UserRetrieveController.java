@@ -4,6 +4,7 @@ import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
 import hous.server.common.success.SuccessCode;
 import hous.server.config.interceptor.auth.Auth;
+import hous.server.config.interceptor.version.Version;
 import hous.server.config.resolver.UserId;
 import hous.server.domain.personality.PersonalityColor;
 import hous.server.service.notification.NotificationRetrieveService;
@@ -38,8 +39,10 @@ public class UserRetrieveController {
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
                             + "2. 참가중인 방이 존재하지 않습니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @Auth
     @GetMapping("/user")
     public ResponseEntity<SuccessResponse<UserInfoResponse>> getUserInfo(@ApiIgnore @UserId Long userId) {
@@ -55,8 +58,10 @@ public class UserRetrieveController {
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 403, message = "같은 방에 참가하고 있지 않습니다.", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @Auth
     @GetMapping("/user/{onboardingId}")
     public ResponseEntity<SuccessResponse<UserInfoResponse>> getHomieInfo(@ApiParam(name = "onboardingId", value = "조회할 호미의 id", required = true, example = "1")
@@ -77,8 +82,10 @@ public class UserRetrieveController {
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
                             + "2. 유저의 온보딩 정보가 존재하지 않습니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @Auth
     @GetMapping("/user/push")
     public ResponseEntity<SuccessResponse<PushSettingResponse>> getUserPushSetting(@ApiIgnore @UserId Long userId) {
@@ -94,8 +101,10 @@ public class UserRetrieveController {
             @ApiResponse(code = 200, message = "성향 정보 조회 성공입니다."),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "GRAY 에 대한 성향 정보는 존재하지 않습니다.", response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @Auth
     @GetMapping("/user/personality")
     public ResponseEntity<SuccessResponse<PersonalityInfoResponse>> getPersonalityInfo(@ApiParam(name = "color", value = "조회할 성향 색깔", required = true, example = "RED")
@@ -110,8 +119,10 @@ public class UserRetrieveController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "성향테스트 정보 조회 성공입니다."),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @Auth
     @GetMapping("/user/personality/test")
     public ResponseEntity<SuccessResponse<List<PersonalityTestInfoResponse>>> getPersonalityTestInfo() {
@@ -132,8 +143,10 @@ public class UserRetrieveController {
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
                             + "2. 참가중인 방이 존재하지 않습니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @Auth
     @GetMapping("/user/badges")
     public ResponseEntity<SuccessResponse<MyBadgeInfoResponse>> getMyBadgeList(@ApiIgnore @UserId Long userId) {
@@ -152,8 +165,10 @@ public class UserRetrieveController {
             @ApiResponse(code = 200, message = "알림 목록 조회 성공입니다."),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @Auth
     @GetMapping("/user/notifications")
     public ResponseEntity<SuccessResponse<NotificationsInfoResponse>> getNotificationsInfo(@ApiParam(name = "size", value = "스크롤 1회당 조회할 개수", required = true, example = "10")

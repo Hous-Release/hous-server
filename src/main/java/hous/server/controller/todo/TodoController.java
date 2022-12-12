@@ -4,6 +4,7 @@ import hous.server.common.aspect.PreventDuplicateRequest;
 import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
 import hous.server.config.interceptor.auth.Auth;
+import hous.server.config.interceptor.version.Version;
 import hous.server.config.resolver.UserId;
 import hous.server.service.todo.TodoService;
 import hous.server.service.todo.dto.request.CheckTodoRequestDto;
@@ -52,9 +53,11 @@ public class TodoController {
                     message = "1. 처리중인 요청입니다.\n"
                             + "2. 이미 존재하는 todo 입니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/todo")
@@ -91,9 +94,11 @@ public class TodoController {
                     message = "1. 처리중인 요청입니다.\n"
                             + "2. 이미 존재하는 todo 입니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @PutMapping("/todo/{todoId}")
     public ResponseEntity<SuccessResponse<String>> updateTodo(@ApiIgnore @UserId Long userId,
@@ -123,9 +128,11 @@ public class TodoController {
                             + "2. 존재하지 않는 todo 입니다.",
                     response = ErrorResponse.class),
             @ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @PostMapping("/todo/{todoId}/check")
     public ResponseEntity<SuccessResponse<String>> checkTodo(@ApiIgnore @UserId Long userId,
@@ -149,9 +156,11 @@ public class TodoController {
                             + "2. 존재하지 않는 todo 입니다.",
                     response = ErrorResponse.class),
             @ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @DeleteMapping("/todo/{todoId}")
     public ResponseEntity<SuccessResponse<String>> deleteTodo(@ApiIgnore @UserId Long userId,

@@ -5,6 +5,7 @@ import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
 import hous.server.common.success.SuccessCode;
 import hous.server.config.interceptor.auth.Auth;
+import hous.server.config.interceptor.version.Version;
 import hous.server.config.resolver.UserId;
 import hous.server.controller.auth.dto.request.LoginRequestDto;
 import hous.server.controller.auth.dto.request.SignUpRequestDto;
@@ -61,8 +62,10 @@ public class AuthController {
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "유효하지 않은 토큰입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 409, message = "이미 해당 계정으로 회원가입하셨습니다.\n   로그인 해주세요.\n", response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @PostMapping("/auth/signup")
     public ResponseEntity<SuccessResponse<LoginResponse>> signUp(@Valid @RequestBody SignUpRequestDto request) {
         AuthService authService = authServiceProvider.getAuthService(request.getSocialType());
@@ -88,8 +91,10 @@ public class AuthController {
             @ApiResponse(code = 401, message = "유효하지 않은 토큰입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 409, message = "이미 로그인 중인 유저입니다.", response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @PostMapping("/auth/login")
     public ResponseEntity<SuccessResponse<LoginResponse>> login(@Valid @RequestBody LoginRequestDto request) {
         AuthService authService = authServiceProvider.getAuthService(request.getSocialType());
@@ -115,8 +120,10 @@ public class AuthController {
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "유효하지 않은 토큰입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @PostMapping("/auth/login/force")
     public ResponseEntity<SuccessResponse<LoginResponse>> forceLogin(@Valid @RequestBody LoginRequestDto request) {
         AuthService authService = authServiceProvider.getAuthService(request.getSocialType());
@@ -140,8 +147,10 @@ public class AuthController {
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
+    @Version
     @PostMapping("/auth/refresh")
     public ResponseEntity<SuccessResponse<RefreshResponse>> reissue(@Valid @RequestBody TokenRequestDto request) {
         return SuccessResponse.success(SuccessCode.REISSUE_TOKEN_SUCCESS, createTokenService.reissueToken(request));
@@ -156,9 +165,11 @@ public class AuthController {
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
+    @Version
     @Auth
     @PostMapping("/auth/logout")
     public ResponseEntity<SuccessResponse<String>> logout(@ApiIgnore @UserId Long userId) {
