@@ -46,6 +46,7 @@ public class RoomController {
                     message = "1. 처리중인 요청입니다.\n"
                             + "2. 이미 참가중인 방이 있습니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
@@ -77,6 +78,7 @@ public class RoomController {
                     message = "1. 처리중인 요청입니다.\n"
                             + "2. 이미 참가중인 방이 있습니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
@@ -107,6 +109,7 @@ public class RoomController {
                             + "2. 참가중인 방이 존재하지 않습니다.",
                     response = ErrorResponse.class),
             @ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest
@@ -132,6 +135,7 @@ public class RoomController {
                             + "2. 참가중인 방이 존재하지 않습니다.",
                     response = ErrorResponse.class),
             @ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @PreventDuplicateRequest

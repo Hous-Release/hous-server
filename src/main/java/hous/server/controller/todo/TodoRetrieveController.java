@@ -37,6 +37,7 @@ public class TodoRetrieveController {
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
                             + "2. 참가중인 방이 존재하지 않습니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Version
@@ -58,6 +59,7 @@ public class TodoRetrieveController {
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
                             + "2. 참가중인 방이 존재하지 않습니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Version
@@ -80,6 +82,7 @@ public class TodoRetrieveController {
                             + "2. 참가중인 방이 존재하지 않습니다.\n"
                             + "3. 존재하지 않는 todo 입니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Version
@@ -103,6 +106,7 @@ public class TodoRetrieveController {
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
                             + "2. 존재하지 않는 todo 입니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Version
@@ -127,6 +131,7 @@ public class TodoRetrieveController {
                             + "2. 존재하지 않는 todo 입니다.\n"
                             + "3. 참가중인 방이 존재하지 않습니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Version
@@ -149,6 +154,7 @@ public class TodoRetrieveController {
                             + "2. 존재하지 않는 todo 입니다.\n"
                             + "3. 참가중인 방이 존재하지 않습니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Version
@@ -170,6 +176,7 @@ public class TodoRetrieveController {
                     message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
                             + "2. 참가중인 방이 존재하지 않습니다.",
                     response = ErrorResponse.class),
+            @ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
     })
     @Version
