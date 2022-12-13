@@ -18,8 +18,8 @@ public class SlackServiceUtils {
     private static final String PROD_ERROR_MESSAGE = "*Error Message:*\n";
     private static final String PROD_ERROR_STACK = "*Error Stack:*\n";
     private static final String FILTER_STRING = "hous.server";
-    private static final String PROD_USER_DELETE_TOTAL_COUNT_MESSAGE = "*총 탈퇴 인원:* ";
-    private static final String PROD_USER_DELETE_MESSAGE = "*유형별 탈퇴 인원:*\n";
+    private static final String PROD_USER_DELETE_TOTAL_COUNT_MESSAGE = "*피드백을 남긴 총 탈퇴 인원:* ";
+    private static final String PROD_USER_DELETE_MESSAGE = "*피드백 유형별 탈퇴 인원:*\n";
 
     public static List<Attachment> createAttachments(String color, List<LayoutBlock> data) {
         List<Attachment> attachments = new ArrayList<>();
