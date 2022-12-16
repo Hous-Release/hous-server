@@ -6,6 +6,9 @@ import hous.server.domain.user.UserSocialType;
 import hous.server.domain.user.UserStatus;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import static hous.server.domain.user.QUser.user;
 
 @RequiredArgsConstructor
@@ -45,5 +48,35 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                         user.status.eq(UserStatus.ACTIVE)
                 )
                 .fetchOne();
+    }
+
+    @Override
+    public User findUserByFcmToken(String fcmToken) {
+        return queryFactory
+                .selectFrom(user)
+                .where(
+                        user.fcmToken.eq(fcmToken),
+                        user.status.eq(UserStatus.ACTIVE)
+                )
+                .fetchOne();
+    }
+
+    @Override
+    public List<User> findAllUsers() {
+        return queryFactory
+                .selectFrom(user)
+                .where(user.status.eq(UserStatus.ACTIVE))
+                .fetch();
+    }
+
+    @Override
+    public List<User> findAllUserByBirthday(LocalDate birthday) {
+        return queryFactory
+                .selectFrom(user)
+                .where(
+                        user.status.eq(UserStatus.ACTIVE),
+                        user.onboarding.birthday.eq(birthday)
+                )
+                .fetch();
     }
 }

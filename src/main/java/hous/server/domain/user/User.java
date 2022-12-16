@@ -1,16 +1,15 @@
 package hous.server.domain.user;
 
 import hous.server.domain.common.AuditingTimeEntity;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Table(name = "users")
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 public class User extends AuditingTimeEntity {
 
     @Id
@@ -20,16 +19,37 @@ public class User extends AuditingTimeEntity {
     @Embedded
     private SocialInfo socialInfo;
 
+    @Column(unique = true, length = 300)
+    private String fcmToken;
+
     @Column(nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    private User(String socialId, UserSocialType socialType) {
-        this.socialInfo = SocialInfo.of(socialId, socialType);
-        this.status = UserStatus.ACTIVE;
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Onboarding onboarding;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "setting_id", nullable = false)
+    private Setting setting;
+
+    public static User newInstance(String socialId, UserSocialType socialType, Setting setting) {
+        return User.builder()
+                .socialInfo(SocialInfo.of(socialId, socialType))
+                .setting(setting)
+                .status(UserStatus.ACTIVE)
+                .build();
     }
 
-    public static User newInstance(String socialId, UserSocialType socialType) {
-        return new User(socialId, socialType);
+    public void setOnboarding(Onboarding onboarding) {
+        this.onboarding = onboarding;
+    }
+
+    public void updateFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
+
+    public void resetFcmToken() {
+        this.fcmToken = null;
     }
 }

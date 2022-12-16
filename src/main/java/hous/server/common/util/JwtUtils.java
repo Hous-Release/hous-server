@@ -1,13 +1,14 @@
 package hous.server.common.util;
 
 import hous.server.config.security.JwtConstants;
-import hous.server.service.auth.dto.response.TokenResponseDto;
+import hous.server.domain.common.RedisKey;
+import hous.server.service.auth.dto.response.TokenResponse;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.io.DecodingException;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -17,15 +18,15 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @Slf4j
-@PropertySource(value = "classpath:application-jwt.yml", factory = YamlPropertySourceFactory.class, ignoreResourceNotFound = true)
 public class JwtUtils {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    //    private static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L;              // 30분
-    //    private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;    // 7일
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 365 * 24 * 60 * 60 * 1000L;   // 1년
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 365 * 24 * 60 * 60 * 1000L;    // 1년
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 10 * 60 * 1000L;              // 10분
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 6 * 30 * 24 * 60 * 60 * 1000L;    // 180일
+    //    private static final long ACCESS_TOKEN_EXPIRE_TIME = 365 * 24 * 60 * 60 * 1000L;   // 1년
+    //    private static final long REFRESH_TOKEN_EXPIRE_TIME = 365 * 24 * 60 * 60 * 1000L;    // 1년
+    private static final long EXPIRED_TIME = 1L;
 
     private final Key secretKey;
 
@@ -35,7 +36,7 @@ public class JwtUtils {
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public TokenResponseDto createTokenInfo(Long userId) {
+    public TokenResponse createTokenInfo(Long userId) {
 
         long now = (new Date()).getTime();
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
@@ -55,23 +56,29 @@ public class JwtUtils {
                 .compact();
 
         redisTemplate.opsForValue()
-                .set("RT:" + userId, refreshToken, REFRESH_TOKEN_EXPIRE_TIME, TimeUnit.MILLISECONDS);
+                .set(RedisKey.REFRESH_TOKEN + userId, refreshToken, REFRESH_TOKEN_EXPIRE_TIME, TimeUnit.MILLISECONDS);
 
-        return TokenResponseDto.of(accessToken, refreshToken);
+        return TokenResponse.of(accessToken, refreshToken);
+    }
+
+    public void expireRefreshToken(Long userId) {
+        redisTemplate.opsForValue().set(RedisKey.REFRESH_TOKEN + userId, "", EXPIRED_TIME, TimeUnit.MILLISECONDS);
     }
 
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
             return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT Token", e);
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException | DecodingException e) {
+            log.warn("Invalid JWT Token", e);
         } catch (ExpiredJwtException e) {
-            log.info("Expired JWT Token", e);
+            log.warn("Expired JWT Token", e);
         } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT Token", e);
+            log.warn("Unsupported JWT Token", e);
         } catch (IllegalArgumentException e) {
-            log.info("JWT claims string is empty.", e);
+            log.warn("JWT claims string is empty.", e);
+        } catch (Exception e) {
+            log.error("Unhandled JWT exception", e);
         }
         return false;
     }

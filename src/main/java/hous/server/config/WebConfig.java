@@ -1,6 +1,7 @@
 package hous.server.config;
 
-import hous.server.config.interceptor.AuthInterceptor;
+import hous.server.config.interceptor.auth.AuthInterceptor;
+import hous.server.config.interceptor.version.VersionInterceptor;
 import hous.server.config.resolver.UserIdResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -19,12 +20,13 @@ import java.util.List;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    private final VersionInterceptor versionInterceptor;
     private final AuthInterceptor authInterceptor;
-
     private final UserIdResolver userIdResolver;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(versionInterceptor);
         registry.addInterceptor(authInterceptor);
     }
 
