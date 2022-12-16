@@ -170,9 +170,9 @@ public class UserController {
     @Auth
     @DeleteMapping("/user")
     public ResponseEntity<SuccessResponse<String>> deleteUser(@ApiIgnore @UserId Long userId,
-                                                              @RequestBody DeleteUserRequestDto request) {
+                                                              @Valid @RequestBody DeleteUserRequestDto request) {
         userService.deleteUser(request, userId);
-        slackService.sendSlackMessageDeleteUser(userRetrieveService.getFeedback());
+        slackService.sendSlackMessageDeleteUser(userRetrieveService.getFeedback(request.getComment()));
         return SuccessResponse.OK;
     }
 

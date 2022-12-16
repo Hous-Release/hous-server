@@ -100,7 +100,7 @@ public class UserRetrieveService {
         return MyBadgeInfoResponse.of(represent, badges, myBadges, newBadges);
     }
 
-    public UserDeleteResponse getFeedback() {
+    public UserDeleteResponse getFeedback(String comment) {
         Map<FeedbackType, List<Feedback>> users = feedbackRepository.findAll().stream()
                 .collect(Collectors.groupingBy(Feedback::getFeedbackType));
         List<UserDelete> userDeletes = new ArrayList<>();
@@ -109,7 +109,7 @@ public class UserRetrieveService {
             totalCount += users.get(feedbackType).size();
             userDeletes.add(UserDelete.of(users.get(feedbackType).size(), feedbackType.getValue()));
         }
-        return UserDeleteResponse.of(totalCount, userDeletes);
+        return UserDeleteResponse.of(totalCount, userDeletes, comment);
     }
 
     private UserInfoResponse getProfileInfoByUser(User user) {
