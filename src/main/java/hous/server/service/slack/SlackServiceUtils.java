@@ -20,6 +20,7 @@ public class SlackServiceUtils {
     private static final String FILTER_STRING = "hous.server";
     private static final String PROD_USER_DELETE_TOTAL_COUNT_MESSAGE = "*피드백을 남긴 총 탈퇴 인원:* ";
     private static final String PROD_USER_DELETE_MESSAGE = "*피드백 유형별 탈퇴 인원:*\n";
+    private static final String PROD_NOW_USER_DELETE_COMMENT = "*지금 탈퇴한 유저의 의견:*\n";
 
     public static List<Attachment> createAttachments(String color, List<LayoutBlock> data) {
         List<Attachment> attachments = new ArrayList<>();
@@ -42,6 +43,12 @@ public class SlackServiceUtils {
         }
         layoutBlockList.add(section(section ->
                 section.text(markdownText(PROD_USER_DELETE_MESSAGE + stringBuilder.toString()))));
+
+        if (userDeleteResponse.getComment() != null) {
+            layoutBlockList.add(section(section ->
+                    section.text(markdownText(PROD_NOW_USER_DELETE_COMMENT + userDeleteResponse.getComment()))));
+        }
+
         return layoutBlockList;
     }
 
