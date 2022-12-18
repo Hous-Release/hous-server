@@ -60,6 +60,10 @@ public class Room extends AuditingTimeEntity {
                 .build();
     }
 
+    public void updateOwner(Onboarding onboarding) {
+        this.owner = onboarding;
+    }
+
     public void updateRoomName(String name) {
         this.name = name;
     }
