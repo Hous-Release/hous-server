@@ -20,6 +20,7 @@ import hous.server.service.todo.TodoServiceUtils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -105,5 +106,10 @@ public class RoomServiceUtils {
         room.deleteParticipate(participate);
         me.deleteParticipate(participate);
         participateRepository.delete(participate);
+        if (me.getId().equals(room.getOwner().getId())) {
+            Optional<Participate> nextOwnerParticipate = room.getParticipates().stream()
+                    .min(Comparator.comparing(Participate::getCreatedAt));
+            nextOwnerParticipate.ifPresent(nextOwner -> room.updateOwner(nextOwner.getOnboarding()));
+        }
     }
 }
