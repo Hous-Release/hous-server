@@ -10,6 +10,7 @@ import hous.server.config.resolver.UserId;
 import hous.server.service.slack.SlackService;
 import hous.server.service.user.UserRetrieveService;
 import hous.server.service.user.UserService;
+import hous.server.service.user.UserServiceUtils;
 import hous.server.service.user.dto.request.DeleteUserRequestDto;
 import hous.server.service.user.dto.request.UpdatePushSettingRequestDto;
 import hous.server.service.user.dto.request.UpdateTestScoreRequestDto;
@@ -173,7 +174,9 @@ public class UserController {
     public ResponseEntity<SuccessResponse<String>> deleteUser(@ApiIgnore @UserId Long userId,
                                                               @Valid @RequestBody DeleteUserRequestDto request) {
         userService.deleteUser(request, userId);
-        slackService.sendSlackMessageDeleteUser(userRetrieveService.getFeedback(request.getComment()));
+        if (UserServiceUtils.isNewFeedback(request.getFeedbackType(), request.getComment())) {
+            slackService.sendSlackMessageDeleteUser(userRetrieveService.getFeedback(request.getComment()));
+        }
         return SuccessResponse.OK;
     }
 

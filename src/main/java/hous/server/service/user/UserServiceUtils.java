@@ -3,6 +3,7 @@ package hous.server.service.user;
 import hous.server.common.exception.ConflictException;
 import hous.server.common.exception.NotFoundException;
 import hous.server.common.exception.ValidationException;
+import hous.server.domain.feedback.FeedbackType;
 import hous.server.domain.personality.Personality;
 import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.personality.repository.PersonalityRepository;
@@ -131,5 +132,9 @@ public class UserServiceUtils {
         result.addAll(justMeList);
         result.addAll(exceptMeList);
         return result;
+    }
+
+    public static boolean isNewFeedback(FeedbackType feedbackType, String comment) {
+        return !(feedbackType.equals(FeedbackType.NO) && comment.isBlank());
     }
 }
