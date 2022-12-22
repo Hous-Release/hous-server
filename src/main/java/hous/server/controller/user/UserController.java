@@ -10,6 +10,7 @@ import hous.server.config.resolver.UserId;
 import hous.server.service.slack.SlackService;
 import hous.server.service.user.UserRetrieveService;
 import hous.server.service.user.UserService;
+import hous.server.service.user.UserServiceUtils;
 import hous.server.service.user.dto.request.DeleteUserRequestDto;
 import hous.server.service.user.dto.request.UpdatePushSettingRequestDto;
 import hous.server.service.user.dto.request.UpdateTestScoreRequestDto;
@@ -151,13 +152,14 @@ public class UserController {
     @ApiOperation(
             value = "[인증] 마이 페이지(설정) - 회원 정보를 삭제합니다.",
             notes = "회원 정보 탈퇴 요청 시 해당 유저의 모든 정보를 삭제합니다.\n"
-                    + "feedbackType을 NO를 보낸 경우, 사유가 없는 것으로 판단합니다."
+                    + "feedbackType을 NO를 보낸 경우, 사유가 없는 것으로 판단합니다. comment가 없는 경우 빈스트링(\"\")으로 보내주세요."
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "성공입니다."),
             @ApiResponse(code = 400,
                     message = "1. 사유를 선택 안한 경우, NO를 보내주세요. (feedbackType)\n"
-                            + "2. 의견은 200 글자 이내로 입력해주세요. (comment)",
+                            + "2. 의견은 200 글자 이내로 입력해주세요. (comment)\n"
+                            + "3. 의견이 없는 경우, 빈 스트링(\"\")을 보내주세요. (comment)",
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
@@ -172,7 +174,9 @@ public class UserController {
     public ResponseEntity<SuccessResponse<String>> deleteUser(@ApiIgnore @UserId Long userId,
                                                               @Valid @RequestBody DeleteUserRequestDto request) {
         userService.deleteUser(request, userId);
-        slackService.sendSlackMessageDeleteUser(userRetrieveService.getFeedback(request.getComment()));
+        if (UserServiceUtils.isNewFeedback(request.getFeedbackType(), request.getComment())) {
+            slackService.sendSlackMessageDeleteUser(userRetrieveService.getFeedback(request.getComment()));
+        }
         return SuccessResponse.OK;
     }
 

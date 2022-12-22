@@ -96,14 +96,13 @@ public class RoomService {
         if (me.getRepresent() != null) {
             representRepository.delete(me.getRepresent());
         }
-        acquireRepository.deleteAll(me.getAcquires());
-        notificationRepository.deleteAll(me.getNotifications());
         if (me.getTestScore() != null) {
             testScoreRepository.delete(me.getTestScore());
             me.updatePersonality(personalityRepository.findPersonalityByColor(PersonalityColor.GRAY));
         }
         me.resetUserInfo();
         me.resetBadge();
+        me.resetNotification();
     }
 
     public boolean existsParticipatingRoomByUserId(Long userId) {

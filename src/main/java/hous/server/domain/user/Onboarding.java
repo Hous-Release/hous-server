@@ -132,6 +132,10 @@ public class Onboarding extends AuditingTimeEntity implements Comparable<Onboard
         this.acquires.clear();
     }
 
+    public void resetNotification() {
+        this.notifications.clear();
+    }
+
     @Override
     public int compareTo(Onboarding o) {
         TestScore t1 = getTestScore();
