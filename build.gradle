@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'hous'
-version = '1.0.0-SNAPSHOT'
+version = '1.0.2-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {

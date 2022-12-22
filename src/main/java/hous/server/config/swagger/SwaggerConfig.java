@@ -1,11 +1,6 @@
 package hous.server.config.swagger;
 
 import com.fasterxml.classmate.TypeResolver;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,15 +15,13 @@ import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.schema.AlternateTypeRules;
 import springfox.documentation.schema.ModelRef;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.Parameter;
-import springfox.documentation.service.SecurityReference;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.util.*;
 
 @Configuration
 @EnableSwagger2
@@ -120,7 +113,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
         return new ApiInfoBuilder()
                 .title("Hous- Release")
                 .description("Server API Docs")
-                .version("1.0.0")
+                .version("1.0.2")
                 .build();
     }
 }
