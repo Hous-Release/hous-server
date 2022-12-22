@@ -19,7 +19,7 @@ public class UserDeleteResponse {
     private String comment;
 
     public static UserDeleteResponse of(long totalDeleteUserCount, List<UserDelete> users, String comment) {
-        if (comment == null) {
+        if (comment.isBlank()) {
             return UserDeleteResponse.builder()
                     .totalDeleteUserCount(totalDeleteUserCount)
                     .totalDeleteUserList(users.stream()
