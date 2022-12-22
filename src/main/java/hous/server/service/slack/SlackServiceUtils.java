@@ -44,7 +44,7 @@ public class SlackServiceUtils {
         layoutBlockList.add(section(section ->
                 section.text(markdownText(PROD_USER_DELETE_MESSAGE + stringBuilder.toString()))));
 
-        if (userDeleteResponse.getComment() != null) {
+        if (!userDeleteResponse.getComment().isBlank()) {
             layoutBlockList.add(section(section ->
                     section.text(markdownText(PROD_NOW_USER_DELETE_COMMENT + userDeleteResponse.getComment()))));
         }
