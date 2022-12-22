@@ -20,5 +20,6 @@ public class DeleteUserRequestDto {
 
     @ApiModelProperty(value = "의견", example = "흠냐링 제법 괜찮았으나 안쓰게 되네요.")
     @Size(max = Constraint.FEEDBACK_COMMENT_MAX, message = "{user.comment.max}")
+    @NotNull(message = "{user.comment.notNull}")
     private String comment;
 }
