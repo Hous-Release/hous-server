@@ -70,6 +70,7 @@ public class UserService {
 
     public Long registerUser(CreateUserRequestDto request) {
         UserServiceUtils.validateNotExistsUser(userRepository, request.getSocialId(), request.getSocialType());
+        UserServiceUtils.validateBirthdayAndIsPublic(request.getBirthday(), request.isPublic());
         User user = userRepository.save(User.newInstance(
                 request.getSocialId(), request.getSocialType(),
                 settingRepository.save(Setting.newInstance())));
