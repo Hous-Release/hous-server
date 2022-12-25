@@ -1,6 +1,5 @@
 package hous.server.domain.user;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import hous.server.domain.badge.Acquire;
 import hous.server.domain.badge.Represent;
 import hous.server.domain.common.AuditingTimeEntity;
@@ -11,7 +10,6 @@ import hous.server.service.user.dto.request.UpdateUserInfoRequestDto;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +32,7 @@ public class Onboarding extends AuditingTimeEntity implements Comparable<Onboard
     private String nickname;
 
     @Column(nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-    private LocalDate birthday;
+    private String birthday;
 
     @Column(length = 100)
     private String introduction;
@@ -69,7 +66,7 @@ public class Onboarding extends AuditingTimeEntity implements Comparable<Onboard
     @OneToMany(mappedBy = "onboarding", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Notification> notifications = new ArrayList<>();
 
-    public static Onboarding newInstance(User user, Personality personality, String nickname, LocalDate birthday, boolean isPublic) {
+    public static Onboarding newInstance(User user, Personality personality, String nickname, String birthday, boolean isPublic) {
         return Onboarding.builder()
                 .user(user)
                 .personality(personality)
