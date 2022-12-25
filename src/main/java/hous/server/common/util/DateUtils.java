@@ -16,6 +16,10 @@ public class DateUtils {
         return LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
     }
 
+    public static String todayLocalDateToString() {
+        return LocalDate.now(ZoneId.of("Asia/Seoul")).toString();
+    }
+
     public static LocalDate todayLocalDate() {
         return LocalDate.now(ZoneId.of("Asia/Seoul"));
     }
