@@ -91,6 +91,7 @@ public class UserService {
     }
 
     public void updateUserInfo(UpdateUserInfoRequestDto request, Long userId) {
+        UserServiceUtils.validateBirthdayAndIsPublic(request.getBirthday(), request.isPublic());
         User user = UserServiceUtils.findUserById(userRepository, userId);
         RoomServiceUtils.findParticipatingRoom(user);
         Onboarding onboarding = user.getOnboarding();
