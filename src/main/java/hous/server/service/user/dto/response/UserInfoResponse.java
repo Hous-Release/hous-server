@@ -78,8 +78,8 @@ public class UserInfoResponse {
                 .personalityColor(onboarding.getPersonality().getColor())
                 .nickname(onboarding.getNickname())
                 .birthdayPublic(onboarding.isPublic())
-                .age(MathUtils.getAge(onboarding.getBirthday()) + "세")
-                .birthday(DateUtils.parseYearAndMonthAndDay(onboarding.getBirthday()))
+                .age(toDisplayAge(onboarding.getBirthday()))
+                .birthday(toDisplayBirthday(onboarding.getBirthday()))
                 .mbti(onboarding.getMbti())
                 .job(onboarding.getJob())
                 .mbti(onboarding.getMbti())
@@ -88,5 +88,19 @@ public class UserInfoResponse {
                 .representBadge(represent != null ? represent.getBadge().getInfo().getValue() : null)
                 .representBadgeImage(represent != null ? represent.getBadge().getImageUrl() : null)
                 .build();
+    }
+
+    private static String toDisplayAge(String birthday) {
+        if (birthday.equals("")) {
+            return birthday;
+        }
+        return MathUtils.getAge(DateUtils.toLocalDate(birthday)) + "세";
+    }
+
+    private static String toDisplayBirthday(String birthday) {
+        if (birthday.equals("")) {
+            return birthday;
+        }
+        return DateUtils.parseYearAndMonthAndDay(DateUtils.toLocalDate(birthday));
     }
 }

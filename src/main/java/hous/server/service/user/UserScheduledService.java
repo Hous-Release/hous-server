@@ -26,7 +26,7 @@ public class UserScheduledService {
      */
     @Scheduled(cron = "0  0  9  *  *  *")
     public void scheduledTodayBirthday() {
-        List<User> users = userRepository.findAllUserByBirthday(DateUtils.todayLocalDate());
+        List<User> users = userRepository.findAllUsersByBirthday(DateUtils.todayLocalDateToString());
         users.forEach(user -> badgeService.acquireBadge(user, BadgeInfo.HOMIE_IS_BORN));
     }
 }

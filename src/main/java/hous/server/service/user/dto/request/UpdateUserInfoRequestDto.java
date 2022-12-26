@@ -1,7 +1,6 @@
 package hous.server.service.user.dto.request;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import hous.server.domain.common.Constraint;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,7 +12,6 @@ import lombok.ToString;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 
 @ToString
 @Getter
@@ -27,8 +25,7 @@ public class UpdateUserInfoRequestDto {
 
     @ApiModelProperty(value = "생년월일", example = "1999-03-04")
     @NotNull(message = "{onboarding.birthday.notNull}")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-    private LocalDate birthday;
+    private String birthday;
 
     @ApiModelProperty(value = "생년월일 공개 여부", example = "true")
     @NotNull(message = "{onboarding.isPublic.notNull}")

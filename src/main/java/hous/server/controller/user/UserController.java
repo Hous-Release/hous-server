@@ -36,7 +36,8 @@ public class UserController {
 
     @ApiOperation(
             value = "[인증] 마이 페이지(Profile 뷰) - 나의 프로필 정보를 수정합니다.",
-            notes = "프로필 정보 수정을 요청합니다. 자기소개에서 줄바꿈을 포함할 경우, ' '(공백)으로 변환하여 저장합니다."
+            notes = "프로필 정보 수정을 요청합니다. 자기소개에서 줄바꿈을 포함할 경우, ' '(공백)으로 변환하여 저장합니다.\n" +
+                    "** iOS의 경우 생년월일을 아무것도 입력하지 않은 경우 -> birthday(\"\"), isPublic(false)로 부탁드립니다."
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "성공입니다."),
@@ -48,7 +49,8 @@ public class UserController {
                             + "4. 생년월일을 공개 여부를 체크해주세요. (isPublic)\n"
                             + "5. mbti 는 4 글자 이내로 입력해주세요. (mbti)\n"
                             + "6. 직업은 3 글자 이내로 입력해주세요. (job)\n"
-                            + "7. 자기소개는 40 글자 이내로 입력해주세요. (introduction)",
+                            + "7. 자기소개는 40 글자 이내로 입력해주세요. (introduction)\n"
+                            + "8. 생년월일이 없는 경우 공개 여부는 true가 될 수 없습니다.",
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
             @ApiResponse(code = 404,

@@ -46,7 +46,8 @@ public class AuthController {
     @ApiOperation(
             value = "온보딩 페이지 - 회원가입을 요청합니다.",
             notes = "카카오 회원가입, 애플 회원가입을 요청합니다.\n" +
-                    "socialType - KAKAO (카카오), APPLE (애플)"
+                    "socialType - KAKAO (카카오), APPLE (애플)\n" +
+                    "** iOS의 경우 생년월일을 아무것도 입력하지 않은 경우 -> birthday(\"\"), isPublic(false)로 부탁드립니다."
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "회원가입 성공입니다."),
@@ -58,7 +59,8 @@ public class AuthController {
                             + "4. 닉네임을 입력해주세요. (nickname)\n"
                             + "5. 닉네임은 최대 3글자까지 가능합니다. (nickname)\n"
                             + "6. 생년월일을 입력해주세요. (birthday)\n"
-                            + "7. 생년월일을 공개 여부를 체크해주세요. (isPublic)",
+                            + "7. 생년월일을 공개 여부를 체크해주세요. (isPublic)\n"
+                            + "8. 생년월일이 없는 경우 공개 여부는 true가 될 수 없습니다.",
                     response = ErrorResponse.class),
             @ApiResponse(code = 401, message = "유효하지 않은 토큰입니다.", response = ErrorResponse.class),
             @ApiResponse(code = 409, message = "이미 해당 계정으로 회원가입하셨습니다.\n   로그인 해주세요.\n", response = ErrorResponse.class),
