@@ -6,7 +6,6 @@ import hous.server.domain.user.UserSocialType;
 import hous.server.domain.user.UserStatus;
 import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static hous.server.domain.user.QUser.user;
@@ -70,7 +69,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public List<User> findAllUserByBirthday(LocalDate birthday) {
+    public List<User> findAllUsersByBirthday(String birthday) {
         return queryFactory
                 .selectFrom(user)
                 .where(

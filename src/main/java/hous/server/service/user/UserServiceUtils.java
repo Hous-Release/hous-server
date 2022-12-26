@@ -137,4 +137,10 @@ public class UserServiceUtils {
     public static boolean isNewFeedback(FeedbackType feedbackType, String comment) {
         return !(feedbackType.equals(FeedbackType.NO) && comment.isBlank());
     }
+
+    public static void validateBirthdayAndIsPublic(String birthday, Boolean isPublic) {
+        if (birthday.equals("") && isPublic) {
+            throw new ValidationException(String.format("생년월일 (\"\") 을 지정하지 않은 경우, 공개 여부 (%s) 를 지정할 수 없습니다.", birthday, isPublic), VALIDATION_BIRTHDAY_EXCEPTION);
+        }
+    }
 }

@@ -70,6 +70,7 @@ public class UserService {
 
     public Long registerUser(CreateUserRequestDto request) {
         UserServiceUtils.validateNotExistsUser(userRepository, request.getSocialId(), request.getSocialType());
+        UserServiceUtils.validateBirthdayAndIsPublic(request.getBirthday(), request.isPublic());
         User user = userRepository.save(User.newInstance(
                 request.getSocialId(), request.getSocialType(),
                 settingRepository.save(Setting.newInstance())));
@@ -90,6 +91,7 @@ public class UserService {
     }
 
     public void updateUserInfo(UpdateUserInfoRequestDto request, Long userId) {
+        UserServiceUtils.validateBirthdayAndIsPublic(request.getBirthday(), request.isPublic());
         User user = UserServiceUtils.findUserById(userRepository, userId);
         RoomServiceUtils.findParticipatingRoom(user);
         Onboarding onboarding = user.getOnboarding();

@@ -5,8 +5,6 @@ import hous.server.domain.user.UserSocialType;
 import hous.server.service.user.dto.request.CreateUserRequestDto;
 import lombok.*;
 
-import java.time.LocalDate;
-
 @ToString
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -18,7 +16,7 @@ public class SignUpDto {
     private String token;
     private String fcmToken;
     private String nickname;
-    private LocalDate birthday;
+    private String birthday;
     private Boolean isPublic;
 
     @JsonProperty("isPublic")
@@ -27,7 +25,7 @@ public class SignUpDto {
     }
 
     public static SignUpDto of(UserSocialType socialType, String token, String fcmToken,
-                               String nickname, LocalDate birthday, Boolean isPublic) {
+                               String nickname, String birthday, Boolean isPublic) {
         return SignUpDto.builder()
                 .socialType(socialType)
                 .token(token)
