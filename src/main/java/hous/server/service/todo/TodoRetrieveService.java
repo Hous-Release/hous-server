@@ -103,15 +103,14 @@ public class TodoRetrieveService {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Onboarding onboarding = user.getOnboarding();
         Room room = RoomServiceUtils.findParticipatingRoom(user);
-        List<Todo> todos = room.getTodos();
 
         // 이 방의 모든 요일의 todo list 조회
-        List<Todo> ourTodosList = TodoServiceUtils.filterAllDaysOurTodos(todos);
-        List<Todo> myTodosList = TodoServiceUtils.filterAllDaysUserTodos(todos, onboarding);
+        List<Todo> ourTodosList = room.getTodos();
+        List<Todo> myTodosList = TodoServiceUtils.filterAllDaysUserTodos(ourTodosList, onboarding);
 
         // 요일별(index) todo list 형태로 가공
-        Map<Integer, Set<Todo>> allDayOurTodosList = TodoServiceUtils.mapByDayOfWeekToList(ourTodosList);
-        Map<Integer, Set<Todo>> allDayMyTodosList = TodoServiceUtils.mapByDayOfWeekToList(myTodosList);
+        Map<Integer, Set<Todo>> allDayOurTodosList = TodoServiceUtils.mapByDayOfWeekToOurTodosList(ourTodosList);
+        Map<Integer, Set<Todo>> allDayMyTodosList = TodoServiceUtils.mapByDayOfWeekToMyTodosList(onboarding, myTodosList);
 
         // List<TodoAllDayResponse> response dto 형태로 가공
         List<TodoAllDayInfo> allDayTodosList = new ArrayList<>();
@@ -144,10 +143,10 @@ public class TodoRetrieveService {
         room.getParticipates().stream()
                 .sorted(Participate::compareTo)
                 .forEach(participate -> {
-                    List<Todo> memberTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, participate.getOnboarding());
-                    List<Todo> memberUniqueTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, participate.getOnboarding());
+                    Onboarding onboarding = participate.getOnboarding();
+                    List<Todo> memberTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, onboarding);
 
-                    Map<Integer, Set<Todo>> allDayMemberTodos = TodoServiceUtils.mapByDayOfWeekToList(memberTodos);
+                    Map<Integer, Set<Todo>> allDayMemberTodos = TodoServiceUtils.mapByDayOfWeekToMyTodosList(onboarding, memberTodos);
 
                     List<DayOfWeekTodo> dayOfWeekTodos = new ArrayList<>();
                     for (int day = DayOfWeek.MONDAY.getIndex(); day <= DayOfWeek.SUNDAY.getIndex(); day++) {
@@ -159,13 +158,13 @@ public class TodoRetrieveService {
                         dayOfWeekTodos.add(DayOfWeekTodo.of(dayOfWeek, thisDayTodosName.size(), thisDayTodosName));
                     }
 
-                    String userName = participate.getOnboarding().getNickname();
-                    PersonalityColor color = participate.getOnboarding().getPersonality().getColor();
+                    String userName = onboarding.getNickname();
+                    PersonalityColor color = onboarding.getPersonality().getColor();
 
-                    if (user.getOnboarding().equals(participate.getOnboarding())) {
-                        allMemberTodos.add(TodoAllMemberInfo.of(userName, color, memberUniqueTodos.size(), dayOfWeekTodos));
+                    if (user.getOnboarding().equals(onboarding)) {
+                        allMemberTodos.add(TodoAllMemberInfo.of(userName, color, memberTodos.size(), dayOfWeekTodos));
                     } else {
-                        otherMemberTodos.add(TodoAllMemberInfo.of(userName, color, memberUniqueTodos.size(), dayOfWeekTodos));
+                        otherMemberTodos.add(TodoAllMemberInfo.of(userName, color, memberTodos.size(), dayOfWeekTodos));
                     }
                 });
         allMemberTodos.addAll(otherMemberTodos);
