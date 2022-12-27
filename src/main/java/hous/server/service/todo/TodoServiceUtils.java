@@ -93,14 +93,6 @@ public class TodoServiceUtils {
         return new ArrayList<>(dayOurTodosSet);
     }
 
-    public static List<Todo> filterAllDaysOurTodos(List<Todo> todos) {
-        Set<Todo> allDaysOurTodosSet = new HashSet<>();
-        todos.forEach(todo -> todo.getTakes().forEach(take ->
-                take.getRedos().forEach(redo ->
-                        allDaysOurTodosSet.add(todo))));
-        return new ArrayList<>(allDaysOurTodosSet);
-    }
-
     public static List<Todo> filterAllDaysUserTodos(List<Todo> todos, Onboarding onboarding) {
         Set<Todo> userTodosSet = new HashSet<>();
         todos.forEach(todo -> todo.getTakes().forEach(take -> {
@@ -117,7 +109,7 @@ public class TodoServiceUtils {
                 .collect(Collectors.toList());
     }
 
-    public static Map<Integer, Set<Todo>> mapByDayOfWeekToList(List<Todo> todos) {
+    public static Map<Integer, Set<Todo>> mapByDayOfWeekToOurTodosList(List<Todo> todos) {
         Map<Integer, Set<Todo>> todosMapByDayOfWeek = new HashMap<>();
         for (int i = DayOfWeek.MONDAY.getIndex(); i <= DayOfWeek.SUNDAY.getIndex(); i++) {
             todosMapByDayOfWeek.put(i, new HashSet<>());
@@ -133,16 +125,37 @@ public class TodoServiceUtils {
         return todosMapByDayOfWeek;
     }
 
+    public static Map<Integer, Set<Todo>> mapByDayOfWeekToMyTodosList(Onboarding me, List<Todo> todos) {
+        Map<Integer, Set<Todo>> todosMapByDayOfWeek = new HashMap<>();
+        for (int i = DayOfWeek.MONDAY.getIndex(); i <= DayOfWeek.SUNDAY.getIndex(); i++) {
+            todosMapByDayOfWeek.put(i, new HashSet<>());
+        }
+        todos.forEach(todo -> todo.getTakes().forEach(take -> {
+                    if (take.getOnboarding().getId().equals(me.getId())) {
+                        take.getRedos().forEach(redo -> {
+                            Set<Todo> todosByDayOfWeek = todosMapByDayOfWeek.get(redo.getDayOfWeek().getIndex());
+                            todosByDayOfWeek.add(todo);
+                            todosMapByDayOfWeek.put(redo.getDayOfWeek().getIndex(), todosByDayOfWeek);
+                        });
+                    }
+                }
+        ));
+        return todosMapByDayOfWeek;
+    }
+
     public static List<Todo> filterDayMyTodos(LocalDate day, Onboarding me, List<Todo> todos) {
         Set<Todo> dayMyTodosSet = new HashSet<>();
         List<Todo> dayOurTodosList = filterDayOurTodos(day, todos);
-        dayOurTodosList.forEach(todo -> {
-            todo.getTakes().forEach(take -> {
-                if (take.getOnboarding().getId().equals(me.getId())) {
-                    dayMyTodosSet.add(todo);
-                }
-            });
-        });
+        // TODO refatoring 필요
+        dayOurTodosList.forEach(todo -> todo.getTakes().forEach(take -> {
+            if (take.getOnboarding().getId().equals(me.getId())) {
+                take.getRedos().forEach(redo -> {
+                    if (redo.getDayOfWeek().toString().equals(DateUtils.nowDayOfWeek(day))) {
+                        dayMyTodosSet.add(todo);
+                    }
+                });
+            }
+        }));
         return new ArrayList<>(dayMyTodosSet);
     }
 
