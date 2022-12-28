@@ -113,7 +113,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
         return new ApiInfoBuilder()
                 .title("Hous- Release")
                 .description("Server API Docs")
-                .version("1.0.4")
+                .version("1.0.5")
                 .build();
     }
 }
