@@ -10,7 +10,8 @@ import hous.server.domain.user.Onboarding;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static hous.server.domain.todo.QDone.done;
 
@@ -34,7 +35,14 @@ public class DoneRepositoryImpl implements DoneRepositoryCustom {
 
     @Override
     public OurTodoStatus findTodayOurTodoStatus(LocalDate today, Todo todo) {
-        List<Take> takes = todo.getTakes();
+        Set<Take> takes = new HashSet<>();
+        todo.getTakes().forEach(take -> {
+            take.getRedos().forEach(redo -> {
+                if (redo.getDayOfWeek().toString().equals(DateUtils.nowDayOfWeek(today))) {
+                    takes.add(take);
+                }
+            });
+        });
         int doneCnt = (int) takes.stream()
                 .map(take -> queryFactory.selectFrom(done)
                         .where(
