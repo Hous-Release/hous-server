@@ -17,23 +17,30 @@ import java.util.Map;
 @Aspect
 @Component
 @Slf4j
-public class RequestLoggingAspect {
+public class LoggingAspect {
 
-    @Pointcut("within(hous.server.controller..*)")
-    public void onRequest() {
+    /**
+     * execution([수식어] 리턴타입 [클래스이름].이름(파라미터)
+     * * : 모든 값 포함
+     * .. : 0개 이상 의미
+     * <p>
+     * hous.server.controller 패키지 내부의 모든 클래스에서 파라미터가 0개 이상인 모든 메서드
+     */
+    @Pointcut("execution(* hous.server.controller..*(..))")
+    public void controllerExecute() {
     }
 
-    @Around("hous.server.common.aspect.logging.RequestLoggingAspect.onRequest()")
+    @Around("hous.server.common.aspect.logging.LoggingAspect.controllerExecute()")
     public Object requestLogging(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         long startAt = System.currentTimeMillis();
-        try {
-            return proceedingJoinPoint.proceed(proceedingJoinPoint.getArgs());
-        } finally {
-            long endAt = System.currentTimeMillis();
-            log.info("====> Request: {} {} ({}ms)\n *Header = {}\n", request.getMethod(), request.getRequestURL(), endAt - startAt, getHeaders(request));
+        Object returnValue = proceedingJoinPoint.proceed(proceedingJoinPoint.getArgs());
+        long endAt = System.currentTimeMillis();
+        log.info("====> Request: {} {} ({}ms)\n *Header = {}\n", request.getMethod(), request.getRequestURL(), endAt - startAt, getHeaders(request));
+        if (returnValue != null) {
+            log.info("====> Response: {}", returnValue);
         }
-
+        return returnValue;
     }
 
     private Map<String, Object> getHeaders(HttpServletRequest request) {
