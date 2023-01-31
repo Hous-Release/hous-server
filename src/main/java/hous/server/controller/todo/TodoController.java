@@ -1,6 +1,6 @@
 package hous.server.controller.todo;
 
-import hous.server.common.aspect.PreventDuplicateRequest;
+import hous.server.common.aspect.duplicate.PreventDuplicateRequest;
 import hous.server.common.dto.ErrorResponse;
 import hous.server.common.dto.SuccessResponse;
 import hous.server.config.interceptor.auth.Auth;

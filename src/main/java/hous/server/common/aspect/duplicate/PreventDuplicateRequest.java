@@ -1,4 +1,4 @@
-package hous.server.common.aspect;
+package hous.server.common.aspect.duplicate;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
