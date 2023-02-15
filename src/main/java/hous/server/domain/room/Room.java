@@ -34,9 +34,6 @@ public class Room extends AuditingTimeEntity {
     @Column(nullable = false)
     private int participantsCnt;
 
-    @Column(nullable = false)
-    private int rulesCnt;
-
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Participate> participates = new ArrayList<>();
 
@@ -52,7 +49,6 @@ public class Room extends AuditingTimeEntity {
                 .name(name)
                 .code(code)
                 .participantsCnt(0)
-                .rulesCnt(0)
                 .build();
     }
 
@@ -76,7 +72,6 @@ public class Room extends AuditingTimeEntity {
 
     public void addRules(List<Rule> rules) {
         this.rules.addAll(rules);
-        this.rulesCnt += rules.size();
     }
 
     public void updateRule(Rule rule) {
@@ -85,7 +80,6 @@ public class Room extends AuditingTimeEntity {
 
     public void deleteRule(Rule rule) {
         this.rules.remove(rule);
-        this.rulesCnt -= 1;
     }
 
     public void addTodo(Todo todo) {
