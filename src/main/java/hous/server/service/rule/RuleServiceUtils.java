@@ -36,7 +36,7 @@ public class RuleServiceUtils {
     }
 
     public static void validateRuleCounts(Room room, int requestRuleCnt) {
-        if (room.getRulesCnt() + requestRuleCnt > Constraint.RULE_COUNT_MAX) {
+        if (room.getRules().size() + requestRuleCnt > Constraint.RULE_COUNT_MAX) {
             throw new ForbiddenException(String.format("방 (%s) 의 rule 는 30 개를 초과할 수 없습니다.", room.getId()), FORBIDDEN_RULE_COUNT_EXCEPTION);
         }
     }

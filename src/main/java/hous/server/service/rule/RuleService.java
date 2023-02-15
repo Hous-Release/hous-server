@@ -17,6 +17,7 @@ import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.rule.dto.request.CreateRuleRequestDto;
 import hous.server.service.rule.dto.request.DeleteRuleReqeustDto;
 import hous.server.service.rule.dto.request.UpdateRuleRequestDto;
+import hous.server.service.rule.dto.response.RuleInfo;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -47,7 +48,7 @@ public class RuleService {
         Onboarding me = user.getOnboarding();
         Room room = RoomServiceUtils.findParticipatingRoom(user);
         RuleServiceUtils.validateRuleCounts(room, request.getRuleNames().size());
-//        RuleServiceUtils.existsRuleByRoomRules(room, request.getRuleNames()); //TODO 다음 릴리즈 때 클라에서 추가할 예정이라 우선 주석 처리
+        RuleServiceUtils.existsRuleByRoomRules(room, request.getRuleNames());
         AtomicInteger ruleIdx = new AtomicInteger(RuleServiceUtils.findRuleIdxByRoomId(ruleRepository, room));
         List<Rule> rules = request.getRuleNames().stream()
                 .map(ruleName -> {
@@ -77,7 +78,7 @@ public class RuleService {
     public void updateRules(UpdateRuleRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
-//        RuleServiceUtils.existsRuleByRoomRules(room, request.getRules().stream().map(RuleInfo::getName).collect(Collectors.toList())); //TODO 다음 릴리즈 때 클라에서 추가할 예정이라 우선 주석 처리
+        RuleServiceUtils.existsRuleByRoomRules(room, request.getRules().stream().map(RuleInfo::getName).collect(Collectors.toList()));
         for (int idx = 0; idx < request.getRules().size(); idx++) {
             Rule rule = RuleServiceUtils.findRuleByIdAndRoom(ruleRepository, request.getRules().get(idx).getId(), room);
             RuleServiceUtils.validateRuleName(room, request.getRules().get(idx).getName());
