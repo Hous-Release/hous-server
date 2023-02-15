@@ -128,7 +128,7 @@ public class TodoRetrieveService {
                     .collect(Collectors.toList());
             allDayTodosList.add(TodoAllDayInfo.of(dayOfWeek, todoInfos, ourTodoInfos));
         }
-        return TodoAllDayResponse.of(room.getTodosCnt(), allDayTodosList);
+        return TodoAllDayResponse.of(room.getTodos().size(), allDayTodosList);
     }
 
     public TodoAllMemberResponse getTodoAllMemberInfo(Long userId) {
@@ -169,7 +169,7 @@ public class TodoRetrieveService {
                 });
         allMemberTodos.addAll(otherMemberTodos);
 
-        return TodoAllMemberResponse.of(room.getTodosCnt(), allMemberTodos);
+        return TodoAllMemberResponse.of(room.getTodos().size(), allMemberTodos);
     }
 
     public MyTodoInfoResponse getMyTodoInfo(Long userId) {

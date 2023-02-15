@@ -37,9 +37,6 @@ public class Room extends AuditingTimeEntity {
     @Column(nullable = false)
     private int rulesCnt;
 
-    @Column(nullable = false)
-    private int todosCnt;
-
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Participate> participates = new ArrayList<>();
 
@@ -56,7 +53,6 @@ public class Room extends AuditingTimeEntity {
                 .code(code)
                 .participantsCnt(0)
                 .rulesCnt(0)
-                .todosCnt(0)
                 .build();
     }
 
@@ -94,7 +90,6 @@ public class Room extends AuditingTimeEntity {
 
     public void addTodo(Todo todo) {
         this.todos.add(todo);
-        this.todosCnt += 1;
     }
 
     public void updateTodo(Todo todo) {
@@ -103,6 +98,5 @@ public class Room extends AuditingTimeEntity {
 
     public void deleteTodo(Todo todo) {
         this.todos.remove(todo);
-        this.todosCnt -= 1;
     }
 }

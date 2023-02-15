@@ -35,7 +35,7 @@ public class TodoServiceUtils {
     }
 
     public static void validateTodoCounts(Room room) {
-        if (room.getTodosCnt() >= Constraint.TODO_COUNT_MAX) {
+        if (room.getTodos().size() >= Constraint.TODO_COUNT_MAX) {
             throw new ForbiddenException(String.format("방 (%s) 의 todo 는 60개를 초과할 수 없습니다.", room.getId()), FORBIDDEN_TODO_COUNT_EXCEPTION);
         }
     }
