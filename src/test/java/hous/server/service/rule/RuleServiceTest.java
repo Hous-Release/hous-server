@@ -1,5 +1,6 @@
 package hous.server.service.rule;
 
+import hous.server.common.exception.NotFoundException;
 import hous.server.domain.badge.repository.AcquireRepository;
 import hous.server.domain.notification.repository.NotificationRepository;
 import hous.server.domain.room.repository.ParticipateRepository;
@@ -14,6 +15,7 @@ import hous.server.service.room.RoomService;
 import hous.server.service.room.dto.request.SetRoomNameRequestDto;
 import hous.server.service.room.dto.response.RoomInfoResponse;
 import hous.server.service.rule.dto.request.CreateRuleRequestDto;
+import hous.server.service.rule.dto.request.DeleteRuleReqeustDto;
 import hous.server.service.user.UserService;
 import hous.server.service.user.dto.request.CreateUserRequestDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,8 +29,10 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @SpringBootTest
 @ActiveProfiles(value = "local")
@@ -120,5 +124,74 @@ public class RuleServiceTest {
         // then
         List<Rule> rules = ruleRepository.findAll();
         assertThat(rules.size()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("rule 1게 삭제 테스트")
+    public void delete_rule_test() {
+        // given
+        CreateUserRequestDto createUserRequestDto1 = CreateUserRequestDto.of(
+                "socialId1", UserSocialType.KAKAO, "fcmToken1", "nickname1", "2022-01-01", true);
+        Long userId = userService.registerUser(createUserRequestDto1);
+
+        SetRoomNameRequestDto setRoomNameRequestDto = SetRoomNameRequestDto.of("room1");
+        roomService.createRoom(setRoomNameRequestDto, userId);
+
+        CreateRuleRequestDto createRuleRequestDto = CreateRuleRequestDto.of(List.of("rule1"));
+        ruleService.createRule(createRuleRequestDto, userId);
+        List<Long> deleteRuleIds = ruleRepository.findAll().stream().map(Rule::getId).collect(Collectors.toList());
+
+        // when
+        ruleService.deleteRules(DeleteRuleReqeustDto.of(deleteRuleIds), userId);
+
+        // then
+        List<Rule> rules = ruleRepository.findAll();
+        assertThat(rules).isEmpty();
+    }
+
+    @Test
+    @DisplayName("rule 여러게 삭제 테스트")
+    public void delete_rules_test() {
+        // given
+        CreateUserRequestDto createUserRequestDto1 = CreateUserRequestDto.of(
+                "socialId1", UserSocialType.KAKAO, "fcmToken1", "nickname1", "2022-01-01", true);
+        Long userId = userService.registerUser(createUserRequestDto1);
+        CreateRuleRequestDto createRuleRequestDto = CreateRuleRequestDto.of(List.of("rule1, rule2, rule3"));
+
+        SetRoomNameRequestDto setRoomNameRequestDto = SetRoomNameRequestDto.of("room1");
+        roomService.createRoom(setRoomNameRequestDto, userId);
+
+        ruleService.createRule(createRuleRequestDto, userId);
+        List<Long> deleteRuleIds = ruleRepository.findAll().stream().map(Rule::getId).collect(Collectors.toList());
+
+        // when
+        ruleService.deleteRules(DeleteRuleReqeustDto.of(deleteRuleIds), userId);
+
+        // then
+        List<Rule> rules = ruleRepository.findAll();
+        assertThat(rules).isEmpty();
+    }
+
+    @Test
+    @DisplayName("rule 삭제 시 존재하지 않는 rule_id일 경우 404 예외 발생")
+    public void delete_rules_test_by_exception() {
+        // given
+        CreateUserRequestDto createUserRequestDto1 = CreateUserRequestDto.of(
+                "socialId1", UserSocialType.KAKAO, "fcmToken1", "nickname1", "2022-01-01", true);
+        Long userId = userService.registerUser(createUserRequestDto1);
+        CreateRuleRequestDto createRuleRequestDto = CreateRuleRequestDto.of(List.of("rule1, rule2, rule3"));
+
+        SetRoomNameRequestDto setRoomNameRequestDto = SetRoomNameRequestDto.of("room1");
+        roomService.createRoom(setRoomNameRequestDto, userId);
+
+        ruleService.createRule(createRuleRequestDto, userId);
+        List<Long> deleteRuleIds = List.of(4L, 5L, 6L);
+
+        // when, then
+        String matchedExceptionMessage = String.format("존재하지 않는 규칙 (%s) 입니다", 4L);
+        assertThatThrownBy(() -> {
+            ruleService.deleteRules(DeleteRuleReqeustDto.of(deleteRuleIds), userId);
+        }).isInstanceOf(NotFoundException.class)
+                .hasMessageContaining(matchedExceptionMessage);
     }
 }
