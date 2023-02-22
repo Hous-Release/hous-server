@@ -1,5 +1,6 @@
 package hous.server.service.todo;
 
+import hous.server.common.exception.ConflictException;
 import hous.server.common.exception.NotFoundException;
 import hous.server.domain.badge.repository.AcquireRepository;
 import hous.server.domain.notification.repository.NotificationRepository;
@@ -156,6 +157,39 @@ public class TodoServiceTest {
         // then
         List<Todo> todos = todoRepository.findAll();
         assertThat(todos.size()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("이미 존재하는 rule 과 같은 이름을 가진 rule 추가할 경우 409 예외 발생")
+    public void create_duplicate_rule_name_throw_by_conflit_exception() {
+        // given
+        CreateUserRequestDto createUserRequestDto = CreateUserRequestDto.of(
+                "socialId1", UserSocialType.KAKAO, "fcmToken1", "nickname1", "2022-01-01", true);
+        Long userId = userService.registerUser(createUserRequestDto);
+        User user = userRepository.findUserById(userId);
+
+        SetRoomNameRequestDto setRoomNameRequestDto = SetRoomNameRequestDto.of("room1");
+        Long roomId = roomService.createRoom(setRoomNameRequestDto, userId).getRoomId();
+
+        TodoInfoRequestDto todoInfoRequestDto = TodoInfoRequestDto.of("todo1", true,
+                List.of(TodoInfoRequestDto.TodoUser.builder()
+                        .onboardingId(user.getOnboarding().getId())
+                        .dayOfWeeks(List.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY))
+                        .build()));
+        todoService.createTodo(todoInfoRequestDto, userId);
+
+        // when, then
+        List<Todo> todos = todoRepository.findAll();
+        List<Take> takes = takeRepository.findAll();
+        List<Redo> redos = redoRepository.findAll();
+        assertThat(todos.size()).isEqualTo(1);
+        assertThat(takes.size()).isEqualTo(1);
+        assertThat(redos.size()).isEqualTo(3);
+        String matchedExceptionMessage = String.format("방 (%s) 에 이미 존재하는 todo (%s) 입니다.", roomId, "todo1");
+        assertThatThrownBy(() -> {
+            todoService.createTodo(todoInfoRequestDto, userId);
+        }).isInstanceOf(ConflictException.class)
+                .hasMessageContaining(matchedExceptionMessage);
     }
 
     @Test
