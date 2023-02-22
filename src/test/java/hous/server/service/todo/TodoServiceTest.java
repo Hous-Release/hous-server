@@ -7,6 +7,8 @@ import hous.server.domain.room.repository.ParticipateRepository;
 import hous.server.domain.room.repository.RoomRepository;
 import hous.server.domain.rule.repository.RuleRepository;
 import hous.server.domain.todo.DayOfWeek;
+import hous.server.domain.todo.Redo;
+import hous.server.domain.todo.Take;
 import hous.server.domain.todo.Todo;
 import hous.server.domain.todo.repository.RedoRepository;
 import hous.server.domain.todo.repository.TakeRepository;
@@ -182,7 +184,11 @@ public class TodoServiceTest {
 
         // then
         List<Todo> todos = todoRepository.findAll();
+        List<Take> takes = takeRepository.findAll();
+        List<Redo> redos = redoRepository.findAll();
         assertThat(todos).isEmpty();
+        assertThat(takes).isEmpty();
+        assertThat(redos).isEmpty();
     }
 
     @Test
