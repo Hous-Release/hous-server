@@ -1,5 +1,6 @@
 package hous.server.service.rule;
 
+import hous.server.common.exception.ConflictException;
 import hous.server.common.exception.NotFoundException;
 import hous.server.domain.badge.repository.AcquireRepository;
 import hous.server.domain.notification.repository.NotificationRepository;
@@ -127,6 +128,30 @@ public class RuleServiceTest {
     }
 
     @Test
+    @DisplayName("이미 존재하는 rule 과 같은 이름을 가진 rule 추가할 경우 409 예외 발생")
+    public void create_duplicate_rule_name_throw_by_conflit_exception() {
+        // given
+        CreateUserRequestDto createUserRequestDto1 = CreateUserRequestDto.of(
+                "socialId1", UserSocialType.KAKAO, "fcmToken1", "nickname1", "2022-01-01", true);
+        Long userId = userService.registerUser(createUserRequestDto1);
+
+        SetRoomNameRequestDto setRoomNameRequestDto = SetRoomNameRequestDto.of("room1");
+        Long roomId = roomService.createRoom(setRoomNameRequestDto, userId).getRoomId();
+
+        CreateRuleRequestDto createRuleRequestDto = CreateRuleRequestDto.of(List.of("rule"));
+        ruleService.createRule(createRuleRequestDto, userId);
+
+        // when, then
+        List<Rule> rules = ruleRepository.findAll();
+        assertThat(rules.size()).isEqualTo(1);
+        String matchedExceptionMessage = String.format("방 (%s) 에 이미 존재하는 ruleName (%s) 입니다.", roomId, "rule");
+        assertThatThrownBy(() -> {
+            ruleService.createRule(createRuleRequestDto, userId);
+        }).isInstanceOf(ConflictException.class)
+                .hasMessageContaining(matchedExceptionMessage);
+    }
+
+    @Test
     @DisplayName("rule 1게 삭제 테스트")
     public void delete_rule_test() {
         // given
@@ -174,7 +199,7 @@ public class RuleServiceTest {
 
     @Test
     @DisplayName("rule 삭제 시 존재하지 않는 rule_id일 경우 404 예외 발생")
-    public void delete_rules_test_by_exception() {
+    public void delete_rules_test_throw_by_notfound_exception() {
         // given
         CreateUserRequestDto createUserRequestDto1 = CreateUserRequestDto.of(
                 "socialId1", UserSocialType.KAKAO, "fcmToken1", "nickname1", "2022-01-01", true);
