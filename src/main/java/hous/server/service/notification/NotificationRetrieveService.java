@@ -2,10 +2,10 @@ package hous.server.service.notification;
 
 import hous.server.domain.common.collection.ScrollPaginationCollection;
 import hous.server.domain.notification.Notification;
-import hous.server.domain.notification.repository.NotificationRepository;
+import hous.server.domain.notification.mysql.NotificationRepository;
 import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.User;
-import hous.server.domain.user.repository.UserRepository;
+import hous.server.domain.user.mysql.UserRepository;
 import hous.server.service.notification.dto.response.NotificationsInfoResponse;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;

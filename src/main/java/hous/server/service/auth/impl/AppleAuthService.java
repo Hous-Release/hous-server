@@ -3,7 +3,7 @@ package hous.server.service.auth.impl;
 import hous.server.common.util.JwtUtils;
 import hous.server.domain.user.User;
 import hous.server.domain.user.UserSocialType;
-import hous.server.domain.user.repository.UserRepository;
+import hous.server.domain.user.mysql.UserRepository;
 import hous.server.external.client.apple.AppleTokenProvider;
 import hous.server.service.auth.AuthService;
 import hous.server.service.auth.CommonAuthService;

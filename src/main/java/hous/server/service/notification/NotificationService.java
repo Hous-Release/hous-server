@@ -5,7 +5,7 @@ import hous.server.domain.notification.Notification;
 import hous.server.domain.notification.NotificationMessage;
 import hous.server.domain.notification.NotificationType;
 import hous.server.domain.notification.PushMessage;
-import hous.server.domain.notification.repository.NotificationRepository;
+import hous.server.domain.notification.mysql.NotificationRepository;
 import hous.server.domain.rule.Rule;
 import hous.server.domain.todo.Todo;
 import hous.server.domain.user.Onboarding;

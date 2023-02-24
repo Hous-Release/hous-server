@@ -4,7 +4,7 @@ import hous.server.common.exception.ErrorCode;
 import hous.server.common.exception.NotFoundException;
 import hous.server.common.exception.ValidationException;
 import hous.server.domain.deploy.Deploy;
-import hous.server.domain.deploy.repository.DeployRepository;
+import hous.server.domain.deploy.mysql.DeployRepository;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

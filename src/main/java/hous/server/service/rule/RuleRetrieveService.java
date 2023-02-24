@@ -3,7 +3,7 @@ package hous.server.service.rule;
 import hous.server.domain.room.Room;
 import hous.server.domain.rule.Rule;
 import hous.server.domain.user.User;
-import hous.server.domain.user.repository.UserRepository;
+import hous.server.domain.user.mysql.UserRepository;
 import hous.server.service.room.RoomServiceUtils;
 import hous.server.service.rule.dto.response.RuleInfoResponse;
 import hous.server.service.user.UserServiceUtils;

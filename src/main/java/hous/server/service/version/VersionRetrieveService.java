@@ -1,7 +1,7 @@
 package hous.server.service.version;
 
 import hous.server.domain.deploy.Deploy;
-import hous.server.domain.deploy.repository.DeployRepository;
+import hous.server.domain.deploy.mysql.DeployRepository;
 import hous.server.service.version.dto.response.VersionInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

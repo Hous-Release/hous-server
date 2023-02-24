@@ -2,7 +2,7 @@ package hous.server.service.auth;
 
 import hous.server.common.util.JwtUtils;
 import hous.server.domain.user.User;
-import hous.server.domain.user.repository.UserRepository;
+import hous.server.domain.user.mysql.UserRepository;
 import hous.server.service.user.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

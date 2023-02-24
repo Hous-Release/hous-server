@@ -4,7 +4,7 @@ import hous.server.common.exception.UnAuthorizedException;
 import hous.server.common.util.JwtUtils;
 import hous.server.domain.common.RedisKey;
 import hous.server.domain.user.User;
-import hous.server.domain.user.repository.UserRepository;
+import hous.server.domain.user.mysql.UserRepository;
 import hous.server.service.auth.dto.request.TokenRequestDto;
 import hous.server.service.auth.dto.response.RefreshResponse;
 import hous.server.service.auth.dto.response.TokenResponse;

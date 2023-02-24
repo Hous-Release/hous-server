@@ -2,8 +2,8 @@ package hous.server.service.badge;
 
 import hous.server.domain.badge.Acquire;
 import hous.server.domain.badge.BadgeInfo;
-import hous.server.domain.badge.repository.AcquireRepository;
-import hous.server.domain.badge.repository.BadgeRepository;
+import hous.server.domain.badge.mysql.AcquireRepository;
+import hous.server.domain.badge.mysql.BadgeRepository;
 import hous.server.domain.user.User;
 import hous.server.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;

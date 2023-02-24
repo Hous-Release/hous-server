@@ -1,15 +1,15 @@
 package hous.server.service.rule;
 
 import hous.server.domain.badge.BadgeInfo;
-import hous.server.domain.badge.repository.AcquireRepository;
-import hous.server.domain.badge.repository.BadgeRepository;
+import hous.server.domain.badge.mysql.AcquireRepository;
+import hous.server.domain.badge.mysql.BadgeRepository;
 import hous.server.domain.common.RedisKey;
 import hous.server.domain.room.Room;
 import hous.server.domain.rule.Rule;
-import hous.server.domain.rule.repository.RuleRepository;
+import hous.server.domain.rule.mysql.RuleRepository;
 import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.User;
-import hous.server.domain.user.repository.UserRepository;
+import hous.server.domain.user.mysql.UserRepository;
 import hous.server.service.badge.BadgeService;
 import hous.server.service.badge.BadgeServiceUtils;
 import hous.server.service.notification.NotificationService;

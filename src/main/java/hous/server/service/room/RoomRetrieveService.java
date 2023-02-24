@@ -2,9 +2,9 @@ package hous.server.service.room;
 
 import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
-import hous.server.domain.room.repository.RoomRepository;
+import hous.server.domain.room.mysql.RoomRepository;
 import hous.server.domain.user.User;
-import hous.server.domain.user.repository.UserRepository;
+import hous.server.domain.user.mysql.UserRepository;
 import hous.server.service.room.dto.response.GetRoomInfoResponse;
 import hous.server.service.room.dto.response.GetRoomResponse;
 import hous.server.service.user.UserServiceUtils;

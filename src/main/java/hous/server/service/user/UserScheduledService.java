@@ -3,7 +3,7 @@ package hous.server.service.user;
 import hous.server.common.util.DateUtils;
 import hous.server.domain.badge.BadgeInfo;
 import hous.server.domain.user.User;
-import hous.server.domain.user.repository.UserRepository;
+import hous.server.domain.user.mysql.UserRepository;
 import hous.server.service.badge.BadgeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;

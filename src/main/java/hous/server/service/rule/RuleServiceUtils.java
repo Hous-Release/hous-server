@@ -7,7 +7,7 @@ import hous.server.common.exception.ValidationException;
 import hous.server.domain.common.Constraint;
 import hous.server.domain.room.Room;
 import hous.server.domain.rule.Rule;
-import hous.server.domain.rule.repository.RuleRepository;
+import hous.server.domain.rule.mysql.RuleRepository;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
