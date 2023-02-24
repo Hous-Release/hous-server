@@ -1,4 +1,4 @@
-package hous.server.common.aspect;
+package hous.server.common.aspect.duplicate;
 
 import hous.server.common.exception.ConflictException;
 import hous.server.domain.common.RedisKey;
@@ -19,7 +19,7 @@ public class RequestAspect {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    @Before("@annotation(hous.server.common.aspect.PreventDuplicateRequest)")
+    @Before("@annotation(hous.server.common.aspect.duplicate.PreventDuplicateRequest)")
     public void beforeRequest(final JoinPoint joinPoint) {
         Long userId = (Long) joinPoint.getArgs()[0];
         if (redisTemplate.opsForValue().get(RedisKey.DUPLICATE_REQUEST + userId) != null) {
@@ -29,7 +29,7 @@ public class RequestAspect {
         redisTemplate.opsForValue().set(RedisKey.DUPLICATE_REQUEST + userId, Long.toString(userId));
     }
 
-    @After("@annotation(hous.server.common.aspect.PreventDuplicateRequest)")
+    @After("@annotation(hous.server.common.aspect.duplicate.PreventDuplicateRequest)")
     public void afterReturningRequest(final JoinPoint joinPoint) {
         Long userId = (Long) joinPoint.getArgs()[0];
         redisTemplate.opsForValue().getAndDelete(RedisKey.DUPLICATE_REQUEST + userId);

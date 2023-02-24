@@ -11,6 +11,7 @@ import hous.server.domain.rule.repository.RuleRepository;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,7 @@ public class RuleServiceUtils {
     }
 
     public static void validateRuleCounts(Room room, int requestRuleCnt) {
-        if (room.getRulesCnt() + requestRuleCnt > Constraint.RULE_COUNT_MAX) {
+        if (room.getRules().size() + requestRuleCnt > Constraint.RULE_COUNT_MAX) {
             throw new ForbiddenException(String.format("방 (%s) 의 rule 는 30 개를 초과할 수 없습니다.", room.getId()), FORBIDDEN_RULE_COUNT_EXCEPTION);
         }
     }
@@ -53,8 +54,15 @@ public class RuleServiceUtils {
         List<String> rules = room.getRules().stream().map(Rule::getName).collect(Collectors.toList());
         for (String ruleName : requestRules) {
             if (rules.contains(ruleName)) {
-                throw new ConflictException(String.format("방 (%s) 에 이미 존재하는 todo (%s) 입니다.", room.getId(), ruleName), CONFLICT_RULE_EXCEPTION);
+                throw new ConflictException(String.format("방 (%s) 에 이미 존재하는 ruleName (%s) 입니다.", room.getId(), ruleName), CONFLICT_RULE_EXCEPTION);
+
             }
+        }
+    }
+
+    public static void existsRuleByRules(List<String> requestRules) {
+        if (requestRules.size() != new HashSet<>(requestRules).size()) {
+            throw new ConflictException("규칙 이름 중복입니다.", CONFLICT_RULE_EXCEPTION);
         }
     }
 }

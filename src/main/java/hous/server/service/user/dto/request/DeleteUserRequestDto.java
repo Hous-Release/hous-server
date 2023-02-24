@@ -12,6 +12,7 @@ import javax.validation.constraints.Size;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 public class DeleteUserRequestDto {
 
     @ApiModelProperty(value = "사유", example = "DONE_LIVING_TOGETHER")
@@ -22,4 +23,11 @@ public class DeleteUserRequestDto {
     @Size(max = Constraint.FEEDBACK_COMMENT_MAX, message = "{user.comment.max}")
     @NotNull(message = "{user.comment.notNull}")
     private String comment;
+
+    public static DeleteUserRequestDto of(FeedbackType feedbackType, String comment) {
+        return DeleteUserRequestDto.builder()
+                .feedbackType(feedbackType)
+                .comment(comment)
+                .build();
+    }
 }

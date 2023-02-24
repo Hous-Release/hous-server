@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import hous.server.domain.common.Constraint;
 import hous.server.domain.todo.DayOfWeek;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -19,6 +16,8 @@ import java.util.List;
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 public class TodoInfoRequestDto {
 
     @ApiModelProperty(value = "todo 이름", example = "청소기 돌리기")
@@ -37,6 +36,8 @@ public class TodoInfoRequestDto {
     @ToString
     @Getter
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @Builder
     public static class TodoUser {
 
         @ApiModelProperty(value = "담당자 id", example = "1")
@@ -50,5 +51,13 @@ public class TodoInfoRequestDto {
     @JsonProperty("isPushNotification")
     public Boolean isPushNotification() {
         return isPushNotification;
+    }
+
+    public static TodoInfoRequestDto of(String name, Boolean isPushNotification, List<TodoUser> todoUsers) {
+        return TodoInfoRequestDto.builder()
+                .name(name)
+                .isPushNotification(isPushNotification)
+                .todoUsers(todoUsers)
+                .build();
     }
 }

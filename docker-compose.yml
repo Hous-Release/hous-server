@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+
+ mysql:
+  image: mysql/mysql-server:5.7
+  environment:
+   MYSQL_ROOT_HOST: '%'
+   MYSQL_USER: "hous"
+   MYSQL_PASSWORD: "hous"
+   MYSQL_DATABASE: "hous"
+  ports:
+   - "3306:3306"
+  command:
+   - "mysqld"
+   - "--character-set-server=utf8mb4"
+   - "--collation-server=utf8mb4_unicode_ci"
+
+ redis:
+  image: redis:alpine
+  command: redis-server --port 6379
+  container_name: redis_boot
+  hostname: redis_boot
+  labels:
+   - "name=redis"
+   - "mode=standalone"
+  ports:
+   - 6379:6379
