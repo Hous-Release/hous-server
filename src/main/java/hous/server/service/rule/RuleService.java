@@ -78,7 +78,7 @@ public class RuleService {
     public void updateRules(UpdateRuleRequestDto request, Long userId) {
         User user = UserServiceUtils.findUserById(userRepository, userId);
         Room room = RoomServiceUtils.findParticipatingRoom(user);
-        RuleServiceUtils.existsRuleByRoomRules(room, request.getRules().stream().map(RuleInfo::getName).collect(Collectors.toList()));
+        RuleServiceUtils.existsRuleByRules(request.getRules().stream().map(RuleInfo::getName).collect(Collectors.toList()));
         for (int idx = 0; idx < request.getRules().size(); idx++) {
             Rule rule = RuleServiceUtils.findRuleByIdAndRoom(ruleRepository, request.getRules().get(idx).getId(), room);
             RuleServiceUtils.validateRuleName(room, request.getRules().get(idx).getName());
