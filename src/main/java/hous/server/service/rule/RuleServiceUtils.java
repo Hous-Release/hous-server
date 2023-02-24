@@ -54,7 +54,8 @@ public class RuleServiceUtils {
         List<String> rules = room.getRules().stream().map(Rule::getName).collect(Collectors.toList());
         for (String ruleName : requestRules) {
             if (rules.contains(ruleName)) {
-                throw new ConflictException(String.format("방 (%s) 에 이미 존재하는 규칙 (%s) 입니다.", room.getId(), ruleName), CONFLICT_RULE_EXCEPTION);
+                throw new ConflictException(String.format("방 (%s) 에 이미 존재하는 ruleName (%s) 입니다.", room.getId(), ruleName), CONFLICT_RULE_EXCEPTION);
+
             }
         }
     }
