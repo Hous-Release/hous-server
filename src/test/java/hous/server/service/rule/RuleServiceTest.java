@@ -129,7 +129,7 @@ public class RuleServiceTest {
 
     @Test
     @DisplayName("이미 존재하는 rule 과 같은 이름을 가진 rule 추가할 경우 409 예외 발생")
-    public void create_duplicate_rule_name_throw_by_conflit_exception() {
+    public void create_duplicate_rule_name_throw_by_conflict_exception() {
         // given
         CreateUserRequestDto createUserRequestDto1 = CreateUserRequestDto.of(
                 "socialId1", UserSocialType.KAKAO, "fcmToken1", "nickname1", "2022-01-01", true);
@@ -152,7 +152,7 @@ public class RuleServiceTest {
     }
 
     @Test
-    @DisplayName("rule 1게 삭제 테스트")
+    @DisplayName("rule 1개 삭제 테스트")
     public void delete_rule_test() {
         // given
         CreateUserRequestDto createUserRequestDto1 = CreateUserRequestDto.of(
@@ -175,7 +175,7 @@ public class RuleServiceTest {
     }
 
     @Test
-    @DisplayName("rule 여러게 삭제 테스트")
+    @DisplayName("rule 여러개 삭제 테스트")
     public void delete_rules_test() {
         // given
         CreateUserRequestDto createUserRequestDto1 = CreateUserRequestDto.of(
