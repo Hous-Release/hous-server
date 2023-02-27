@@ -2,7 +2,7 @@ package hous.server.config.interceptor.version;
 
 import hous.server.common.exception.UpgradeRequiredException;
 import hous.server.domain.deploy.Deploy;
-import hous.server.domain.deploy.repository.DeployRepository;
+import hous.server.domain.deploy.mysql.DeployRepository;
 import hous.server.service.version.VersionServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
