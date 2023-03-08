@@ -6,6 +6,8 @@ import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventLis
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @RequiredArgsConstructor
 @Component
 public class NotificationListener extends AbstractMongoEventListener<NotificationMongo> {
@@ -14,6 +16,11 @@ public class NotificationListener extends AbstractMongoEventListener<Notificatio
 
     @Override
     public void onBeforeConvert(BeforeConvertEvent<NotificationMongo> event) {
-        event.getSource().setId(generatorService.generateSequence(NotificationMongo.SEQUENCE_NAME));
+        if (event.getSource().getId() == null) {
+            event.getSource().setId(generatorService.generateSequence(NotificationMongo.SEQUENCE_NAME));
+        }
+        if (event.getSource().getCreatedAt() == null) {
+            event.getSource().setCreatedAt(LocalDateTime.now());
+        }
     }
 }
