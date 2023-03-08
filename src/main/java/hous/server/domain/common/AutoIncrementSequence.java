@@ -14,6 +14,6 @@ public class AutoIncrementSequence {
     @Id
     private String id;
 
-    @Field
+    @Field(name = "sequence")
     private Long sequence;
 }

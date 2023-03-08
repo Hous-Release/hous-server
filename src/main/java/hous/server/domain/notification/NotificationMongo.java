@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Getter
-@Document
+@Document(collection = "notification_mongo")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
@@ -21,16 +21,16 @@ public class NotificationMongo extends AuditingTimeEntity {
     @Setter
     private Long id;
 
-    @Field
+    @Field(name = "onboarding_id")
     private Long onboardingId;
 
-    @Field
+    @Field(name = "type")
     private NotificationType type;
 
-    @Field
+    @Field(name = "content")
     private String content;
 
-    @Field
+    @Field(name = "is_read")
     private boolean isRead;
 
     public static NotificationMongo newInstance(Long onboardingId, NotificationType type, String content, boolean isRead) {

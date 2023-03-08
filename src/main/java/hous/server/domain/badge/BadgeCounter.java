@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Getter
-@Document
+@Document(collection = "badge_counter")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
@@ -21,16 +21,16 @@ public class BadgeCounter extends AuditingTimeEntity {
     @Setter
     private Long id;
 
-    @Field
+    @Field(name = "user_id")
     private Long userId;
 
-    @Field
+    @Field(name = "rule_create_count")
     private int ruleCreateCount;
 
-    @Field
+    @Field(name = "todo_complete_count")
     private int todoCompleteCount;
 
-    @Field
+    @Field(name = "test_score_complete_count")
     private int testScoreCompleteCount;
 
     public static BadgeCounter newInstance(Long userId) {
