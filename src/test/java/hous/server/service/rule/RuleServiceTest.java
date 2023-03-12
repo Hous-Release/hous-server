@@ -2,16 +2,9 @@ package hous.server.service.rule;
 
 import hous.server.common.exception.ConflictException;
 import hous.server.common.exception.NotFoundException;
-import hous.server.domain.badge.mysql.AcquireRepository;
-import hous.server.domain.notification.mysql.NotificationRepository;
-import hous.server.domain.room.mysql.ParticipateRepository;
-import hous.server.domain.room.mysql.RoomRepository;
 import hous.server.domain.rule.Rule;
 import hous.server.domain.rule.mysql.RuleRepository;
-import hous.server.domain.user.User;
 import hous.server.domain.user.UserSocialType;
-import hous.server.domain.user.mysql.OnboardingRepository;
-import hous.server.domain.user.mysql.UserRepository;
 import hous.server.service.room.RoomService;
 import hous.server.service.room.dto.request.SetRoomNameRequestDto;
 import hous.server.service.room.dto.response.RoomInfoResponse;
@@ -19,12 +12,12 @@ import hous.server.service.rule.dto.request.CreateRuleRequestDto;
 import hous.server.service.rule.dto.request.DeleteRuleReqeustDto;
 import hous.server.service.user.UserService;
 import hous.server.service.user.dto.request.CreateUserRequestDto;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -40,25 +33,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 public class RuleServiceTest {
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private OnboardingRepository onboardingRepository;
-
-    @Autowired
-    private RoomRepository roomRepository;
-
-    @Autowired
-    private ParticipateRepository participateRepository;
-
-    @Autowired
     private RuleRepository ruleRepository;
-
-    @Autowired
-    private AcquireRepository acquireRepository;
-
-    @Autowired
-    private NotificationRepository notificationRepository;
 
     @Autowired
     private UserService userService;
@@ -68,17 +43,6 @@ public class RuleServiceTest {
 
     @Autowired
     private RuleService ruleService;
-
-    @BeforeEach
-    public void reset() {
-        ruleRepository.deleteAllInBatch();
-        participateRepository.deleteAllInBatch();
-        acquireRepository.deleteAllInBatch();
-        roomRepository.deleteAllInBatch();
-        notificationRepository.deleteAllInBatch();
-        onboardingRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
-    }
 
     @Test
     @DisplayName("rule 동시에 2개 추가해도 성공")
@@ -91,8 +55,6 @@ public class RuleServiceTest {
                 "socialId2", UserSocialType.KAKAO, "fcmToken2", "nickname2", "2022-01-01", true);
         Long userId1 = userService.registerUser(createUserRequestDto1);
         Long userId2 = userService.registerUser(createUserRequestDto2);
-        User user1 = userRepository.findUserById(userId1);
-        User user2 = userRepository.findUserById(userId2);
 
         SetRoomNameRequestDto setRoomNameRequestDto = SetRoomNameRequestDto.of("room1");
         RoomInfoResponse roomInfoResponse = roomService.createRoom(setRoomNameRequestDto, userId1);
@@ -129,6 +91,7 @@ public class RuleServiceTest {
 
     @Test
     @DisplayName("이미 존재하는 rule 과 같은 이름을 가진 rule 추가할 경우 409 예외 발생")
+    @Transactional
     public void create_duplicate_rule_name_throw_by_conflict_exception() {
         // given
         CreateUserRequestDto createUserRequestDto1 = CreateUserRequestDto.of(
@@ -153,6 +116,7 @@ public class RuleServiceTest {
 
     @Test
     @DisplayName("rule 1개 삭제 테스트")
+    @Transactional
     public void delete_rule_success() {
         // given
         CreateUserRequestDto createUserRequestDto1 = CreateUserRequestDto.of(
@@ -176,6 +140,7 @@ public class RuleServiceTest {
 
     @Test
     @DisplayName("rule 여러개 삭제 테스트")
+    @Transactional
     public void delete_rules_success() {
         // given
         CreateUserRequestDto createUserRequestDto1 = CreateUserRequestDto.of(
@@ -199,6 +164,7 @@ public class RuleServiceTest {
 
     @Test
     @DisplayName("rule 삭제 시 존재하지 않는 rule_id일 경우 404 예외 발생")
+    @Transactional
     public void delete_rules_throw_by_not_found_exception() {
         // given
         CreateUserRequestDto createUserRequestDto1 = CreateUserRequestDto.of(

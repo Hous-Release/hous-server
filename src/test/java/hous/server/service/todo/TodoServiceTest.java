@@ -2,11 +2,6 @@ package hous.server.service.todo;
 
 import hous.server.common.exception.ConflictException;
 import hous.server.common.exception.NotFoundException;
-import hous.server.domain.badge.mysql.AcquireRepository;
-import hous.server.domain.notification.mysql.NotificationRepository;
-import hous.server.domain.room.mysql.ParticipateRepository;
-import hous.server.domain.room.mysql.RoomRepository;
-import hous.server.domain.rule.mysql.RuleRepository;
 import hous.server.domain.todo.DayOfWeek;
 import hous.server.domain.todo.Redo;
 import hous.server.domain.todo.Take;
@@ -16,7 +11,6 @@ import hous.server.domain.todo.mysql.TakeRepository;
 import hous.server.domain.todo.mysql.TodoRepository;
 import hous.server.domain.user.User;
 import hous.server.domain.user.UserSocialType;
-import hous.server.domain.user.mysql.OnboardingRepository;
 import hous.server.domain.user.mysql.UserRepository;
 import hous.server.service.room.RoomService;
 import hous.server.service.room.dto.request.SetRoomNameRequestDto;
@@ -24,12 +18,12 @@ import hous.server.service.room.dto.response.RoomInfoResponse;
 import hous.server.service.todo.dto.request.TodoInfoRequestDto;
 import hous.server.service.user.UserService;
 import hous.server.service.user.dto.request.CreateUserRequestDto;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -47,15 +41,6 @@ public class TodoServiceTest {
     private UserRepository userRepository;
 
     @Autowired
-    private OnboardingRepository onboardingRepository;
-
-    @Autowired
-    private RoomRepository roomRepository;
-
-    @Autowired
-    private ParticipateRepository participateRepository;
-
-    @Autowired
     private RedoRepository redoRepository;
 
     @Autowired
@@ -65,15 +50,6 @@ public class TodoServiceTest {
     private TodoRepository todoRepository;
 
     @Autowired
-    private AcquireRepository acquireRepository;
-
-    @Autowired
-    private NotificationRepository notificationRepository;
-
-    @Autowired
-    private RuleRepository ruleRepository;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
@@ -81,20 +57,6 @@ public class TodoServiceTest {
 
     @Autowired
     private TodoService todoService;
-
-    @BeforeEach
-    public void reset() {
-        redoRepository.deleteAllInBatch();
-        takeRepository.deleteAllInBatch();
-        todoRepository.deleteAllInBatch();
-        participateRepository.deleteAllInBatch();
-        acquireRepository.deleteAllInBatch();
-        ruleRepository.deleteAllInBatch();
-        roomRepository.deleteAllInBatch();
-        notificationRepository.deleteAllInBatch();
-        onboardingRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
-    }
 
     @Test
     @DisplayName("todo 동시에 2개 추가해도 성공")
@@ -161,6 +123,7 @@ public class TodoServiceTest {
 
     @Test
     @DisplayName("이미 존재하는 rule 과 같은 이름을 가진 rule 추가할 경우 409 예외 발생")
+    @Transactional
     public void create_duplicate_rule_name_throw_by_conflict_exception() {
         // given
         CreateUserRequestDto createUserRequestDto = CreateUserRequestDto.of(
@@ -194,6 +157,7 @@ public class TodoServiceTest {
 
     @Test
     @DisplayName("todo 삭제 성공")
+    @Transactional
     public void delete_todo_success() {
         // given
         CreateUserRequestDto createUserRequestDto = CreateUserRequestDto.of(
@@ -227,6 +191,7 @@ public class TodoServiceTest {
 
     @Test
     @DisplayName("todo 삭제 시 존재하지 않는 todo_id인 경우 404 예외 발생")
+    @Transactional
     public void delete_rules_throw_by_not_found_exception() {
         // given
         CreateUserRequestDto createUserRequestDto = CreateUserRequestDto.of(

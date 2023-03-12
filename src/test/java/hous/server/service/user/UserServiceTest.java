@@ -1,31 +1,19 @@
 package hous.server.service.user;
 
-import hous.server.domain.badge.mysql.AcquireRepository;
-import hous.server.domain.badge.mysql.RepresentRepository;
 import hous.server.domain.feedback.FeedbackType;
-import hous.server.domain.notification.mysql.NotificationRepository;
-import hous.server.domain.personality.mysql.PersonalityRepository;
 import hous.server.domain.room.Room;
-import hous.server.domain.room.mysql.ParticipateRepository;
 import hous.server.domain.room.mysql.RoomRepository;
-import hous.server.domain.rule.mysql.RuleRepository;
-import hous.server.domain.todo.mysql.RedoRepository;
-import hous.server.domain.todo.mysql.TakeRepository;
-import hous.server.domain.todo.mysql.TodoRepository;
 import hous.server.domain.user.User;
 import hous.server.domain.user.UserSocialType;
-import hous.server.domain.user.mysql.OnboardingRepository;
-import hous.server.domain.user.mysql.TestScoreRepository;
 import hous.server.domain.user.mysql.UserRepository;
-import hous.server.service.room.RoomService;
 import hous.server.service.user.dto.request.CreateUserRequestDto;
 import hous.server.service.user.dto.request.DeleteUserRequestDto;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -33,68 +21,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles(value = "local")
+@Transactional
 public class UserServiceTest {
 
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
-    private OnboardingRepository onboardingRepository;
-
-    @Autowired
     private RoomRepository roomRepository;
 
     @Autowired
-    private ParticipateRepository participateRepository;
-
-    @Autowired
-    private RedoRepository redoRepository;
-
-    @Autowired
-    private TakeRepository takeRepository;
-
-    @Autowired
-    private TodoRepository todoRepository;
-
-    @Autowired
-    private AcquireRepository acquireRepository;
-
-    @Autowired
-    private NotificationRepository notificationRepository;
-
-    @Autowired
-    private RepresentRepository representRepository;
-
-    @Autowired
-    private TestScoreRepository testScoreRepository;
-
-    @Autowired
-    private PersonalityRepository personalityRepository;
-
-    @Autowired
-    private RuleRepository ruleRepository;
-
-    @Autowired
     private UserService userService;
-
-    @Autowired
-    private RoomService roomService;
-
-    @BeforeEach
-    public void reset() {
-        redoRepository.deleteAllInBatch();
-        takeRepository.deleteAllInBatch();
-        todoRepository.deleteAllInBatch();
-        participateRepository.deleteAllInBatch();
-        acquireRepository.deleteAllInBatch();
-        ruleRepository.deleteAllInBatch();
-        representRepository.deleteAllInBatch();
-        testScoreRepository.deleteAllInBatch();
-        roomRepository.deleteAllInBatch();
-        notificationRepository.deleteAllInBatch();
-        onboardingRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
-    }
 
     // 정책상 방에 들어가지 않을 경우에만 사용자 삭제가 가능
     @Test
