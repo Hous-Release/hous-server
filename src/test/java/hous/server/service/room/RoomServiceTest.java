@@ -1,16 +1,13 @@
 package hous.server.service.room;
 
 import hous.server.domain.badge.Represent;
-import hous.server.domain.badge.mysql.AcquireRepository;
 import hous.server.domain.badge.mysql.RepresentRepository;
-import hous.server.domain.notification.mysql.NotificationRepository;
 import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.personality.mysql.PersonalityRepository;
 import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
 import hous.server.domain.room.mysql.ParticipateRepository;
 import hous.server.domain.room.mysql.RoomRepository;
-import hous.server.domain.rule.mysql.RuleRepository;
 import hous.server.domain.todo.DayOfWeek;
 import hous.server.domain.todo.Redo;
 import hous.server.domain.todo.Take;
@@ -30,20 +27,20 @@ import hous.server.service.todo.TodoService;
 import hous.server.service.todo.dto.request.TodoInfoRequestDto;
 import hous.server.service.user.UserService;
 import hous.server.service.user.dto.request.CreateUserRequestDto;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles(value = "local")
+@Transactional
 public class RoomServiceTest {
 
     @Autowired
@@ -68,12 +65,6 @@ public class RoomServiceTest {
     private TodoRepository todoRepository;
 
     @Autowired
-    private AcquireRepository acquireRepository;
-
-    @Autowired
-    private NotificationRepository notificationRepository;
-
-    @Autowired
     private RepresentRepository representRepository;
 
     @Autowired
@@ -81,9 +72,6 @@ public class RoomServiceTest {
 
     @Autowired
     private PersonalityRepository personalityRepository;
-
-    @Autowired
-    private RuleRepository ruleRepository;
 
     @Autowired
     private UserService userService;
@@ -94,25 +82,8 @@ public class RoomServiceTest {
     @Autowired
     private TodoService todoService;
 
-    @BeforeEach
-    public void reset() {
-        redoRepository.deleteAllInBatch();
-        takeRepository.deleteAllInBatch();
-        todoRepository.deleteAllInBatch();
-        participateRepository.deleteAllInBatch();
-        acquireRepository.deleteAllInBatch();
-        ruleRepository.deleteAllInBatch();
-        representRepository.deleteAllInBatch();
-        testScoreRepository.deleteAllInBatch();
-        roomRepository.deleteAllInBatch();
-        notificationRepository.deleteAllInBatch();
-        onboardingRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
-    }
-
     @Test
     @DisplayName("방에 들어가자마자 나가기 성공")
-    @Transactional
     public void leave_room_success() {
         // given
         CreateUserRequestDto createUserRequestDto = CreateUserRequestDto.of(
@@ -165,7 +136,6 @@ public class RoomServiceTest {
 
     @Test
     @DisplayName("방에 여러명 참여할 때 주인이 아닌 사람이 나가기 성공")
-    @Transactional
     public void leave_room_by_participate_success() {
         // given
         CreateUserRequestDto createUserRequestDto1 = CreateUserRequestDto.of(
@@ -231,7 +201,6 @@ public class RoomServiceTest {
 
     @Test
     @DisplayName("방에 여러명 참여할 때 주인이 나가기 성공 후 owner 넘겨주기 성공")
-    @Transactional
     public void leave_room_by_owner_success() {
         // given
         CreateUserRequestDto createUserRequestDto1 = CreateUserRequestDto.of(

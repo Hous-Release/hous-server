@@ -28,70 +28,13 @@ services:
   ports:
    - 6379:6379
 
- mongo1:
+ mongodb:
   image: mongo:latest
-  hostname: mongo1
-  container_name: mongo1
+  hostname: mongodb
+  container_name: mongodb
   restart: always
   environment:
    MONGO_INITDB_ROOT_USERNAME: hous
    MONGO_INITDB_ROOT_PASSWORD: hous
   ports:
    - 27017:27017
-  volumes:
-   - /host_mnt/Users/orijoon98/data/db/replica/mongo1:/data/db
-   - /host_mnt/Users/orijoon98/Key/mongodb.key:/etc/mongodb.key
-  command:
-   - '--replSet'
-   - 'myReplicaSet'
-   - '--keyFile'
-   - '/etc/mongodb.key'
-   - '--bind_ip_all'
-
- mongo2:
-  image: mongo:latest
-  hostname: mongo2
-  container_name: mongo2
-  restart: always
-  environment:
-   MONGO_INITDB_ROOT_USERNAME: hous
-   MONGO_INITDB_ROOT_PASSWORD: hous
-  depends_on:
-   - mongo1
-  ports:
-   - 27018:27017
-  volumes:
-   - /host_mnt/Users/orijoon98/data/db/replica/mongo2:/data/db
-   - /host_mnt/Users/orijoon98/Key/mongodb.key:/etc/mongodb.key
-  command:
-   - '--replSet'
-   - 'myReplicaSet'
-   - '--keyFile'
-   - '/etc/mongodb.key'
-   - '--bind_ip_all'
-
- mongo3:
-  image: mongo:latest
-  hostname: mongo3
-  container_name: mongo3
-  restart: always
-  environment:
-   MONGO_INITDB_ROOT_USERNAME: hous
-   MONGO_INITDB_ROOT_PASSWORD: hous
-  depends_on:
-   - mongo2
-  ports:
-   - 27019:27017
-  volumes:
-   - /host_mnt/Users/orijoon98/data/db/replica/mongo3:/data/db
-   - /host_mnt/Users/orijoon98/Key/mongodb.key:/etc/mongodb.key
-  command:
-   - '--replSet'
-   - 'myReplicaSet'
-   - '--keyFile'
-   - '/etc/mongodb.key'
-   - '--bind_ip_all'
-
-networks:
- mongoCluster:
-  driver: bridge

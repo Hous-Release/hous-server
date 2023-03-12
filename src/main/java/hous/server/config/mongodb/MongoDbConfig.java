@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
-import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.data.mongodb.core.convert.DbRefResolver;
 import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
@@ -16,11 +15,6 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 public class MongoDbConfig {
 
     private final MongoMappingContext mongoMappingContext;
-
-    @Bean
-    public MongoTransactionManager transactionManager(MongoDatabaseFactory databaseFactory) {
-        return new MongoTransactionManager(databaseFactory);
-    }
 
     @Bean
     public MappingMongoConverter mappingMongoConverter(MongoDatabaseFactory mongoDatabaseFactory, MongoMappingContext mongoMappingContext) {
