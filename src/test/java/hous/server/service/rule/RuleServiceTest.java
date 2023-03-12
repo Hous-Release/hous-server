@@ -153,7 +153,7 @@ public class RuleServiceTest {
 
     @Test
     @DisplayName("rule 1개 삭제 테스트")
-    public void delete_rule_test() {
+    public void delete_rule_success() {
         // given
         CreateUserRequestDto createUserRequestDto1 = CreateUserRequestDto.of(
                 "socialId1", UserSocialType.KAKAO, "fcmToken1", "nickname1", "2022-01-01", true);
@@ -176,7 +176,7 @@ public class RuleServiceTest {
 
     @Test
     @DisplayName("rule 여러개 삭제 테스트")
-    public void delete_rules_test() {
+    public void delete_rules_success() {
         // given
         CreateUserRequestDto createUserRequestDto1 = CreateUserRequestDto.of(
                 "socialId1", UserSocialType.KAKAO, "fcmToken1", "nickname1", "2022-01-01", true);
@@ -199,7 +199,7 @@ public class RuleServiceTest {
 
     @Test
     @DisplayName("rule 삭제 시 존재하지 않는 rule_id일 경우 404 예외 발생")
-    public void delete_rules_test_throw_by_notfound_exception() {
+    public void delete_rules_throw_by_not_found_exception() {
         // given
         CreateUserRequestDto createUserRequestDto1 = CreateUserRequestDto.of(
                 "socialId1", UserSocialType.KAKAO, "fcmToken1", "nickname1", "2022-01-01", true);

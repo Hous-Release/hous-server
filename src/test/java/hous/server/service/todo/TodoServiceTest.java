@@ -194,7 +194,7 @@ public class TodoServiceTest {
 
     @Test
     @DisplayName("todo 삭제 성공")
-    public void delete_todo() {
+    public void delete_todo_success() {
         // given
         CreateUserRequestDto createUserRequestDto = CreateUserRequestDto.of(
                 "socialId1", UserSocialType.KAKAO, "fcmToken1", "nickname1", "2022-01-01", true);
@@ -227,7 +227,7 @@ public class TodoServiceTest {
 
     @Test
     @DisplayName("todo 삭제 시 존재하지 않는 todo_id인 경우 404 예외 발생")
-    public void delete_rules_test_by_exception() {
+    public void delete_rules_throw_by_not_found_exception() {
         // given
         CreateUserRequestDto createUserRequestDto = CreateUserRequestDto.of(
                 "socialId1", UserSocialType.KAKAO, "fcmToken1", "nickname1", "2022-01-01", true);
