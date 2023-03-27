@@ -24,21 +24,21 @@ public class BadgeCounter extends AuditingTimeEntity {
     @Field(name = "user_id")
     private Long userId;
 
-    @Field(name = "rule_create_count")
-    private int ruleCreateCount;
+    @Field(name = "count_type")
+    private BadgeCounterType countType;
 
-    @Field(name = "todo_complete_count")
-    private int todoCompleteCount;
+    @Field(name = "count")
+    private int count;
 
-    @Field(name = "test_score_complete_count")
-    private int testScoreCompleteCount;
-
-    public static BadgeCounter newInstance(Long userId) {
+    public static BadgeCounter newInstance(Long userId, BadgeCounterType countType, int count) {
         return BadgeCounter.builder()
                 .userId(userId)
-                .ruleCreateCount(0)
-                .todoCompleteCount(0)
-                .testScoreCompleteCount(0)
+                .countType(countType)
+                .count(count)
                 .build();
+    }
+
+    public void updateCount(int count) {
+        this.count = count;
     }
 }
