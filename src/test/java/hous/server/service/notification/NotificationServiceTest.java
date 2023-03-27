@@ -3,7 +3,7 @@ package hous.server.service.notification;
 import hous.server.domain.badge.BadgeInfo;
 import hous.server.domain.notification.Notification;
 import hous.server.domain.notification.NotificationType;
-import hous.server.domain.notification.mysql.NotificationRepository;
+import hous.server.domain.notification.mongo.NotificationRepository;
 import hous.server.domain.room.Room;
 import hous.server.domain.rule.Rule;
 import hous.server.domain.todo.Todo;

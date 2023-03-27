@@ -1,9 +1,8 @@
 package hous.server.service.room;
 
 import hous.server.domain.badge.BadgeInfo;
-import hous.server.domain.badge.mysql.AcquireRepository;
 import hous.server.domain.badge.mysql.RepresentRepository;
-import hous.server.domain.notification.mysql.NotificationRepository;
+import hous.server.domain.notification.mongo.NotificationRepository;
 import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.personality.mysql.PersonalityRepository;
 import hous.server.domain.room.Participate;
@@ -41,11 +40,10 @@ public class RoomService {
     private final TodoRepository todoRepository;
     private final TakeRepository takeRepository;
     private final DoneRepository doneRepository;
-    private final AcquireRepository acquireRepository;
     private final RepresentRepository representRepository;
     private final TestScoreRepository testScoreRepository;
-    private final NotificationRepository notificationRepository;
     private final PersonalityRepository personalityRepository;
+    private final NotificationRepository notificationRepository;
 
     private final BadgeService badgeService;
 
@@ -102,7 +100,7 @@ public class RoomService {
         }
         me.resetUserInfo();
         me.resetBadge();
-        me.resetNotification();
+        notificationRepository.deleteAllByOnboarding(me);
     }
 
     public boolean existsParticipatingRoomByUserId(Long userId) {

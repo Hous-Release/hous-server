@@ -2,7 +2,7 @@ package hous.server.service.notification;
 
 import hous.server.domain.common.collection.ScrollPaginationCollection;
 import hous.server.domain.notification.Notification;
-import hous.server.domain.notification.mysql.NotificationRepository;
+import hous.server.domain.notification.mongo.NotificationRepository;
 import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.User;
 import hous.server.domain.user.mysql.UserRepository;

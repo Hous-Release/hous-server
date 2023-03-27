@@ -1,39 +1,41 @@
 package hous.server.domain.notification;
 
 import hous.server.domain.common.AuditingTimeEntity;
-import hous.server.domain.user.Onboarding;
 import lombok.*;
-
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Getter
-@Entity
+@Document(collection = "notification")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
 public class Notification extends AuditingTimeEntity {
 
+    @Transient
+    public static final String SEQUENCE_NAME = "notification_sequence";
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "onboarding_id")
-    private Onboarding onboarding;
+    @Field(name = "onboarding_id")
+    private Long onboardingId;
 
-    @Column(nullable = false, length = 30)
-    @Enumerated(EnumType.STRING)
+    @Field(name = "type")
     private NotificationType type;
 
-    @Column(nullable = false, length = 100)
+    @Field(name = "content")
     private String content;
 
-    @Column(nullable = false)
+    @Field(name = "is_read")
     private boolean isRead;
 
-    public static Notification newInstance(Onboarding onboarding, NotificationType type, String content, boolean isRead) {
+    public static Notification newInstance(Long onboardingId, NotificationType type, String content, boolean isRead) {
         return Notification.builder()
-                .onboarding(onboarding)
+                .onboardingId(onboardingId)
                 .type(type)
                 .content(content)
                 .isRead(isRead)

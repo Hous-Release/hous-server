@@ -10,14 +10,14 @@ import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Component
-public class NotificationListener extends AbstractMongoEventListener<NotificationMongo> {
+public class NotificationListener extends AbstractMongoEventListener<Notification> {
 
     private final SequenceGeneratorService generatorService;
 
     @Override
-    public void onBeforeConvert(BeforeConvertEvent<NotificationMongo> event) {
+    public void onBeforeConvert(BeforeConvertEvent<Notification> event) {
         if (event.getSource().getId() == null) {
-            event.getSource().setId(generatorService.generateSequence(NotificationMongo.SEQUENCE_NAME));
+            event.getSource().setId(generatorService.generateSequence(Notification.SEQUENCE_NAME));
         }
         if (event.getSource().getCreatedAt() == null) {
             event.getSource().setCreatedAt(LocalDateTime.now());

@@ -3,7 +3,6 @@ package hous.server.domain.user;
 import hous.server.domain.badge.Acquire;
 import hous.server.domain.badge.Represent;
 import hous.server.domain.common.AuditingTimeEntity;
-import hous.server.domain.notification.Notification;
 import hous.server.domain.personality.Personality;
 import hous.server.domain.room.Participate;
 import hous.server.service.user.dto.request.UpdateUserInfoRequestDto;
@@ -63,9 +62,6 @@ public class Onboarding extends AuditingTimeEntity implements Comparable<Onboard
     @OneToMany(mappedBy = "onboarding", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Acquire> acquires = new ArrayList<>();
 
-    @OneToMany(mappedBy = "onboarding", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Notification> notifications = new ArrayList<>();
-
     public static Onboarding newInstance(User user, Personality personality, String nickname, String birthday, boolean isPublic) {
         return Onboarding.builder()
                 .user(user)
@@ -90,10 +86,6 @@ public class Onboarding extends AuditingTimeEntity implements Comparable<Onboard
 
     public void addAcquire(Acquire acquire) {
         this.acquires.add(acquire);
-    }
-
-    public void addNotification(Notification notification) {
-        this.notifications.add(notification);
     }
 
     public void deleteParticipate(Participate participate) {
@@ -127,10 +119,6 @@ public class Onboarding extends AuditingTimeEntity implements Comparable<Onboard
     public void resetBadge() {
         this.represent = null;
         this.acquires.clear();
-    }
-
-    public void resetNotification() {
-        this.notifications.clear();
     }
 
     @Override
