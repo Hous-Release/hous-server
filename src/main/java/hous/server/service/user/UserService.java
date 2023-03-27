@@ -1,13 +1,11 @@
 package hous.server.service.user;
 
 import hous.server.common.util.JwtUtils;
-import hous.server.domain.badge.Badge;
-import hous.server.domain.badge.BadgeInfo;
-import hous.server.domain.badge.Represent;
+import hous.server.domain.badge.*;
+import hous.server.domain.badge.mongo.BadgeCounterRepository;
 import hous.server.domain.badge.mysql.AcquireRepository;
 import hous.server.domain.badge.mysql.BadgeRepository;
 import hous.server.domain.badge.mysql.RepresentRepository;
-import hous.server.domain.common.RedisKey;
 import hous.server.domain.feedback.Feedback;
 import hous.server.domain.feedback.mysql.FeedbackRepository;
 import hous.server.domain.personality.Personality;
@@ -63,6 +61,7 @@ public class UserService {
     private final RoomRepository roomRepository;
     private final ParticipateRepository participateRepository;
     private final FeedbackRepository feedbackRepository;
+    private final BadgeCounterRepository badgeCounterRepository;
 
     private final BadgeService badgeService;
 
@@ -117,20 +116,23 @@ public class UserService {
         testScore.updateTestScore(request.getLight(), request.getNoise(), request.getClean(), request.getSmell(), request.getIntroversion());
         Personality personality = UserServiceUtils.getPersonalityColorByTestScore(personalityRepository, testScore);
         me.updatePersonality(personality);
+
         badgeService.acquireBadge(user, BadgeInfo.I_AM_SUCH_A_PERSON);
         if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.I_DONT_EVEN_KNOW_ME, me)) {
-            String personalityTestCountString = (String) redisTemplate.opsForValue().get(RedisKey.PERSONALITY_TEST_COUNT + userId);
-            if (personalityTestCountString != null && Integer.parseInt(personalityTestCountString) >= 4) {
+            BadgeCounter testScoreComplete = badgeCounterRepository.findByUserIdAndCountType(userId, BadgeCounterType.TEST_SCORE_COMPLETE);
+            if (testScoreComplete != null && testScoreComplete.getCount() >= 4) {
                 badgeService.acquireBadge(user, BadgeInfo.I_DONT_EVEN_KNOW_ME);
-                redisTemplate.delete(RedisKey.PERSONALITY_TEST_COUNT + user.getId());
+                badgeCounterRepository.deleteBadgeCounterByUserIdAndCountType(userId, BadgeCounterType.TEST_SCORE_COMPLETE);
             } else {
-                if (personalityTestCountString == null) {
-                    redisTemplate.opsForValue().set(RedisKey.PERSONALITY_TEST_COUNT + user.getId(), Integer.toString(1));
+                if (testScoreComplete == null) {
+                    badgeCounterRepository.save(BadgeCounter.newInstance(userId, BadgeCounterType.TEST_SCORE_COMPLETE, 1));
                 } else {
-                    redisTemplate.opsForValue().set(RedisKey.PERSONALITY_TEST_COUNT + user.getId(), Integer.toString(Integer.parseInt(personalityTestCountString) + 1));
+                    testScoreComplete.updateCount(testScoreComplete.getCount() + 1);
+                    badgeCounterRepository.save(testScoreComplete);
                 }
             }
         }
+
         List<Participate> participates = room.getParticipates();
         int testCompleteCnt = (int) participates.stream()
                 .filter(participate -> participate.getOnboarding().getPersonality().getColor() != PersonalityColor.GRAY)
