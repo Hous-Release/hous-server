@@ -3,6 +3,7 @@ package hous.server.service.notification.dto.response;
 import hous.server.common.util.DateUtils;
 import hous.server.domain.common.collection.ScrollPaginationCollection;
 import hous.server.domain.notification.Notification;
+import hous.server.domain.notification.mongo.NotificationRepository;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,24 +30,24 @@ public class NotificationsInfoResponse {
         this.nextCursor = nextCursor;
     }
 
-    public static NotificationsInfoResponse of(ScrollPaginationCollection<Notification> notificationsScroll, long totalElements) {
+    public static NotificationsInfoResponse of(NotificationRepository notificationRepository, ScrollPaginationCollection<Notification> notificationsScroll, long totalElements) {
         if (notificationsScroll.isLastScroll()) {
-            return NotificationsInfoResponse.newLastScroll(notificationsScroll.getCurrentScrollItems(), totalElements);
+            return NotificationsInfoResponse.newLastScroll(notificationRepository, notificationsScroll.getCurrentScrollItems(), totalElements);
         }
-        return NotificationsInfoResponse.newScrollHasNext(notificationsScroll.getCurrentScrollItems(), totalElements, notificationsScroll.getNextCursor().getId());
+        return NotificationsInfoResponse.newScrollHasNext(notificationRepository, notificationsScroll.getCurrentScrollItems(), totalElements, notificationsScroll.getNextCursor().getId());
     }
 
-    private static NotificationsInfoResponse newLastScroll(List<Notification> notificationsScroll, long totalElements) {
-        return newScrollHasNext(notificationsScroll, totalElements, LAST_CURSOR);
+    private static NotificationsInfoResponse newLastScroll(NotificationRepository notificationRepository, List<Notification> notificationsScroll, long totalElements) {
+        return newScrollHasNext(notificationRepository, notificationsScroll, totalElements, LAST_CURSOR);
     }
 
-    private static NotificationsInfoResponse newScrollHasNext(List<Notification> notificationsScroll, long totalElements, long nextCursor) {
-        return new NotificationsInfoResponse(getContents(notificationsScroll, DateUtils.todayLocalDateTime()), totalElements, nextCursor);
+    private static NotificationsInfoResponse newScrollHasNext(NotificationRepository notificationRepository, List<Notification> notificationsScroll, long totalElements, long nextCursor) {
+        return new NotificationsInfoResponse(getContents(notificationRepository, notificationsScroll, DateUtils.todayLocalDateTime()), totalElements, nextCursor);
     }
 
-    private static List<NotificationInfo> getContents(List<Notification> notificationsScroll, LocalDateTime now) {
+    private static List<NotificationInfo> getContents(NotificationRepository notificationRepository, List<Notification> notificationsScroll, LocalDateTime now) {
         return notificationsScroll.stream()
-                .map(notification -> NotificationInfo.of(notification, now))
+                .map(notification -> NotificationInfo.of(notificationRepository, notification, now))
                 .collect(Collectors.toList());
     }
 }
