@@ -122,9 +122,9 @@ public class TodoServiceTest {
     }
 
     @Test
-    @DisplayName("이미 존재하는 rule 과 같은 이름을 가진 rule 추가할 경우 409 예외 발생")
+    @DisplayName("이미 존재하는 todo 와 같은 이름을 가진 todo 추가할 경우 409 예외 발생")
     @Transactional
-    public void create_duplicate_rule_name_throw_by_conflict_exception() {
+    public void create_duplicate_todo_name_throw_by_conflict_exception() {
         // given
         CreateUserRequestDto createUserRequestDto = CreateUserRequestDto.of(
                 "socialId1", UserSocialType.KAKAO, "fcmToken1", "nickname1", "2022-01-01", true);
