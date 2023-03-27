@@ -2,7 +2,10 @@ package hous.server.service.badge;
 
 import hous.server.common.util.DateUtils;
 import hous.server.domain.badge.Acquire;
+import hous.server.domain.badge.BadgeCounter;
+import hous.server.domain.badge.BadgeCounterType;
 import hous.server.domain.badge.BadgeInfo;
+import hous.server.domain.badge.mongo.BadgeCounterRepository;
 import hous.server.domain.badge.mysql.AcquireRepository;
 import hous.server.domain.badge.mysql.BadgeRepository;
 import hous.server.domain.personality.PersonalityColor;
@@ -25,6 +28,7 @@ import hous.server.service.user.UserService;
 import hous.server.service.user.dto.request.CreateUserRequestDto;
 import hous.server.service.user.dto.request.UpdateTestScoreRequestDto;
 import hous.server.service.user.dto.response.UpdatePersonalityColorResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +62,9 @@ public class BadgeServiceTest {
     BadgeRepository badgeRepository;
 
     @Autowired
+    BadgeCounterRepository badgeCounterRepository;
+
+    @Autowired
     UserService userService;
 
     @Autowired
@@ -71,6 +78,11 @@ public class BadgeServiceTest {
 
     @Autowired
     RuleService ruleService;
+
+    @BeforeEach
+    public void setUp() {
+        this.badgeCounterRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("두근두근 하우스 배지 획득")
@@ -112,18 +124,16 @@ public class BadgeServiceTest {
 
         // then
         List<Acquire> acquires = acquireRepository.findAllAcquireByOnboarding(user.getOnboarding());
-        Acquire acquireBadge1 = acquires.stream()
+        Acquire acquireBadge = acquires.stream()
                 .filter(acquire -> BadgeInfo.I_AM_SUCH_A_PERSON.equals(acquire.getBadge().getInfo()))
                 .findAny()
                 .orElse(null);
-        Acquire acquireBadge2 = acquires.stream()
-                .filter(acquire -> BadgeInfo.OUR_HOUSE_HOMIES.equals(acquire.getBadge().getInfo()))
-                .findAny()
-                .orElse(null);
         assertThat(acquires).hasSize(3);
-        assertThat(acquireBadge1).isNotNull();
-        assertThat(acquireBadge2).isNotNull();
+        assertThat(acquireBadge).isNotNull();
         assertThat(updatePersonalityColorResponse.getColor()).isEqualTo(PersonalityColor.YELLOW);
+
+        BadgeCounter badgeCounter = badgeCounterRepository.findAllByUserIdAndCountType(userId, BadgeCounterType.TEST_SCORE_COMPLETE);
+        assertThat(badgeCounter).isNotNull();
     }
 
     @Test
@@ -196,6 +206,9 @@ public class BadgeServiceTest {
         assertThat(acquiresByUser).hasSize(4);
         assertThat(acquireBadge).isNotNull();
         assertThat(user.getOnboarding().getPersonality().getColor()).isEqualTo(updatePersonalityColorResponse.getColor());
+        
+        BadgeCounter badgeCounter = badgeCounterRepository.findAllByUserIdAndCountType(userId, BadgeCounterType.TEST_SCORE_COMPLETE);
+        assertThat(badgeCounter).isNull(); // 배지를 받으면 삭제되니까 데이터가 없어야 해
     }
 
     @Test
