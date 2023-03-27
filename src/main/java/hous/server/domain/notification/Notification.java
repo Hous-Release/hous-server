@@ -4,8 +4,11 @@ import hous.server.domain.common.AuditingTimeEntity;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Document(collection = "notification")
@@ -33,12 +36,16 @@ public class Notification extends AuditingTimeEntity {
     @Field(name = "is_read")
     private boolean isRead;
 
+    @Indexed(name = "notification_ttl", expireAfterSeconds = 60 * 60 * 24 * 30)
+    private LocalDateTime expireAt;
+
     public static Notification newInstance(Long onboardingId, NotificationType type, String content, boolean isRead) {
         return Notification.builder()
                 .onboardingId(onboardingId)
                 .type(type)
                 .content(content)
                 .isRead(isRead)
+                .expireAt(LocalDateTime.now())
                 .build();
     }
 
