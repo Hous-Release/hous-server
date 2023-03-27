@@ -38,6 +38,6 @@ public class NotificationRepositoryImpl implements NotificationRepositoryCustom 
         Query query = new Query();
         query.addCriteria(Criteria.where("onboarding_id").is(onboarding.getId()));
 
-        mongoTemplate.findAndRemove(query, Notification.class);
+        mongoTemplate.remove(query, Notification.class);
     }
 }
