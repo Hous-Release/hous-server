@@ -11,6 +11,7 @@ import javax.validation.constraints.Min;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 public class UpdateTestScoreRequestDto {
 
     @ApiModelProperty(value = "빛", example = "4")
@@ -37,4 +38,14 @@ public class UpdateTestScoreRequestDto {
     @Min(value = Constraint.ONBOARDING_TESTSCORE_MIN, message = "{onboarding.testScore.size}")
     @Max(value = Constraint.ONBOARDING_TESTSCORE_MAX, message = "{onboarding.testScore.size}")
     private int introversion;
+
+    public static UpdateTestScoreRequestDto of (int light, int noise, int clean, int smell, int introversion) {
+        return UpdateTestScoreRequestDto.builder()
+                .light(light)
+                .noise(noise)
+                .clean(clean)
+                .smell(smell)
+                .introversion(introversion)
+                .build();
+    }
 }
