@@ -53,12 +53,29 @@ public class NotificationRetrieveServiceTest {
         NotificationsInfoResponse response2 = notificationRetrieveService.getNotificationsInfo(1, response1.getNextCursor(), userId);
         NotificationsInfoResponse response3 = notificationRetrieveService.getNotificationsInfo(1, response2.getNextCursor(), userId);
 
+        NotificationsInfoResponse response4 = notificationRetrieveService.getNotificationsInfo(1, Long.MAX_VALUE, userId);
+        NotificationsInfoResponse response5 = notificationRetrieveService.getNotificationsInfo(1, response4.getNextCursor(), userId);
+        NotificationsInfoResponse response6 = notificationRetrieveService.getNotificationsInfo(1, response5.getNextCursor(), userId);
+
         // then
         assertThat(response1.getContents()).hasSize(1);
+        assertThat(response1.getContents().get(0).isRead()).isFalse();
         assertThat(response1.getNextCursor()).isEqualTo(3);
         assertThat(response2.getContents()).hasSize(1);
+        assertThat(response2.getContents().get(0).isRead()).isFalse();
         assertThat(response2.getNextCursor()).isEqualTo(2);
         assertThat(response3.getContents()).hasSize(1);
+        assertThat(response3.getContents().get(0).isRead()).isFalse();
         assertThat(response3.getNextCursor()).isEqualTo(-1);
+
+        assertThat(response4.getContents()).hasSize(1);
+        assertThat(response4.getContents().get(0).isRead()).isTrue();
+        assertThat(response4.getNextCursor()).isEqualTo(3);
+        assertThat(response5.getContents()).hasSize(1);
+        assertThat(response5.getContents().get(0).isRead()).isTrue();
+        assertThat(response5.getNextCursor()).isEqualTo(2);
+        assertThat(response6.getContents()).hasSize(1);
+        assertThat(response6.getContents().get(0).isRead()).isTrue();
+        assertThat(response6.getNextCursor()).isEqualTo(-1);
     }
 }
