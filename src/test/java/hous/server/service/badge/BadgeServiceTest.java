@@ -100,7 +100,7 @@ public class BadgeServiceTest {
         // then
         List<Acquire> acquires = acquireRepository.findAllAcquireByOnboarding(user.getOnboarding());
         Acquire acquireBadge = acquires.stream()
-                .filter(acquire -> BadgeInfo.I_AM_SUCH_A_PERSON.equals(acquire.getBadge().getInfo()))
+                .filter(acquire -> BadgeInfo.POUNDING_HOUSE.equals(acquire.getBadge().getInfo()))
                 .findAny()
                 .orElse(null);
         assertThat(acquires).hasSize(1);
@@ -132,8 +132,9 @@ public class BadgeServiceTest {
         assertThat(acquireBadge).isNotNull();
         assertThat(updatePersonalityColorResponse.getColor()).isEqualTo(PersonalityColor.YELLOW);
 
-        BadgeCounter badgeCounter = badgeCounterRepository.findAllByUserIdAndCountType(userId, BadgeCounterType.TEST_SCORE_COMPLETE);
+        BadgeCounter badgeCounter = badgeCounterRepository.findByUserIdAndCountType(userId, BadgeCounterType.TEST_SCORE_COMPLETE);
         assertThat(badgeCounter).isNotNull();
+        assertThat(badgeCounter.getCount()).isEqualTo(1);
     }
 
     @Test
@@ -206,8 +207,8 @@ public class BadgeServiceTest {
         assertThat(acquiresByUser).hasSize(4);
         assertThat(acquireBadge).isNotNull();
         assertThat(user.getOnboarding().getPersonality().getColor()).isEqualTo(updatePersonalityColorResponse.getColor());
-        
-        BadgeCounter badgeCounter = badgeCounterRepository.findAllByUserIdAndCountType(userId, BadgeCounterType.TEST_SCORE_COMPLETE);
+
+        BadgeCounter badgeCounter = badgeCounterRepository.findByUserIdAndCountType(userId, BadgeCounterType.TEST_SCORE_COMPLETE);
         assertThat(badgeCounter).isNull(); // 배지를 받으면 삭제되니까 데이터가 없어야 해
     }
 
@@ -298,6 +299,10 @@ public class BadgeServiceTest {
                 .orElse(null);
         assertThat(acquiresByUser).hasSize(2);
         assertThat(acquireBadge).isNotNull();
+
+        BadgeCounter badgeCounter = badgeCounterRepository.findByUserIdAndCountType(userId, BadgeCounterType.RULE_CREATE);
+        assertThat(badgeCounter).isNotNull();
+        assertThat(badgeCounter.getCount()).isEqualTo(1);
     }
 
     @Test
@@ -328,6 +333,9 @@ public class BadgeServiceTest {
                 .orElse(null);
         assertThat(acquiresByUser).hasSize(3);
         assertThat(acquireBadge).isNotNull();
+
+        BadgeCounter badgeCounter = badgeCounterRepository.findByUserIdAndCountType(userId, BadgeCounterType.RULE_CREATE);
+        assertThat(badgeCounter).isNull(); // 배지를 받으면 삭제되니까 데이터가 없어야 해
     }
 
     @Test
