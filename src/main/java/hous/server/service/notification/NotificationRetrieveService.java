@@ -2,7 +2,7 @@ package hous.server.service.notification;
 
 import hous.server.domain.common.collection.ScrollPaginationCollection;
 import hous.server.domain.notification.Notification;
-import hous.server.domain.notification.mysql.NotificationRepository;
+import hous.server.domain.notification.mongo.NotificationRepository;
 import hous.server.domain.user.Onboarding;
 import hous.server.domain.user.User;
 import hous.server.domain.user.mysql.UserRepository;
@@ -28,6 +28,14 @@ public class NotificationRetrieveService {
         Onboarding me = user.getOnboarding();
         List<Notification> notifications = notificationRepository.findNotificationsByOnboardingAndCursor(me, lastNotificationId, size + 1);
         ScrollPaginationCollection<Notification> notificationsCursor = ScrollPaginationCollection.of(notifications, size);
-        return NotificationsInfoResponse.of(notificationsCursor, notificationRepository.countAllByOnboarding(me));
+        NotificationsInfoResponse response = NotificationsInfoResponse.of(notificationsCursor, notificationRepository.countAllByOnboarding(me));
+        List<Notification> readNotifications = notificationsCursor.getCurrentScrollItems();
+        readNotifications.stream()
+                .filter(notification -> !notification.isRead())
+                .forEach(notification -> {
+                    notification.updateIsRead();
+                    notificationRepository.save(notification);
+                });
+        return response;
     }
 }

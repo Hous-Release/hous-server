@@ -2,6 +2,7 @@ package hous.server.service.room;
 
 import hous.server.domain.badge.Represent;
 import hous.server.domain.badge.mysql.RepresentRepository;
+import hous.server.domain.notification.mongo.NotificationRepository;
 import hous.server.domain.personality.PersonalityColor;
 import hous.server.domain.personality.mysql.PersonalityRepository;
 import hous.server.domain.room.Participate;
@@ -74,6 +75,9 @@ public class RoomServiceTest {
     private PersonalityRepository personalityRepository;
 
     @Autowired
+    private NotificationRepository notificationRepository;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -132,6 +136,7 @@ public class RoomServiceTest {
         assertThat(onboarding.getIntroduction()).isNull();
         assertThat(onboarding.getTestScore()).isNull();
         assertThat(onboarding.getRepresent()).isNull();
+        assertThat(notificationRepository.countAllByOnboarding(onboarding)).isEqualTo(0);
     }
 
     @Test
@@ -197,6 +202,7 @@ public class RoomServiceTest {
         assertThat(onboarding.getIntroduction()).isNull();
         assertThat(onboarding.getTestScore()).isNull();
         assertThat(onboarding.getRepresent()).isNull();
+        assertThat(notificationRepository.countAllByOnboarding(onboarding)).isEqualTo(0);
     }
 
     @Test
@@ -262,5 +268,6 @@ public class RoomServiceTest {
         assertThat(onboarding.getIntroduction()).isNull();
         assertThat(onboarding.getTestScore()).isNull();
         assertThat(onboarding.getRepresent()).isNull();
+        assertThat(notificationRepository.countAllByOnboarding(onboarding)).isEqualTo(0);
     }
 }

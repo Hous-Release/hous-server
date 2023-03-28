@@ -5,7 +5,7 @@ import hous.server.domain.notification.Notification;
 import hous.server.domain.notification.NotificationMessage;
 import hous.server.domain.notification.NotificationType;
 import hous.server.domain.notification.PushMessage;
-import hous.server.domain.notification.mysql.NotificationRepository;
+import hous.server.domain.notification.mongo.NotificationRepository;
 import hous.server.domain.rule.Rule;
 import hous.server.domain.todo.Todo;
 import hous.server.domain.user.Onboarding;
@@ -28,8 +28,7 @@ public class NotificationService {
     private final FirebaseCloudMessageService firebaseCloudMessageService;
 
     public void sendNewTodoNotification(User to, Todo todo, boolean isTake) {
-        Notification notification = notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.TODO, newTodoNotification(todo, isTake), false));
-        to.getOnboarding().addNotification(notification);
+        notificationRepository.save(Notification.newInstance(to.getOnboarding().getId(), NotificationType.TODO, newTodoNotification(todo, isTake), false));
         if (todo.isPushNotification() && to.getSetting().isPushNotification() && to.getSetting().getNewTodoPushStatus() == TodoPushStatus.ON_ALL) {
             firebaseCloudMessageService.sendMessageTo(to, PushMessage.NEW_TODO.getTitle(), PushMessage.NEW_TODO.getBody());
         }
@@ -49,8 +48,7 @@ public class NotificationService {
 
     public void sendRemindTodoNotification(User to, List<Todo> todos, boolean isTake) {
         todos.forEach(todo -> {
-            Notification notification = notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.TODO, remindTodoNotification(todo), false));
-            to.getOnboarding().addNotification(notification);
+            notificationRepository.save(Notification.newInstance(to.getOnboarding().getId(), NotificationType.TODO, remindTodoNotification(todo), false));
         });
         if (to.getSetting().isPushNotification() && to.getSetting().getRemindTodoPushStatus() == TodoPushStatus.ON_ALL) {
             firebaseCloudMessageService.sendMessageTo(to, PushMessage.TODO_REMIND.getTitle(), PushMessage.TODO_REMIND.getBody());
@@ -62,8 +60,7 @@ public class NotificationService {
 
     public void sendNewRuleNotification(User to, List<Rule> rules) {
         rules.stream().forEach(rule -> {
-            Notification notification = notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.RULE, newRuleNotification(rule), false));
-            to.getOnboarding().addNotification(notification);
+            notificationRepository.save(Notification.newInstance(to.getOnboarding().getId(), NotificationType.RULE, newRuleNotification(rule), false));
         });
         if (to.getSetting().isPushNotification() && to.getSetting().getRulesPushStatus() == PushStatus.ON) {
             firebaseCloudMessageService.sendMessageTo(to, PushMessage.NEW_RULE.getTitle(), PushMessage.NEW_RULE.getBody());
@@ -71,8 +68,7 @@ public class NotificationService {
     }
 
     public void sendNewBadgeNotification(User to, BadgeInfo badgeInfo) {
-        Notification notification = notificationRepository.save(Notification.newInstance(to.getOnboarding(), NotificationType.BADGE, newBadgeNotification(badgeInfo), false));
-        to.getOnboarding().addNotification(notification);
+        notificationRepository.save(Notification.newInstance(to.getOnboarding().getId(), NotificationType.BADGE, newBadgeNotification(badgeInfo), false));
         if (to.getSetting().isPushNotification() && to.getSetting().getBadgePushStatus() == PushStatus.ON) {
             firebaseCloudMessageService.sendMessageTo(to, newBadgePushTitle(badgeInfo), newBadgePushBody(to.getOnboarding()));
         }

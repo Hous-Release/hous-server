@@ -34,7 +34,6 @@ public class NotificationInfo {
                 .isRead(notification.isRead())
                 .createdAt(DateUtils.passedTime(now, notification.getCreatedAt()))
                 .build();
-        notification.updateIsRead();
         return notificationInfo;
     }
 }
