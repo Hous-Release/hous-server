@@ -271,7 +271,7 @@ public class BadgeServiceTest {
         assertThat(acquireBadge).isNotNull();
     }
 
-    // TODO 참 잘했어요 배지 획득 테스트
+    // TODO 참 잘했어요 테스트
     // TODO 성실왕 호미 테스트
     // TODO todo-마스터 테스트
 
@@ -361,5 +361,74 @@ public class BadgeServiceTest {
                 .orElse(null);
         assertThat(acquiresByUser).hasSize(2);
         assertThat(acquireBadge).isNotNull();
+    }
+
+
+    @Test
+    @DisplayName("나도 날 모르겠어 배지 마획득 - 카운터 테스트")
+    public void acquire_badge_by_i_dont_even_know_me_on_fail() {
+        // given
+        CreateUserRequestDto createUserRequestDto = CreateUserRequestDto.of(
+                "socialId1", UserSocialType.KAKAO, "fcmToken1", "nickname1", "2022-01-01", true);
+        Long userId = userService.registerUser(createUserRequestDto);
+        User user = userRepository.findUserById(userId);
+        SetRoomNameRequestDto setRoomNameRequestDto = SetRoomNameRequestDto.of("room1");
+        roomService.createRoom(setRoomNameRequestDto, userId);
+
+        // when
+        UpdatePersonalityColorResponse updatePersonalityColorResponse = null;
+        for (int i = 0; i < 4; i++) {
+            int randomNumber = (int) ((Math.random() * 3) + 3); // 3 ~ 9 까지의 랜덤 숫자
+            updatePersonalityColorResponse = userService.updateUserTestScore(
+                    UpdateTestScoreRequestDto.of(randomNumber, randomNumber, randomNumber, randomNumber, randomNumber),
+                    userId
+            );
+        }
+        // then
+        List<Acquire> acquiresByUser = acquireRepository.findAllAcquireByOnboarding(user.getOnboarding());
+        Acquire acquireBadge = acquiresByUser.stream()
+                .filter(acquire -> BadgeInfo.I_DONT_EVEN_KNOW_ME.equals(acquire.getBadge().getInfo()))
+                .findAny()
+                .orElse(null);
+        assertThat(acquiresByUser).hasSize(3);
+        assertThat(acquireBadge).isNull();
+        assertThat(user.getOnboarding().getPersonality().getColor()).isEqualTo(updatePersonalityColorResponse.getColor());
+
+        BadgeCounter badgeCounter = badgeCounterRepository.findByUserIdAndCountType(userId, BadgeCounterType.TEST_SCORE_COMPLETE);
+        assertThat(badgeCounter.getCount()).isEqualTo(4);
+    }
+
+    @Test
+    @DisplayName("우리집 기둥 호미 배지 미획득 - 카운터 테스트")
+    public void acquire_badge_by_our_house_pillar_homie_on_fail() {
+        // given
+        String now = DateUtils.todayLocalDateToString();
+        CreateUserRequestDto createUserRequestDto = CreateUserRequestDto.of(
+                "socialId1", UserSocialType.KAKAO, "fcmToken1", "nickname1", now, true);
+        Long userId = userService.registerUser(createUserRequestDto);
+        User user = userRepository.findUserById(userId);
+        SetRoomNameRequestDto setRoomNameRequestDto = SetRoomNameRequestDto.of("room1");
+        roomService.createRoom(setRoomNameRequestDto, userId);
+
+        // when
+        for (int i = 0; i < 3; i++) {
+            ruleService.createRule(CreateRuleRequestDto.of(List.of(String.valueOf(i))), userId);
+        }
+
+        // then
+        List<Rule> rules = ruleRepository.findAll();
+        IntStream.range(0, 5).mapToObj(index -> assertThat(rules.get(index).getName()).isEqualTo(index));
+        assertThat(rules).hasSize(3);
+
+        List<Acquire> acquiresByUser = acquireRepository.findAllAcquireByOnboarding(user.getOnboarding());
+        Acquire acquireBadge = acquiresByUser.stream()
+                .filter(acquire -> BadgeInfo.OUR_HOUSE_PILLAR_HOMIE.equals(acquire.getBadge().getInfo()))
+                .findAny()
+                .orElse(null);
+        assertThat(acquiresByUser).hasSize(2);
+        assertThat(acquireBadge).isNull();
+
+        BadgeCounter badgeCounter = badgeCounterRepository.findByUserIdAndCountType(userId, BadgeCounterType.RULE_CREATE);
+        assertThat(badgeCounter.getCount()).isEqualTo(3);
     }
 }
