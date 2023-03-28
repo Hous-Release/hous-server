@@ -28,6 +28,14 @@ public class NotificationRetrieveService {
         Onboarding me = user.getOnboarding();
         List<Notification> notifications = notificationRepository.findNotificationsByOnboardingAndCursor(me, lastNotificationId, size + 1);
         ScrollPaginationCollection<Notification> notificationsCursor = ScrollPaginationCollection.of(notifications, size);
-        return NotificationsInfoResponse.of(notificationRepository, notificationsCursor, notificationRepository.countAllByOnboarding(me));
+        NotificationsInfoResponse response = NotificationsInfoResponse.of(notificationsCursor, notificationRepository.countAllByOnboarding(me));
+        List<Notification> readNotifications = notificationsCursor.getCurrentScrollItems();
+        readNotifications.stream()
+                .filter(notification -> !notification.isRead())
+                .forEach(notification -> {
+                    notification.updateIsRead();
+                    notificationRepository.save(notification);
+                });
+        return response;
     }
 }

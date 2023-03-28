@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import hous.server.common.util.DateUtils;
 import hous.server.domain.notification.Notification;
 import hous.server.domain.notification.NotificationType;
-import hous.server.domain.notification.mongo.NotificationRepository;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -27,7 +26,7 @@ public class NotificationInfo {
         return isRead;
     }
 
-    public static NotificationInfo of(NotificationRepository notificationRepository, Notification notification, LocalDateTime now) {
+    public static NotificationInfo of(Notification notification, LocalDateTime now) {
         NotificationInfo notificationInfo = NotificationInfo.builder()
                 .notificationId(notification.getId())
                 .type(notification.getType())
@@ -35,8 +34,6 @@ public class NotificationInfo {
                 .isRead(notification.isRead())
                 .createdAt(DateUtils.passedTime(now, notification.getCreatedAt()))
                 .build();
-        notification.updateIsRead();
-        notificationRepository.save(notification);
         return notificationInfo;
     }
 }
