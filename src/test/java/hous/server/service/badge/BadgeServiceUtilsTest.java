@@ -45,7 +45,7 @@ public class BadgeServiceUtilsTest {
 
     @Test
     @DisplayName("배지 존재할 경우 true 를 반환")
-    public void hasBadge_exists_on_success() {
+    public void has_badge_exists_on_success() {
         // given
         CreateUserRequestDto createUserRequestDto = CreateUserRequestDto.of(
                 "socialId1", UserSocialType.KAKAO, "fcmToken1", "nickname1", "2022-01-01", true);
@@ -64,7 +64,7 @@ public class BadgeServiceUtilsTest {
 
     @Test
     @DisplayName("배지가 존재하지 않을 경우 false 를 반환")
-    public void hasBadge_un_exists_on_success() {
+    public void has_badge_unexists_on_success() {
         // given
         CreateUserRequestDto createUserRequestDto = CreateUserRequestDto.of(
                 "socialId1", UserSocialType.KAKAO, "fcmToken1", "nickname1", "2022-01-01", true);
@@ -83,7 +83,7 @@ public class BadgeServiceUtilsTest {
 
     @Test
     @DisplayName("존재하는 배지의 경우 배지를 반환")
-    public void findBadgeById_on_success() {
+    public void find_badge_by_id_on_success() {
         // given
         BadgeInfo testBadgeInfo = BadgeInfo.I_AM_SUCH_A_PERSON;
         Badge testBadge = badgeRepository.findBadgeByBadgeInfo(testBadgeInfo);
@@ -98,7 +98,7 @@ public class BadgeServiceUtilsTest {
 
     @Test
     @DisplayName("존재하지 않는 배지의 경우 404 예외 발생")
-    public void findBadgeById_by_not_found_exception() {
+    public void find_badge_by_id_throw_by_not_found_exception() {
         // given
         Long unExistsBadgeId = 50L;
 
@@ -112,7 +112,7 @@ public class BadgeServiceUtilsTest {
 
     @Test
     @DisplayName("사용자가 획득한 배지가 아니라면 403 예외 반환")
-    public void validateExistsByOnboardingAndBadge_by_forbidden_exception() {
+    public void validate_exists_by_onboarding_and_badge_throw_by_forbidden_exception() {
         // given
         CreateUserRequestDto createUserRequestDto = CreateUserRequestDto.of(
                 "socialId1", UserSocialType.KAKAO, "fcmToken1", "nickname1", "2022-01-01", true);
