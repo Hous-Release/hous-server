@@ -1,10 +1,12 @@
 package hous.server.service.todo;
 
 import hous.server.common.util.DateUtils;
+import hous.server.domain.badge.BadgeCounter;
+import hous.server.domain.badge.BadgeCounterType;
 import hous.server.domain.badge.BadgeInfo;
+import hous.server.domain.badge.mongo.BadgeCounterRepository;
 import hous.server.domain.badge.mysql.AcquireRepository;
 import hous.server.domain.badge.mysql.BadgeRepository;
-import hous.server.domain.common.RedisKey;
 import hous.server.domain.room.Participate;
 import hous.server.domain.room.Room;
 import hous.server.domain.todo.OurTodoStatus;
@@ -37,6 +39,7 @@ public class TodoScheduledService {
     private final DoneRepository doneRepository;
     private final BadgeRepository badgeRepository;
     private final AcquireRepository acquireRepository;
+    private final BadgeCounterRepository badgeCounterRepository;
 
     private final BadgeService badgeService;
     private final NotificationService notificationService;
@@ -61,24 +64,25 @@ public class TodoScheduledService {
                             .filter(todo -> doneRepository.existsDayDoneByOnboardingAndTodo(yesterday, onboarding, todo))
                             .count();
                     if (!allDayMyTodos.isEmpty() && yesterdayMyTodos.size() == yesterdayDoneMyTodosCnt) {
-                        String todoCompleteCountString = (String) redisTemplate.opsForValue().get(RedisKey.TODO_COMPLETE_COUNT + user.getId());
-                        if (todoCompleteCountString == null) {
-                            redisTemplate.opsForValue().set(RedisKey.TODO_COMPLETE_COUNT + user.getId(), Integer.toString(1));
+                        BadgeCounter todoComplete = badgeCounterRepository.findByUserIdAndCountType(user.getId(), BadgeCounterType.TODO_COMPLETE);
+                        if (todoComplete == null) {
+                            badgeCounterRepository.save(BadgeCounter.newInstance(user.getId(), BadgeCounterType.TODO_COMPLETE, 1));
                         } else {
-                            redisTemplate.opsForValue().set(RedisKey.TODO_COMPLETE_COUNT + user.getId(), Integer.toString(Integer.parseInt(todoCompleteCountString) + 1));
-                            if (Integer.parseInt(todoCompleteCountString) == 6) {
+                            todoComplete.updateCount(todoComplete.getCount() + 1);
+                            badgeCounterRepository.save(todoComplete);
+                            if (todoComplete.getCount() == 6) {
                                 badgeService.acquireBadge(user, BadgeInfo.GOOD_JOB);
                             }
-                            if (Integer.parseInt(todoCompleteCountString) == 13) {
+                            if (todoComplete.getCount() == 13) {
                                 badgeService.acquireBadge(user, BadgeInfo.SINCERITY_KING_HOMIE);
                             }
-                            if (Integer.parseInt(todoCompleteCountString) == 20) {
+                            if (todoComplete.getCount() == 20) {
                                 badgeService.acquireBadge(user, BadgeInfo.TODO_MASTER);
-                                redisTemplate.delete(RedisKey.TODO_COMPLETE_COUNT + user.getId());
+                                badgeCounterRepository.deleteBadgeCounterByUserIdAndCountType(user.getId(), BadgeCounterType.TODO_COMPLETE);
                             }
                         }
                     } else {
-                        redisTemplate.delete(RedisKey.TODO_COMPLETE_COUNT + user.getId());
+                        badgeCounterRepository.deleteBadgeCounterByUserIdAndCountType(user.getId(), BadgeCounterType.TODO_COMPLETE);
                     }
                 }
             }

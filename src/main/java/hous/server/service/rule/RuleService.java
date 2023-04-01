@@ -1,9 +1,11 @@
 package hous.server.service.rule;
 
+import hous.server.domain.badge.BadgeCounter;
+import hous.server.domain.badge.BadgeCounterType;
 import hous.server.domain.badge.BadgeInfo;
+import hous.server.domain.badge.mongo.BadgeCounterRepository;
 import hous.server.domain.badge.mysql.AcquireRepository;
 import hous.server.domain.badge.mysql.BadgeRepository;
-import hous.server.domain.common.RedisKey;
 import hous.server.domain.room.Room;
 import hous.server.domain.rule.Rule;
 import hous.server.domain.rule.mysql.RuleRepository;
@@ -39,6 +41,7 @@ public class RuleService {
     private final RuleRepository ruleRepository;
     private final BadgeRepository badgeRepository;
     private final AcquireRepository acquireRepository;
+    private final BadgeCounterRepository badgeCounterRepository;
 
     private final BadgeService badgeService;
     private final NotificationService notificationService;
@@ -57,20 +60,23 @@ public class RuleService {
                 })
                 .collect(Collectors.toList());
         room.addRules(rules);
+
         badgeService.acquireBadge(user, BadgeInfo.LETS_BUILD_A_POLE);
         if (!BadgeServiceUtils.hasBadge(badgeRepository, acquireRepository, BadgeInfo.OUR_HOUSE_PILLAR_HOMIE, me)) {
-            String createRuleCountString = (String) redisTemplate.opsForValue().get(RedisKey.CREATE_RULE_COUNT + userId);
-            if (createRuleCountString != null && Integer.parseInt(createRuleCountString) >= 4) {
+            BadgeCounter ruleComplete = badgeCounterRepository.findByUserIdAndCountType(userId, BadgeCounterType.RULE_CREATE);
+            if (ruleComplete != null && ruleComplete.getCount() >= 4) {
                 badgeService.acquireBadge(user, BadgeInfo.OUR_HOUSE_PILLAR_HOMIE);
-                redisTemplate.delete(RedisKey.CREATE_RULE_COUNT + user.getId());
+                badgeCounterRepository.deleteBadgeCounterByUserIdAndCountType(userId, BadgeCounterType.RULE_CREATE);
             } else {
-                if (createRuleCountString == null) {
-                    redisTemplate.opsForValue().set(RedisKey.CREATE_RULE_COUNT + user.getId(), Integer.toString(1));
+                if (ruleComplete == null) {
+                    badgeCounterRepository.save(BadgeCounter.newInstance(userId, BadgeCounterType.RULE_CREATE, 1));
                 } else {
-                    redisTemplate.opsForValue().set(RedisKey.CREATE_RULE_COUNT + user.getId(), Integer.toString(Integer.parseInt(createRuleCountString) + 1));
+                    ruleComplete.updateCount(ruleComplete.getCount() + 1);
+                    badgeCounterRepository.save(ruleComplete);
                 }
             }
         }
+
         List<User> usersExceptMe = RoomServiceUtils.findParticipatingUsersExceptMe(room, user);
         usersExceptMe.forEach(userExceptMe -> notificationService.sendNewRuleNotification(userExceptMe, rules));
     }
