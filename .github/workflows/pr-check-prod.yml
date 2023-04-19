@@ -9,14 +9,14 @@ on:
 
 jobs:
  build:
-  runs-on: ubuntu-18.04
+  runs-on: ubuntu-20.04
 
   steps:
    - name: Checkout
      uses: actions/checkout@v3
 
    - name: create secret files
-     working-directory: ./src/main/resources
+     working-directory: ./hous-api/src/main/resources
      run: |
       touch application.yml
       touch application-prod.yml
@@ -42,5 +42,5 @@ jobs:
    #          run: ./gradlew test
 
    - name: Build with Gradle
-     run: ./gradlew build -x test
+     run: ./gradlew hous-api:bootJar -x test
      shell: bash

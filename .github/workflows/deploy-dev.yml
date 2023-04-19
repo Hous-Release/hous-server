@@ -19,7 +19,7 @@ jobs:
      uses: actions/checkout@v3
 
    - name: create secret files
-     working-directory: ./src/main/resources
+     working-directory: ./hous-api/src/main/resources
      run: |
       touch application.yml
       touch application-dev.yml
@@ -45,7 +45,7 @@ jobs:
    #          run: ./gradlew test
 
    - name: Build with Gradle
-     run: ./gradlew build -x test
+     run: ./gradlew hous-api:bootJar -x test
      shell: bash
 
    - name: Make zip file
