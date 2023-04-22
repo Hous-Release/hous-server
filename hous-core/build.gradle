@@ -23,7 +23,7 @@ sourceSets {
 }
 
 tasks.withType(JavaCompile) {
-    options.annotationProcessorGeneratedSourcesDirectory = file(queryDslDir)
+    options.generatedSourceOutputDirectory = file(queryDslDir)
 }
 
 clean.doLast {
