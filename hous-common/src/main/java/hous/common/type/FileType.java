@@ -1,15 +1,16 @@
 package hous.common.type;
 
-import hous.common.exception.ErrorCode;
 import hous.common.exception.ValidationException;
 import hous.common.util.FileUtils;
 import hous.common.util.UuidUtils;
 import lombok.Getter;
 
+import static hous.common.exception.ErrorCode.FORBIDDEN_FILE_NAME_EXCEPTION;
+
 @Getter
 public enum FileType {
 
-    ROOM_PRIVATE_IMAGE("방촬영 이미지", "data/", FileContentType.IMAGE);
+    IMAGE("이미지", "data/", FileContentType.IMAGE);
 
     private final String description;
     private final String directory;
@@ -30,7 +31,7 @@ public enum FileType {
      */
     public String createUniqueFileNameWithExtension(String originalFileName) {
         if (originalFileName == null) {
-            throw new ValidationException("잘못된 파일의 originFilename 입니다", ErrorCode.FORBIDDEN_FILE_NAME_EXCEPTION);
+            throw new ValidationException("잘못된 파일의 originFilename 입니다", FORBIDDEN_FILE_NAME_EXCEPTION);
         }
         String extension = FileUtils.getFileExtension(originalFileName);
         return getFileNameWithDirectory(UuidUtils.generate().concat(extension));
