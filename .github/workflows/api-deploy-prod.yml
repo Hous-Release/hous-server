@@ -6,6 +6,10 @@ name: deploy-prod
 on:
  push:
   branches: [ main ]
+  paths:
+   - hous-api/**
+   - hous-core/**
+   - hous-common/**
 
 env:
  AWS_S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME_PROD }}
@@ -19,7 +23,7 @@ jobs:
      uses: actions/checkout@v3
 
    - name: create secret files
-     working-directory: ./hous-api/src/main/resources
+     working-directory: hous-api/src/main/resources
      run: |
       touch application.yml
       touch application-prod.yml
@@ -49,7 +53,7 @@ jobs:
      shell: bash
 
    - name: Make zip file
-     run: zip -r ./code-deploy.zip .
+     run: zip -r ./code-deploy.zip ./hous-api/* ./scripts/hous-api/* -j
      shell: bash
 
    - name: Configure AWS credentials

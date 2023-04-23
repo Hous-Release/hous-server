@@ -22,11 +22,11 @@ if [ ! -z ${TARGET_PID} ]; then
 fi
 
 if [ ${HOST_NAME} == "hous-prod-server" ]; then
-  nohup java -jar -Dserver.port=${TARGET_PORT} -Dspring.profiles.active=prod /home/ubuntu/hous/build/libs/*.jar >> /home/ubuntu/hous/deploy.log 2>/home/ubuntu/hous/deploy_err.log &
+  nohup java -jar -Dserver.port=${TARGET_PORT} -Dspring.profiles.active=prod /home/ubuntu/hous/hous-api/build/libs/*.jar >> /home/ubuntu/hous/deploy.log 2>/home/ubuntu/hous/deploy_err.log &
   echo "[$NOW_TIME] Now new WAS runs at ${TARGET_PORT}." >> /home/ubuntu/hous/deploy.log
   exit 0
 else
-  nohup java -jar -Dserver.port=${TARGET_PORT} -Dspring.profiles.active=dev /home/ubuntu/hous/build/libs/*.jar >> /home/ubuntu/hous/deploy.log 2>/home/ubuntu/hous/deploy_err.log &
+  nohup java -jar -Dserver.port=${TARGET_PORT} -Dspring.profiles.active=dev /home/ubuntu/hous/hous-api/build/libs/*.jar >> /home/ubuntu/hous/deploy.log 2>/home/ubuntu/hous/deploy_err.log &
   echo "[$NOW_TIME] Now new WAS runs at ${TARGET_PORT}." >> /home/ubuntu/hous/deploy.log
   exit 0
 fi
