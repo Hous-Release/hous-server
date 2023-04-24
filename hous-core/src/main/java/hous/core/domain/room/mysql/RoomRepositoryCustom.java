@@ -4,10 +4,10 @@ import hous.core.domain.room.Room;
 
 public interface RoomRepositoryCustom {
 
-    boolean existsByRoomCode(String code);
+	boolean existsByRoomCode(String code);
 
-    Room findRoomById(Long id);
+	Room findRoomById(Long id);
 
-    Room findRoomByCode(String code);
+	Room findRoomByCode(String code);
 
 }

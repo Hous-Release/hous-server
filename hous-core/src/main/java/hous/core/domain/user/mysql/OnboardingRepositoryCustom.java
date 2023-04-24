@@ -4,5 +4,5 @@ import hous.core.domain.user.Onboarding;
 
 public interface OnboardingRepositoryCustom {
 
-    Onboarding findOnboardingById(Long id);
+	Onboarding findOnboardingById(Long id);
 }

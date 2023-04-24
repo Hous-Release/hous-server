@@ -2,5 +2,5 @@ package hous.api.external.client.apple;
 
 public interface AppleTokenProvider {
 
-    String getSocialIdFromIdToken(String idToken);
+	String getSocialIdFromIdToken(String idToken);
 }

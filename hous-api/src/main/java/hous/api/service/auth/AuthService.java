@@ -5,9 +5,9 @@ import hous.api.service.auth.dto.request.SignUpDto;
 
 public interface AuthService {
 
-    Long signUp(SignUpDto request);
+	Long signUp(SignUpDto request);
 
-    Long login(LoginDto request);
+	Long login(LoginDto request);
 
-    Long forceLogin(LoginDto request);
+	Long forceLogin(LoginDto request);
 }

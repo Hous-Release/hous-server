@@ -5,5 +5,5 @@ import hous.core.domain.personality.PersonalityColor;
 
 public interface PersonalityRepositoryCustom {
 
-    Personality findPersonalityByColor(PersonalityColor color);
+	Personality findPersonalityByColor(PersonalityColor color);
 }

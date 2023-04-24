@@ -19,16 +19,16 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
-public class CreateRuleRequestDto {
+public class DeleteRuleRequestDto {
 
-	@ApiModelProperty(value = "규칙 내용 배열", example = "[\"우리집 대장은 김또순\", \"우리집 대장은 혜조니\", \"우리집 대장은 혁주니\", ...]")
+	@ApiModelProperty(value = "규칙 id 배열", example = "[12, 13, 14, ...]")
 	@NotNull(message = "{rule.list.notNull}")
 	@Size(min = Constraint.RULE_LIST_MIN, message = "{rule.list.min}")
-	private List<String> ruleNames;
+	private List<Long> rulesIdList;
 
-	public static CreateRuleRequestDto of(List<String> ruleNames) {
-		return CreateRuleRequestDto.builder()
-			.ruleNames(ruleNames)
+	public static DeleteRuleRequestDto of(List<Long> rulesIdList) {
+		return DeleteRuleRequestDto.builder()
+			.rulesIdList(rulesIdList)
 			.build();
 	}
 }

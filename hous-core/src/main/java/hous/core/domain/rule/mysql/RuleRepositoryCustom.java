@@ -5,7 +5,7 @@ import hous.core.domain.rule.Rule;
 
 public interface RuleRepositoryCustom {
 
-    Rule findLastRuleByRoom(Room room);
+	Rule findLastRuleByRoom(Room room);
 
-    Rule findRuleByIdAndRoom(Long ruleId, Room room);
+	Rule findRuleByIdAndRoom(Long ruleId, Room room);
 }

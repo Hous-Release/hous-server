@@ -1,7 +1,12 @@
 package hous.api.service.room.dto.response;
 
 import hous.core.domain.room.Room;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @ToString
 @Getter
@@ -10,14 +15,14 @@ import lombok.*;
 @Builder(access = AccessLevel.PRIVATE)
 public class RoomInfoResponse {
 
-    private Long roomId;
+	private Long roomId;
 
-    private String roomCode;
+	private String roomCode;
 
-    public static RoomInfoResponse of(Room room) {
-        return RoomInfoResponse.builder()
-                .roomId(room.getId())
-                .roomCode(room.getCode())
-                .build();
-    }
+	public static RoomInfoResponse of(Room room) {
+		return RoomInfoResponse.builder()
+			.roomId(room.getId())
+			.roomCode(room.getCode())
+			.build();
+	}
 }

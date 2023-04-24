@@ -2,7 +2,12 @@ package hous.api.service.user.dto.response;
 
 import hous.core.domain.personality.Personality;
 import hous.core.domain.personality.PersonalityColor;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @ToString
 @Getter
@@ -11,11 +16,11 @@ import lombok.*;
 @Builder(access = AccessLevel.PRIVATE)
 public class UpdatePersonalityColorResponse {
 
-    private PersonalityColor color;
+	private PersonalityColor color;
 
-    public static UpdatePersonalityColorResponse of(Personality personality) {
-        return UpdatePersonalityColorResponse.builder()
-                .color(personality.getColor())
-                .build();
-    }
+	public static UpdatePersonalityColorResponse of(Personality personality) {
+		return UpdatePersonalityColorResponse.builder()
+			.color(personality.getColor())
+			.build();
+	}
 }
