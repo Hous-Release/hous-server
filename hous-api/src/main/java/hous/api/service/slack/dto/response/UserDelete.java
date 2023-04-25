@@ -9,18 +9,18 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
 public class UserDelete {
-    private long count;
-    private String feedbackType;
+	private long count;
+	private String feedbackType;
 
-    public static UserDelete of(long count, String feedbackType) {
-        return UserDelete.builder()
-                .count(count)
-                .feedbackType(feedbackType)
-                .build();
-    }
+	public static UserDelete of(long count, String feedbackType) {
+		return UserDelete.builder()
+			.count(count)
+			.feedbackType(feedbackType)
+			.build();
+	}
 
-    @Override
-    public String toString() {
-        return String.format("- %s: %s명", feedbackType, count);
-    }
+	@Override
+	public String toString() {
+		return String.format("- %s: %s명", feedbackType, count);
+	}
 }

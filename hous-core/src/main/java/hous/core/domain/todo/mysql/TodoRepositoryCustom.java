@@ -4,5 +4,5 @@ import hous.core.domain.todo.Todo;
 
 public interface TodoRepositoryCustom {
 
-    Todo findTodoById(Long id);
+	Todo findTodoById(Long id);
 }

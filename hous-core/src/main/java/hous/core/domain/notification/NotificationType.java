@@ -1,8 +1,7 @@
 package hous.core.domain.notification;
 
 public enum NotificationType {
-
-    TODO,
-    RULE,
-    BADGE;
+	TODO,
+	RULE,
+	BADGE;
 }

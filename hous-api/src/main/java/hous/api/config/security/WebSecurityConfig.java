@@ -11,23 +11,23 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class WebSecurityConfig {
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/swagger-resources/**").permitAll()
-                .anyRequest().permitAll()
-                .and()
-                .httpBasic().and()
-                .formLogin().disable()
-                .logout().disable()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .headers()
-                .frameOptions().sameOrigin()
-                .cacheControl().and()
-                .xssProtection().and()
-                .httpStrictTransportSecurity().disable();
-        return http.build();
-    }
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http.authorizeRequests()
+			.antMatchers("/swagger-resources/**").permitAll()
+			.anyRequest().permitAll()
+			.and()
+			.httpBasic().and()
+			.formLogin().disable()
+			.logout().disable()
+			.csrf().disable()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and()
+			.headers()
+			.frameOptions().sameOrigin()
+			.cacheControl().and()
+			.xssProtection().and()
+			.httpStrictTransportSecurity().disable();
+		return http.build();
+	}
 }

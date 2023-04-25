@@ -4,5 +4,5 @@ import hous.core.domain.user.Onboarding;
 
 public interface ParticipateRepositoryCustom {
 
-    boolean existsByOnboarding(Onboarding onboarding);
+	boolean existsByOnboarding(Onboarding onboarding);
 }

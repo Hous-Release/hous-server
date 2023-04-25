@@ -8,13 +8,13 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 @Configuration
 public class SchedulerConfig implements SchedulingConfigurer {
 
-    @Override
-    public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar) {
-        ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
-        threadPoolTaskScheduler.setPoolSize(10);
-        threadPoolTaskScheduler.setErrorHandler(new SchedulerErrorHandler());
-        threadPoolTaskScheduler.initialize();
+	@Override
+	public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar) {
+		ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+		threadPoolTaskScheduler.setPoolSize(10);
+		threadPoolTaskScheduler.setErrorHandler(new SchedulerErrorHandler());
+		threadPoolTaskScheduler.initialize();
 
-        scheduledTaskRegistrar.setTaskScheduler(threadPoolTaskScheduler);
-    }
+		scheduledTaskRegistrar.setTaskScheduler(threadPoolTaskScheduler);
+	}
 }

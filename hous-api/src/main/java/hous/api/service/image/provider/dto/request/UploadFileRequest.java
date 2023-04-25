@@ -4,13 +4,13 @@ import hous.common.type.FileType;
 
 public interface UploadFileRequest {
 
-    FileType getType();
+	FileType getType();
 
-    default void validateAvailableContentType(String contentType) {
-        getType().validateAvailableContentType(contentType);
-    }
+	default void validateAvailableContentType(String contentType) {
+		getType().validateAvailableContentType(contentType);
+	}
 
-    default String getFileNameWithBucketDirectory(String originalFileName) {
-        return getType().createUniqueFileNameWithExtension(originalFileName);
-    }
+	default String getFileNameWithBucketDirectory(String originalFileName) {
+		return getType().createUniqueFileNameWithExtension(originalFileName);
+	}
 }

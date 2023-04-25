@@ -4,5 +4,5 @@ import hous.core.domain.deploy.Deploy;
 
 public interface DeployRepositoryCustom {
 
-    Deploy findDeployByOs(String os);
+	Deploy findDeployByOs(String os);
 }
