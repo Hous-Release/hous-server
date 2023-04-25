@@ -27,6 +27,7 @@ public class ApplePublicKeyResponse {
 	@Getter
 	@AllArgsConstructor(access = AccessLevel.PRIVATE)
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
+	// @checkstyle:off 애플 로그인 response 로 받는 형태라 한글자 멤버 변수 사용 필요
 	public static class Key {
 		private String alg;
 		private String e;
