@@ -1,4 +1,4 @@
-package hous.api.external.client.apple;
+package hous.external.client.apple;
 
 public interface AppleTokenProvider {
 

@@ -1,10 +1,10 @@
-package hous.api.external.client.kakao;
+package hous.external.client.kakao;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-import hous.api.external.client.kakao.dto.response.KakaoProfileResponse;
+import hous.external.client.kakao.dto.response.KakaoProfileResponse;
 
 @FeignClient(name = "kakaoApiClient", url = "https://kapi.kakao.com")
 public interface KakaoApiClient {

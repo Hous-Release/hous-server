@@ -1,4 +1,4 @@
-package hous.api.external.client.kakao.dto.response;
+package hous.external.client.kakao.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;

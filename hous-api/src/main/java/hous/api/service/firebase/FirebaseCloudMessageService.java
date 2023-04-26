@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 
-import hous.api.external.client.firebase.FirebaseApiClient;
 import hous.api.service.firebase.dto.request.FcmMessage;
 import hous.api.service.jwt.JwtService;
 import hous.common.exception.InternalServerException;
 import hous.common.util.HttpHeaderUtils;
 import hous.core.domain.user.User;
+import hous.external.client.firebase.FirebaseApiClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

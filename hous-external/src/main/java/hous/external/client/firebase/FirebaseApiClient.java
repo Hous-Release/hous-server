@@ -1,4 +1,4 @@
-package hous.api.external.client.firebase;
+package hous.external.client.firebase;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
