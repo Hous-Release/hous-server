@@ -11,10 +11,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @EnableSwagger2
 @EnableScheduling
-@EnableFeignClients
+@EnableFeignClients(basePackages = "hous.external")
 @EnableAspectJAutoProxy
 @EntityScan("hous.core")
-@SpringBootApplication(scanBasePackages = {"hous.core", "hous.common", "hous.api"})
+@SpringBootApplication(scanBasePackages = {"hous.core", "hous.common", "hous.api", "hous.external"})
 public class ApiApplication {
 
 	public static void main(String[] args) {

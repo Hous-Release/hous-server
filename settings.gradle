@@ -4,4 +4,5 @@ include 'hous-common'
 include 'hous-api'
 include 'hous-batch'
 include 'hous-notification'
+include 'hous-external'
 

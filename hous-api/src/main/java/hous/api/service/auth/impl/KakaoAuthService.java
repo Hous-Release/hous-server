@@ -5,8 +5,6 @@ import javax.transaction.Transactional;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import hous.api.external.client.kakao.KakaoApiClient;
-import hous.api.external.client.kakao.dto.response.KakaoProfileResponse;
 import hous.api.service.auth.AuthService;
 import hous.api.service.auth.CommonAuthService;
 import hous.api.service.auth.CommonAuthServiceUtils;
@@ -19,6 +17,8 @@ import hous.common.util.HttpHeaderUtils;
 import hous.core.domain.user.User;
 import hous.core.domain.user.UserSocialType;
 import hous.core.domain.user.mysql.UserRepository;
+import hous.external.client.kakao.KakaoApiClient;
+import hous.external.client.kakao.dto.response.KakaoProfileResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

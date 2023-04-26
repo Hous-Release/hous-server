@@ -1,4 +1,4 @@
-package hous.api.external.client.apple.dto.response;
+package hous.external.client.apple.dto.response;
 
 import java.util.List;
 

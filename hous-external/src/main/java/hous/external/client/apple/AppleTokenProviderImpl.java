@@ -1,4 +1,4 @@
-package hous.api.external.client.apple;
+package hous.external.client.apple;
 
 import static hous.common.exception.ErrorCode.*;
 
@@ -18,8 +18,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import hous.api.external.client.apple.dto.response.ApplePublicKeyResponse;
 import hous.common.exception.UnAuthorizedException;
+import hous.external.client.apple.dto.response.ApplePublicKeyResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.InvalidClaimException;
@@ -48,7 +48,7 @@ public class AppleTokenProviderImpl implements AppleTokenProvider {
 				.getBody();
 			return claims.getSubject(); // return socialId;
 		} catch (JsonProcessingException | InvalidKeySpecException | InvalidClaimException |
-			NoSuchAlgorithmException | IllegalArgumentException e) {
+				 NoSuchAlgorithmException | IllegalArgumentException e) {
 			throw new UnAuthorizedException(
 				String.format("잘못된 애플 idToken (%s) 입니다 (reason: %s)", idToken, e.getMessage()),
 				UNAUTHORIZED_INVALID_TOKEN_EXCEPTION);
