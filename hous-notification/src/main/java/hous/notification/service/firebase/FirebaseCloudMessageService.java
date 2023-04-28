@@ -1,4 +1,4 @@
-package hous.api.service.firebase;
+package hous.notification.service.firebase;
 
 import static hous.common.exception.ErrorCode.*;
 
@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 
-import hous.api.service.firebase.dto.request.FcmMessage;
-import hous.api.service.jwt.JwtService;
 import hous.common.exception.InternalServerException;
 import hous.common.util.HttpHeaderUtils;
+import hous.common.util.JwtUtils;
 import hous.core.domain.user.User;
 import hous.external.client.firebase.FirebaseApiClient;
+import hous.notification.service.firebase.dto.request.FcmMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,7 +30,7 @@ public class FirebaseCloudMessageService {
 
 	private final ObjectMapper objectMapper;
 	private final FirebaseApiClient firebaseApiCaller;
-	private final JwtService jwtService;
+	private final JwtUtils jwtUtils;
 
 	public void sendMessageTo(User to, String title, String body) {
 		try {
@@ -38,7 +38,7 @@ public class FirebaseCloudMessageService {
 			String message = makeMessage(targetToken, title, body);
 			firebaseApiCaller.requestFcmMessaging(HttpHeaderUtils.withBearerToken(getAccessToken()), message);
 		} catch (Exception exception) {
-			jwtService.expireRefreshToken(to.getId());
+			jwtUtils.expireRefreshToken(to.getId());
 			to.resetFcmToken();
 			log.error(exception.getMessage(), exception);
 		}

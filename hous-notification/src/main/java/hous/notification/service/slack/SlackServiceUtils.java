@@ -1,17 +1,18 @@
-package hous.api.service.slack;
+package hous.notification.service.slack;
 
-import static com.slack.api.model.block.Blocks.*;
 import static com.slack.api.model.block.composition.BlockCompositions.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.slack.api.model.Attachment;
+import com.slack.api.model.block.Blocks;
 import com.slack.api.model.block.LayoutBlock;
+import com.slack.api.model.block.composition.BlockCompositions;
 import com.slack.api.model.block.composition.TextObject;
 
-import hous.api.service.slack.dto.response.UserDelete;
-import hous.api.service.slack.dto.response.UserDeleteResponse;
+import hous.notification.service.slack.dto.response.UserDelete;
+import hous.notification.service.slack.dto.response.UserDeleteResponse;
 
 public class SlackServiceUtils {
 
@@ -33,7 +34,7 @@ public class SlackServiceUtils {
 
 	public static List<LayoutBlock> createUserDeleteMessage(UserDeleteResponse userDeleteResponse) {
 		List<LayoutBlock> layoutBlockList = new ArrayList<>();
-		layoutBlockList.add(section(section ->
+		layoutBlockList.add(Blocks.section(section ->
 			section.text(
 				markdownText(PROD_USER_DELETE_TOTAL_COUNT_MESSAGE + userDeleteResponse.getTotalDeleteUserCount()))));
 
@@ -42,11 +43,11 @@ public class SlackServiceUtils {
 			stringBuilder.append(userDelete.toString());
 			stringBuilder.append('\n');
 		}
-		layoutBlockList.add(section(section ->
-			section.text(markdownText(PROD_USER_DELETE_MESSAGE + stringBuilder.toString()))));
+		layoutBlockList.add(Blocks.section(section ->
+			section.text(BlockCompositions.markdownText(PROD_USER_DELETE_MESSAGE + stringBuilder.toString()))));
 
 		if (!userDeleteResponse.getComment().isBlank()) {
-			layoutBlockList.add(section(section ->
+			layoutBlockList.add(Blocks.section(section ->
 				section.text(markdownText(PROD_NOW_USER_DELETE_COMMENT + userDeleteResponse.getComment()))));
 		}
 
@@ -59,12 +60,13 @@ public class SlackServiceUtils {
 		List<LayoutBlock> layoutBlockList = new ArrayList<>();
 
 		List<TextObject> sectionInFields = new ArrayList<>();
-		sectionInFields.add(markdownText(PROD_ERROR_MESSAGE + exception.getMessage()));
-		sectionInFields.add(markdownText(PROD_ERROR_STACK + exception));
-		layoutBlockList.add(section(section -> section.fields(sectionInFields)));
+		sectionInFields.add(BlockCompositions.markdownText(PROD_ERROR_MESSAGE + exception.getMessage()));
+		sectionInFields.add(BlockCompositions.markdownText(PROD_ERROR_STACK + exception));
+		layoutBlockList.add(Blocks.section(section -> section.fields(sectionInFields)));
 
-		layoutBlockList.add(divider());
-		layoutBlockList.add(section(section -> section.text(markdownText(filterErrorStack(stacks)))));
+		layoutBlockList.add(Blocks.divider());
+		layoutBlockList.add(
+			Blocks.section(section -> section.text(BlockCompositions.markdownText(filterErrorStack(stacks)))));
 		return layoutBlockList;
 	}
 

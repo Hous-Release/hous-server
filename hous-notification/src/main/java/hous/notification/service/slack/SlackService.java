@@ -1,4 +1,4 @@
-package hous.api.service.slack;
+package hous.notification.service.slack;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,7 +11,7 @@ import com.slack.api.methods.SlackApiException;
 import com.slack.api.model.Attachment;
 import com.slack.api.model.block.LayoutBlock;
 
-import hous.api.service.slack.dto.response.UserDeleteResponse;
+import hous.notification.service.slack.dto.response.UserDeleteResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

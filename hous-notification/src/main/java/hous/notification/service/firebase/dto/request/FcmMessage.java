@@ -1,4 +1,4 @@
-package hous.api.service.firebase.dto.request;
+package hous.notification.service.firebase.dto.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
