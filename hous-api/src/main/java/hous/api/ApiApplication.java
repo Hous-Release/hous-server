@@ -14,7 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableFeignClients(basePackages = "hous.external")
 @EnableAspectJAutoProxy
 @EntityScan("hous.core")
-@SpringBootApplication(scanBasePackages = {"hous.core", "hous.common", "hous.api", "hous.external"})
+@SpringBootApplication(scanBasePackages = {"hous.core", "hous.common", "hous.external", "hous.api"})
 public class ApiApplication {
 
 	public static void main(String[] args) {
