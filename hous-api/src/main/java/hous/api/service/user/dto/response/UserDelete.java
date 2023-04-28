@@ -1,4 +1,4 @@
-package hous.api.service.slack.dto.response;
+package hous.api.service.user.dto.response;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

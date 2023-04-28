@@ -1,4 +1,4 @@
-package hous.api.service.slack.dto.response;
+package hous.notification.service.slack.dto.response;
 
 import java.util.Comparator;
 import java.util.List;

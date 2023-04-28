@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import hous.api.service.room.RoomServiceUtils;
-import hous.api.service.slack.dto.response.UserDelete;
-import hous.api.service.slack.dto.response.UserDeleteResponse;
 import hous.api.service.user.dto.response.MyBadgeInfoResponse;
 import hous.api.service.user.dto.response.PersonalityInfoResponse;
 import hous.api.service.user.dto.response.PersonalityTestInfoResponse;
 import hous.api.service.user.dto.response.PushSettingResponse;
+import hous.api.service.user.dto.response.UserDelete;
+import hous.api.service.user.dto.response.UserDeleteResponse;
 import hous.api.service.user.dto.response.UserInfoResponse;
 import hous.core.domain.badge.Acquire;
 import hous.core.domain.badge.Badge;
