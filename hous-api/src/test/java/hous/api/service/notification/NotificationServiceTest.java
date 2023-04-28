@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,11 @@ public class NotificationServiceTest {
 
 	@Autowired
 	private NotificationService notificationService;
+
+	@BeforeEach
+	public void init() {
+		notificationRepository.deleteAll();
+	}
 
 	@Test
 	@DisplayName("새로운 to-do 추가 알림 전송 성공")
