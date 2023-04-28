@@ -5,22 +5,22 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import hous.api.service.jwt.JwtService;
 import hous.common.exception.UnAuthorizedException;
+import hous.common.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Component
 public class LoginCheckHandler {
 
-	private final JwtService jwtService;
+	private final JwtUtils jwtUtils;
 
 	public Long getUserId(HttpServletRequest request) {
 		String bearerToken = request.getHeader("Authorization");
 		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
 			String accessToken = bearerToken.substring("Bearer ".length());
-			if (jwtService.validateToken(accessToken)) {
-				Long userId = jwtService.getUserIdFromJwt(accessToken);
+			if (jwtUtils.validateToken(accessToken)) {
+				Long userId = jwtUtils.getUserIdFromJwt(accessToken);
 				if (userId != null) {
 					return userId;
 				}

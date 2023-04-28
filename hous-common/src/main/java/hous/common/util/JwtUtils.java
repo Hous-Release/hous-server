@@ -1,15 +1,15 @@
-package hous.api.service.jwt;
+package hous.common.util;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import hous.api.config.security.JwtConstants;
-import hous.api.service.auth.dto.response.TokenResponse;
+import hous.common.constant.JwtKeys;
 import hous.common.constant.RedisKey;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
-public class JwtService {
+public class JwtUtils {
 
 	private final RedisTemplate<String, Object> redisTemplate;
 
@@ -36,13 +36,13 @@ public class JwtService {
 
 	private final Key secretKey;
 
-	public JwtService(@Value("${jwt.secret}") String secretKey, RedisTemplate redisTemplate) {
+	public JwtUtils(@Value("${jwt.secret}") String secretKey, RedisTemplate redisTemplate) {
 		this.redisTemplate = redisTemplate;
 		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 		this.secretKey = Keys.hmacShaKeyFor(keyBytes);
 	}
 
-	public TokenResponse createTokenInfo(Long userId) {
+	public List<String> createTokenInfo(Long userId) {
 
 		long now = (new Date()).getTime();
 		Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
@@ -50,7 +50,7 @@ public class JwtService {
 
 		// Access Token 생성
 		String accessToken = Jwts.builder()
-			.claim(JwtConstants.USER_ID, userId)
+			.claim(JwtKeys.USER_ID, userId)
 			.setExpiration(accessTokenExpiresIn)
 			.signWith(secretKey, SignatureAlgorithm.HS512)
 			.compact();
@@ -64,7 +64,7 @@ public class JwtService {
 		redisTemplate.opsForValue()
 			.set(RedisKey.REFRESH_TOKEN + userId, refreshToken, REFRESH_TOKEN_EXPIRE_TIME, TimeUnit.MILLISECONDS);
 
-		return TokenResponse.of(accessToken, refreshToken);
+		return List.of(accessToken, refreshToken);
 	}
 
 	public void expireRefreshToken(Long userId) {
@@ -90,7 +90,7 @@ public class JwtService {
 	}
 
 	public Long getUserIdFromJwt(String accessToken) {
-		return parseClaims(accessToken).get(JwtConstants.USER_ID, Long.class);
+		return parseClaims(accessToken).get(JwtKeys.USER_ID, Long.class);
 	}
 
 	private Claims parseClaims(String accessToken) {
