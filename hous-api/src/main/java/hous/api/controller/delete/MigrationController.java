@@ -24,8 +24,9 @@ public class MigrationController {
 	@ApiOperation(value = "[삭제될 api] redis 데이터 -> mongo db로 마이그레이션 하는 api.")
 	@DeleteMapping("/redis")
 	public ResponseEntity redisToMongoDb() {
-		int migrationDataCount = migrationService.transferRedisToMongoDb();
-		return ResponseEntity.ok(String.format("redis 카운터 데이터 (%s)개 전환 성공", migrationDataCount));
+		List<Integer> successCount = migrationService.transferRedisToMongoDb();
+		return ResponseEntity.ok(
+			String.format("redis 카운터 데이터 (%s)개 중 (%s)개 전환 성공", successCount.get(0), successCount.get(1)));
 	}
 
 	@ApiOperation(value = "[삭제될 api] 알림 데이터 -> mongo db로 마이그레이션 하는 api.")

@@ -36,9 +36,10 @@ public class MigrationService {
 	private final RdbNotificationRepository rdbNotificationRepository;
 	private final NotificationRepository notificationRepository;
 
-	public int transferRedisToMongoDb() {
+	public List<Integer> transferRedisToMongoDb() {
 		// 전체 데이터를 가져와
 		Set<String> redisKeys = redisTemplate.keys("*");
+		int successCount = 0;
 		for (String key : redisKeys) {
 			Long userId = Long.parseLong(key.substring(key.indexOf(":") + 1));
 			// key 값에 따라 몽고디비에 저장해
@@ -46,19 +47,22 @@ public class MigrationService {
 				BadgeCounter personalityTestCounter = getBadgeCounterByCounterType(userId,
 					BadgeCounterType.TEST_SCORE_COMPLETE);
 				migrationBadgeCount(key, personalityTestCounter);
+				successCount++;
 			}
 
 			if (key.startsWith(CREATE_RULE_COUNT)) {
 				BadgeCounter ruleCounter = getBadgeCounterByCounterType(userId, BadgeCounterType.RULE_CREATE);
 				migrationBadgeCount(key, ruleCounter);
+				successCount++;
 			}
 
 			if (key.startsWith(TODO_COMPLETE_COUNT)) {
 				BadgeCounter todoCounter = getBadgeCounterByCounterType(userId, BadgeCounterType.TODO_COMPLETE);
 				migrationBadgeCount(key, todoCounter);
+				successCount++;
 			}
 		}
-		return redisKeys.size();
+		return List.of(redisKeys.size(), successCount);
 	}
 
 	private BadgeCounter getBadgeCounterByCounterType(Long userId, BadgeCounterType badgeCounterType) {
