@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class NotificationService implements MessageGenerator {
+public class NotificationService {
 
 	private final NotificationRepository notificationRepository;
 	private final FirebaseCloudMessageService firebaseCloudMessageService;
@@ -33,7 +33,7 @@ public class NotificationService implements MessageGenerator {
 				generateContent(todo.getName(), getTodoMessage(isTake)),
 				false));
 
-		if (to.getSetting().isPushNotification()) {
+		if (todo.isPushNotification() && to.getSetting().isPushNotification()) {
 			TodoPushStatus todoPushStatus = to.getSetting().getNewTodoPushStatus();
 			String title = "";
 			String body = "";
@@ -51,7 +51,7 @@ public class NotificationService implements MessageGenerator {
 
 	public void sendTodayTodoNotification(User to, boolean isTake) {
 		if (to.getSetting().isPushNotification()) {
-			TodoPushStatus todoPushStatus = to.getSetting().getNewTodoPushStatus();
+			TodoPushStatus todoPushStatus = to.getSetting().getTodayTodoPushStatus();
 			String title = "";
 			String body = "";
 			if (todoPushStatus == TodoPushStatus.ON_ALL) {
@@ -75,7 +75,7 @@ public class NotificationService implements MessageGenerator {
 		);
 
 		if (to.getSetting().isPushNotification()) {
-			TodoPushStatus todoPushStatus = to.getSetting().getNewTodoPushStatus();
+			TodoPushStatus todoPushStatus = to.getSetting().getRemindTodoPushStatus();
 			String title = "";
 			String body = "";
 			if (todoPushStatus == TodoPushStatus.ON_ALL) {
@@ -98,7 +98,7 @@ public class NotificationService implements MessageGenerator {
 					generateContent(rule.getName(), NotificationMessage.NEW_RULE.getValue()),
 					false))
 		);
-		
+
 		if (to.getSetting().isPushNotification() && to.getSetting().getRulesPushStatus() == PushStatus.ON) {
 			firebaseCloudMessageService.sendMessageTo(to, PushMessage.NEW_RULE.getTitle(),
 				PushMessage.NEW_RULE.getBody());
@@ -117,6 +117,14 @@ public class NotificationService implements MessageGenerator {
 				generateContent(badgeInfo.getValue(), PushMessage.NEW_BADGE.getTitle()),
 				generateDetailContent(to.getOnboarding().getNickname(), PushMessage.NEW_BADGE.getBody()));
 		}
+	}
+
+	private String generateContent(String name, String message) {
+		return String.format("'%s' %s", name, message);
+	}
+
+	private String generateDetailContent(String name, String message) {
+		return String.format("%s%s", name, message);
 	}
 
 	private String getTodoMessage(boolean isTake) {
