@@ -28,6 +28,10 @@ public class DateUtils {
 		return LocalDateTime.now(ZoneId.of("Asia/Seoul"));
 	}
 
+	public static LocalDateTime convertUtcToKst(LocalDateTime utcDateTime) {
+		return utcDateTime.plusHours(9);
+	}
+
 	public static LocalDate yesterdayLocalDate() {
 		LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
 		return today.minusDays(1);
