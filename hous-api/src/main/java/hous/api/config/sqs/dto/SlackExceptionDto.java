@@ -15,11 +15,13 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class SlackExceptionDto extends MessageDto {
 
+	private String instance;
 	private Exception exception;
 
-	public static SlackExceptionDto of(Exception exception) {
+	public static SlackExceptionDto of(String instance, Exception exception) {
 		return SlackExceptionDto.builder()
 			.type(MessageType.SLACK_EXCEPTION)
+			.instance(instance)
 			.exception(exception)
 			.build();
 	}

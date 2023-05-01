@@ -40,7 +40,8 @@ public class SqsConsumer {
 					break;
 				case MessageType.SLACK_EXCEPTION:
 					SlackExceptionDto slackExceptionDto = objectMapper.readValue(info, SlackExceptionDto.class);
-					slackService.sendSlackMessageProductError(slackExceptionDto.getException());
+					slackService.sendSlackMessageProductError(
+						slackExceptionDto.getInstance(), slackExceptionDto.getException());
 					break;
 				case MessageType.SLACK_USER_DELETE:
 					SlackUserDeleteDto slackUserDeleteDto = objectMapper.readValue(info, SlackUserDeleteDto.class);

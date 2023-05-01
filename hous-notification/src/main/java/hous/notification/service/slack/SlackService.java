@@ -50,11 +50,11 @@ public class SlackService {
 		}
 	}
 
-	public void sendSlackMessageProductError(Exception exception) {
+	public void sendSlackMessageProductError(String instance, Exception exception) {
 		if (!profile.equals(LOCAL)) {
 			try {
 				Slack slack = Slack.getInstance();
-				List<LayoutBlock> layoutBlocks = SlackServiceUtils.createProdErrorMessage(exception);
+				List<LayoutBlock> layoutBlocks = SlackServiceUtils.createProdErrorMessage(instance, exception);
 				List<Attachment> attachments = SlackServiceUtils.createAttachments(ATTACHMENTS_ERROR_COLOR,
 					layoutBlocks);
 				slack.methods(token).chatPostMessage(req ->

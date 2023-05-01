@@ -15,6 +15,7 @@ import hous.notification.service.slack.dto.response.UserDeleteResponse;
 
 public class SlackServiceUtils {
 
+	private static final String PROD_ERROR_INSTANCE = "*Error Instance:*\n";
 	private static final String PROD_ERROR_MESSAGE = "*Error Message:*\n";
 	private static final String PROD_ERROR_STACK = "*Error Stack:*\n";
 	private static final String FILTER_STRING = "hous.server";
@@ -52,12 +53,13 @@ public class SlackServiceUtils {
 		return layoutBlockList;
 	}
 
-	public static List<LayoutBlock> createProdErrorMessage(Exception exception) {
+	public static List<LayoutBlock> createProdErrorMessage(String instance, Exception exception) {
 		StackTraceElement[] stacks = exception.getStackTrace();
 
 		List<LayoutBlock> layoutBlockList = new ArrayList<>();
 
 		List<TextObject> sectionInFields = new ArrayList<>();
+		sectionInFields.add(markdownText(PROD_ERROR_INSTANCE + instance));
 		sectionInFields.add(markdownText(PROD_ERROR_MESSAGE + exception.getMessage()));
 		sectionInFields.add(markdownText(PROD_ERROR_STACK + exception));
 		layoutBlockList.add(section(section -> section.fields(sectionInFields)));
