@@ -42,7 +42,7 @@ public class Notification extends AuditingTimeEntity {
 	@Field(name = "is_read")
 	private boolean isRead;
 
-	@Indexed(name = "notification_ttl", expireAfterSeconds = 60 * 60 * 24 * 30)
+	@Indexed(name = "notification_ttl", expireAfterSeconds = 0)
 	private LocalDateTime expireAt;
 
 	public static Notification newInstance(Long onboardingId, NotificationType type, String content, boolean isRead) {
@@ -51,7 +51,21 @@ public class Notification extends AuditingTimeEntity {
 			.type(type)
 			.content(content)
 			.isRead(isRead)
-			.expireAt(LocalDateTime.now())
+			.expireAt(LocalDateTime.now().plusDays(30))
+			.build();
+	}
+
+	// TODO migration - 삭제 예정
+
+	public static Notification migrationInstance(Long id, Long onboardingId, NotificationType type, String content,
+		boolean isRead, LocalDateTime createdAt) {
+		return builder()
+			.id(id)
+			.onboardingId(onboardingId)
+			.type(type)
+			.content(content)
+			.isRead(isRead)
+			.expireAt(createdAt.plusDays(30))
 			.build();
 	}
 

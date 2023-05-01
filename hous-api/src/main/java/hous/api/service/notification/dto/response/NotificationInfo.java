@@ -33,13 +33,12 @@ public class NotificationInfo {
 	}
 
 	public static NotificationInfo of(Notification notification, LocalDateTime now) {
-		NotificationInfo notificationInfo = NotificationInfo.builder()
+		return NotificationInfo.builder()
 			.notificationId(notification.getId())
 			.type(notification.getType())
 			.content(notification.getContent())
 			.isRead(notification.isRead())
-			.createdAt(DateUtils.passedTime(now, notification.getCreatedAt()))
+			.createdAt(DateUtils.passedTime(now, DateUtils.convertUtcToKst(notification.getCreatedAt())))
 			.build();
-		return notificationInfo;
 	}
 }

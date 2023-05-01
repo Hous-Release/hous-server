@@ -15,7 +15,6 @@ import hous.core.domain.notification.PushMessage;
 import hous.core.domain.notification.mongo.NotificationRepository;
 import hous.core.domain.rule.Rule;
 import hous.core.domain.todo.Todo;
-import hous.core.domain.user.Onboarding;
 import hous.core.domain.user.PushStatus;
 import hous.core.domain.user.TodoPushStatus;
 import hous.core.domain.user.User;
@@ -30,92 +29,108 @@ public class NotificationService {
 	private final SqsProducer sqsProducer;
 
 	public void sendNewTodoNotification(User to, Todo todo, boolean isTake) {
-		notificationRepository.save(Notification.newInstance(to.getOnboarding().getId(), NotificationType.TODO,
-			newTodoNotification(todo, isTake), false));
-		if (todo.isPushNotification() && to.getSetting().isPushNotification()
-			&& to.getSetting().getNewTodoPushStatus() == TodoPushStatus.ON_ALL) {
-			sqsProducer.produce(MessageDto.of(to, PushMessage.NEW_TODO.getTitle(), PushMessage.NEW_TODO.getBody()));
-		}
-		if (todo.isPushNotification() && to.getSetting().isPushNotification()
-			&& to.getSetting().getNewTodoPushStatus() == TodoPushStatus.ON_MY && isTake) {
-			sqsProducer.produce(
-				MessageDto.of(to, PushMessage.NEW_TODO_TAKE.getTitle(), PushMessage.NEW_TODO_TAKE.getBody()));
+		notificationRepository.save(
+			Notification.newInstance(to.getOnboarding().getId(), NotificationType.TODO,
+				generateContent(todo.getName(), getTodoMessage(isTake)),
+				false));
+
+		if (todo.isPushNotification() && to.getSetting().isPushNotification()) {
+			TodoPushStatus todoPushStatus = to.getSetting().getNewTodoPushStatus();
+			String title = "";
+			String body = "";
+			if (todoPushStatus == TodoPushStatus.ON_ALL) {
+				title = PushMessage.NEW_TODO.getTitle();
+				body = PushMessage.NEW_TODO.getBody();
+			}
+			if (todoPushStatus == TodoPushStatus.ON_MY && isTake) {
+				title = PushMessage.NEW_TODO_TAKE.getTitle();
+				body = PushMessage.NEW_TODO_TAKE.getBody();
+			}
+			sqsProducer.produce(MessageDto.of(to, title, body));
 		}
 	}
 
 	public void sendTodayTodoNotification(User to, boolean isTake) {
-		if (to.getSetting().isPushNotification() && to.getSetting().getTodayTodoPushStatus() == TodoPushStatus.ON_ALL) {
-			sqsProducer.produce(
-				MessageDto.of(to, PushMessage.TODAY_TODO_START.getTitle(), PushMessage.TODAY_TODO_START.getBody()));
-		}
-		if (to.getSetting().isPushNotification() && to.getSetting().getTodayTodoPushStatus() == TodoPushStatus.ON_MY
-			&& isTake) {
-			sqsProducer.produce(MessageDto.of(to, PushMessage.TODAY_TODO_TAKE_START.getTitle(),
-				PushMessage.TODAY_TODO_TAKE_START.getBody()));
+		if (to.getSetting().isPushNotification()) {
+			TodoPushStatus todoPushStatus = to.getSetting().getTodayTodoPushStatus();
+			String title = "";
+			String body = "";
+			if (todoPushStatus == TodoPushStatus.ON_ALL) {
+				title = PushMessage.TODAY_TODO_START.getTitle();
+				body = PushMessage.TODAY_TODO_START.getBody();
+			}
+			if (todoPushStatus == TodoPushStatus.ON_MY && isTake) {
+				title = PushMessage.TODAY_TODO_TAKE_START.getTitle();
+				body = PushMessage.TODAY_TODO_TAKE_START.getBody();
+			}
+			sqsProducer.produce(MessageDto.of(to, title, body));
 		}
 	}
 
 	public void sendRemindTodoNotification(User to, List<Todo> todos, boolean isTake) {
-		todos.forEach(todo -> {
-			notificationRepository.save(Notification.newInstance(to.getOnboarding().getId(), NotificationType.TODO,
-				remindTodoNotification(todo), false));
-		});
-		if (to.getSetting().isPushNotification()
-			&& to.getSetting().getRemindTodoPushStatus() == TodoPushStatus.ON_ALL) {
-			sqsProducer.produce(
-				MessageDto.of(to, PushMessage.TODO_REMIND.getTitle(), PushMessage.TODO_REMIND.getBody()));
-		}
-		if (to.getSetting().isPushNotification() && to.getSetting().getRemindTodoPushStatus() == TodoPushStatus.ON_MY
-			&& isTake) {
-			sqsProducer.produce(
-				MessageDto.of(to, PushMessage.TODO_TAKE_REMIND.getTitle(), PushMessage.TODO_TAKE_REMIND.getBody()));
+		todos.forEach(todo ->
+			notificationRepository.save(
+				Notification.newInstance(to.getOnboarding().getId(), NotificationType.TODO,
+					generateContent(todo.getName(), NotificationMessage.TODO_REMIND.getValue()),
+					false))
+		);
+
+		if (to.getSetting().isPushNotification()) {
+			TodoPushStatus todoPushStatus = to.getSetting().getRemindTodoPushStatus();
+			String title = "";
+			String body = "";
+			if (todoPushStatus == TodoPushStatus.ON_ALL) {
+				title = PushMessage.TODO_REMIND.getTitle();
+				body = PushMessage.TODO_REMIND.getBody();
+			}
+			if (todoPushStatus == TodoPushStatus.ON_MY
+				&& isTake) {
+				title = PushMessage.TODO_TAKE_REMIND.getTitle();
+				body = PushMessage.TODO_TAKE_REMIND.getBody();
+			}
+			sqsProducer.produce(MessageDto.of(to, title, body));
 		}
 	}
 
 	public void sendNewRuleNotification(User to, List<Rule> rules) {
-		rules.stream().forEach(rule -> {
+		rules.forEach(rule ->
 			notificationRepository.save(
-				Notification.newInstance(to.getOnboarding().getId(), NotificationType.RULE, newRuleNotification(rule),
-					false));
-		});
+				Notification.newInstance(to.getOnboarding().getId(), NotificationType.RULE,
+					generateContent(rule.getName(), NotificationMessage.NEW_RULE.getValue()),
+					false))
+		);
+
 		if (to.getSetting().isPushNotification() && to.getSetting().getRulesPushStatus() == PushStatus.ON) {
 			sqsProducer.produce(MessageDto.of(to, PushMessage.NEW_RULE.getTitle(), PushMessage.NEW_RULE.getBody()));
 		}
 	}
 
 	public void sendNewBadgeNotification(User to, BadgeInfo badgeInfo) {
-		notificationRepository.save(Notification.newInstance(to.getOnboarding().getId(), NotificationType.BADGE,
-			newBadgeNotification(badgeInfo), false));
+		notificationRepository.save(
+			Notification.newInstance(to.getOnboarding().getId(), NotificationType.BADGE,
+				generateContent(badgeInfo.getValue(), NotificationMessage.NEW_BADGE.getValue()),
+				false)
+		);
+
 		if (to.getSetting().isPushNotification() && to.getSetting().getBadgePushStatus() == PushStatus.ON) {
-			sqsProducer.produce(MessageDto.of(to, newBadgePushTitle(badgeInfo), newBadgePushBody(to.getOnboarding())));
+			sqsProducer.produce(MessageDto.of(to,
+				generateContent(badgeInfo.getValue(), PushMessage.NEW_BADGE.getTitle()),
+				generateDetailContent(to.getOnboarding().getNickname(), PushMessage.NEW_BADGE.getBody())));
 		}
 	}
 
-	private String newTodoNotification(Todo todo, boolean isTake) {
+	private String generateContent(String name, String message) {
+		return String.format("'%s' %s", name, message);
+	}
+
+	private String generateDetailContent(String name, String message) {
+		return String.format("%s%s", name, message);
+	}
+
+	private String getTodoMessage(boolean isTake) {
 		if (isTake) {
-			return String.format("'%s' %s", todo.getName(), NotificationMessage.NEW_TODO_TAKE.getValue());
-		} else {
-			return String.format("'%s' %s", todo.getName(), NotificationMessage.NEW_TODO.getValue());
+			return NotificationMessage.NEW_TODO_TAKE.getValue();
 		}
-	}
-
-	private String remindTodoNotification(Todo todo) {
-		return String.format("'%s' %s", todo.getName(), NotificationMessage.TODO_REMIND.getValue());
-	}
-
-	private String newRuleNotification(Rule rule) {
-		return String.format("'%s' %s", rule.getName(), NotificationMessage.NEW_RULE.getValue());
-	}
-
-	private String newBadgePushTitle(BadgeInfo badgeInfo) {
-		return String.format("'%s' %s", badgeInfo.getValue(), PushMessage.NEW_BADGE.getTitle());
-	}
-
-	private String newBadgePushBody(Onboarding onboarding) {
-		return String.format("%s%s", onboarding.getNickname(), PushMessage.NEW_BADGE.getBody());
-	}
-
-	private String newBadgeNotification(BadgeInfo badgeInfo) {
-		return String.format("'%s' %s", badgeInfo.getValue(), NotificationMessage.NEW_BADGE.getValue());
+		return NotificationMessage.NEW_TODO.getValue();
 	}
 }
