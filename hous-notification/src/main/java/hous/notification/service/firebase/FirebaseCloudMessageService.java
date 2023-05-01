@@ -13,9 +13,9 @@ import com.google.auth.oauth2.GoogleCredentials;
 
 import hous.common.exception.InternalServerException;
 import hous.common.util.HttpHeaderUtils;
-import hous.common.util.JwtUtils;
-import hous.core.domain.user.User;
 import hous.external.client.firebase.FirebaseApiClient;
+import hous.notification.config.sqs.dto.FcmTokenResetDto;
+import hous.notification.config.sqs.producer.SqsProducer;
 import hous.notification.service.firebase.dto.request.FcmMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,16 +30,14 @@ public class FirebaseCloudMessageService {
 
 	private final ObjectMapper objectMapper;
 	private final FirebaseApiClient firebaseApiCaller;
-	private final JwtUtils jwtUtils;
+	private final SqsProducer sqsProducer;
 
-	public void sendMessageTo(User to, String title, String body) {
+	public void sendMessageTo(String fcmToken, String title, String body) {
 		try {
-			String targetToken = to.getFcmToken();
-			String message = makeMessage(targetToken, title, body);
+			String message = makeMessage(fcmToken, title, body);
 			firebaseApiCaller.requestFcmMessaging(HttpHeaderUtils.withBearerToken(getAccessToken()), message);
 		} catch (Exception exception) {
-			jwtUtils.expireRefreshToken(to.getId());
-			to.resetFcmToken();
+			sqsProducer.produce(FcmTokenResetDto.of(fcmToken));
 			log.error(exception.getMessage(), exception);
 		}
 	}

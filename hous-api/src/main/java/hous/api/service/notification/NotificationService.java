@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import hous.api.config.sqs.dto.MessageDto;
+import hous.api.config.sqs.dto.FirebaseDto;
 import hous.api.config.sqs.producer.SqsProducer;
 import hous.core.domain.badge.BadgeInfo;
 import hous.core.domain.notification.Notification;
@@ -46,7 +46,7 @@ public class NotificationService {
 				title = PushMessage.NEW_TODO_TAKE.getTitle();
 				body = PushMessage.NEW_TODO_TAKE.getBody();
 			}
-			sqsProducer.produce(MessageDto.of(to, title, body));
+			sqsProducer.produce(FirebaseDto.of(to.getFcmToken(), title, body));
 		}
 	}
 
@@ -63,7 +63,7 @@ public class NotificationService {
 				title = PushMessage.TODAY_TODO_TAKE_START.getTitle();
 				body = PushMessage.TODAY_TODO_TAKE_START.getBody();
 			}
-			sqsProducer.produce(MessageDto.of(to, title, body));
+			sqsProducer.produce(FirebaseDto.of(to.getFcmToken(), title, body));
 		}
 	}
 
@@ -88,7 +88,7 @@ public class NotificationService {
 				title = PushMessage.TODO_TAKE_REMIND.getTitle();
 				body = PushMessage.TODO_TAKE_REMIND.getBody();
 			}
-			sqsProducer.produce(MessageDto.of(to, title, body));
+			sqsProducer.produce(FirebaseDto.of(to.getFcmToken(), title, body));
 		}
 	}
 
@@ -101,7 +101,8 @@ public class NotificationService {
 		);
 
 		if (to.getSetting().isPushNotification() && to.getSetting().getRulesPushStatus() == PushStatus.ON) {
-			sqsProducer.produce(MessageDto.of(to, PushMessage.NEW_RULE.getTitle(), PushMessage.NEW_RULE.getBody()));
+			sqsProducer.produce(
+				FirebaseDto.of(to.getFcmToken(), PushMessage.NEW_RULE.getTitle(), PushMessage.NEW_RULE.getBody()));
 		}
 	}
 
@@ -113,7 +114,7 @@ public class NotificationService {
 		);
 
 		if (to.getSetting().isPushNotification() && to.getSetting().getBadgePushStatus() == PushStatus.ON) {
-			sqsProducer.produce(MessageDto.of(to,
+			sqsProducer.produce(FirebaseDto.of(to.getFcmToken(),
 				generateContent(badgeInfo.getValue(), PushMessage.NEW_BADGE.getTitle()),
 				generateDetailContent(to.getOnboarding().getNickname(), PushMessage.NEW_BADGE.getBody())));
 		}

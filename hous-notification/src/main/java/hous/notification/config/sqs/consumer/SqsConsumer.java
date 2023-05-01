@@ -9,11 +9,12 @@ import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import hous.common.constant.MessageType;
-import hous.notification.config.sqs.dto.MessageDto;
+import hous.notification.config.sqs.dto.FirebaseDto;
+import hous.notification.config.sqs.dto.SlackExceptionDto;
+import hous.notification.config.sqs.dto.SlackUserDeleteDto;
 import hous.notification.service.firebase.FirebaseCloudMessageService;
 import hous.notification.service.slack.SlackService;
 import lombok.RequiredArgsConstructor;
@@ -28,22 +29,25 @@ public class SqsConsumer {
 	private final FirebaseCloudMessageService firebaseCloudMessageService;
 	private final SlackService slackService;
 
-	@SqsListener(value = "${cloud.aws.sqs.queue.name}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
+	@SqsListener(value = "${cloud.aws.sqs.notification.name}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
 	public void consume(@Payload String info, @Headers Map<String, String> headers, Acknowledgment ack) {
 		try {
-			MessageDto dto = objectMapper.readValue(info, MessageDto.class);
-			switch (dto.getType()) {
+			switch (headers.get(MessageType.TYPE)) {
 				case MessageType.FIREBASE:
-					firebaseCloudMessageService.sendMessageTo(dto.getTo(), dto.getTitle(), dto.getBody());
+					FirebaseDto firebaseDto = objectMapper.readValue(info, FirebaseDto.class);
+					firebaseCloudMessageService.sendMessageTo(
+						firebaseDto.getFcmToken(), firebaseDto.getTitle(), firebaseDto.getBody());
 					break;
 				case MessageType.SLACK_EXCEPTION:
-					slackService.sendSlackMessageProductError(dto.getException());
+					SlackExceptionDto slackExceptionDto = objectMapper.readValue(info, SlackExceptionDto.class);
+					slackService.sendSlackMessageProductError(slackExceptionDto.getException());
 					break;
 				case MessageType.SLACK_USER_DELETE:
-					slackService.sendSlackMessageDeleteUser(dto.getUserDeleteResponse());
+					SlackUserDeleteDto slackUserDeleteDto = objectMapper.readValue(info, SlackUserDeleteDto.class);
+					slackService.sendSlackMessageDeleteUser(slackUserDeleteDto.getUserDeleteResponse());
 					break;
 			}
-		} catch (JsonProcessingException exception) {
+		} catch (Exception exception) {
 			log.error(exception.getMessage(), exception);
 		}
 		ack.acknowledge();
