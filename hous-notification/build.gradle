@@ -1,0 +1,16 @@
+dependencies {
+    implementation project(":hous-core")
+    implementation project(":hous-common")
+    implementation project(":hous-external")
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-data-mongodb"
+    runtimeOnly "mysql:mysql-connector-java"
+    implementation "org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE"
+    implementation "org.springframework.cloud:spring-cloud-aws-messaging:2.2.6.RELEASE"
+    implementation "com.google.firebase:firebase-admin:6.8.1"
+    implementation group: "com.squareup.okhttp3", name: "okhttp", version: "4.2.2"
+    implementation "com.slack.api:slack-api-client:1.25.1"
+}

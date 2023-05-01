@@ -10,9 +10,9 @@ import hous.api.service.auth.CommonAuthService;
 import hous.api.service.auth.CommonAuthServiceUtils;
 import hous.api.service.auth.dto.request.LoginDto;
 import hous.api.service.auth.dto.request.SignUpDto;
-import hous.api.service.jwt.JwtService;
 import hous.api.service.user.UserService;
 import hous.api.service.user.UserServiceUtils;
+import hous.common.util.JwtUtils;
 import hous.core.domain.user.User;
 import hous.core.domain.user.UserSocialType;
 import hous.core.domain.user.mysql.UserRepository;
@@ -34,7 +34,7 @@ public class AppleAuthService implements AuthService {
 
 	private final CommonAuthService commonAuthService;
 
-	private final JwtService jwtService;
+	private final JwtUtils jwtUtils;
 
 	private final RedisTemplate<String, Object> redisTemplate;
 
@@ -60,7 +60,7 @@ public class AppleAuthService implements AuthService {
 		String socialId = appleTokenDecoder.getSocialIdFromIdToken(request.getToken());
 		User user = UserServiceUtils.findUserBySocialIdAndSocialType(userRepository, socialId, socialType);
 		commonAuthService.resetConflictFcmToken(request.getFcmToken());
-		CommonAuthServiceUtils.forceLogoutUser(redisTemplate, jwtService, user);
+		CommonAuthServiceUtils.forceLogoutUser(redisTemplate, jwtUtils, user);
 		user.updateFcmToken(request.getFcmToken());
 		return user.getId();
 	}

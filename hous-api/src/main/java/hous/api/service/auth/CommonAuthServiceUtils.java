@@ -4,9 +4,9 @@ import static hous.common.exception.ErrorCode.*;
 
 import org.springframework.data.redis.core.RedisTemplate;
 
-import hous.api.service.jwt.JwtService;
 import hous.common.constant.RedisKey;
 import hous.common.exception.ConflictException;
+import hous.common.util.JwtUtils;
 import hous.core.domain.user.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -21,7 +21,7 @@ public class CommonAuthServiceUtils {
 		}
 	}
 
-	public static void forceLogoutUser(RedisTemplate<String, Object> redisTemplate, JwtService jwtService, User user) {
+	public static void forceLogoutUser(RedisTemplate<String, Object> redisTemplate, JwtUtils jwtService, User user) {
 		String refreshToken = (String)redisTemplate.opsForValue().get(RedisKey.REFRESH_TOKEN + user.getId());
 		if (refreshToken != null) {
 			jwtService.expireRefreshToken(user.getId());

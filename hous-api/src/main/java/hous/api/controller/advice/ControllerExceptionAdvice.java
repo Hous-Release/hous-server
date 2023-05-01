@@ -24,7 +24,9 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 
-import hous.api.service.slack.SlackService;
+import hous.api.config.sqs.dto.SlackExceptionDto;
+import hous.api.config.sqs.producer.SqsProducer;
+import hous.common.constant.InstanceType;
 import hous.common.dto.ErrorResponse;
 import hous.common.exception.FeignClientException;
 import hous.common.exception.HousException;
@@ -35,7 +37,8 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 @AllArgsConstructor
 public class ControllerExceptionAdvice {
-	private final SlackService slackService;
+
+	private final SqsProducer sqsProducer;
 
 	/**
 	 * Hous Custom Exception
@@ -46,7 +49,7 @@ public class ControllerExceptionAdvice {
 			log.warn(exception.getMessage(), exception);
 		} else {
 			log.error(exception.getMessage(), exception);
-			slackService.sendSlackMessageProductError(exception);
+			sqsProducer.produce(SlackExceptionDto.of(InstanceType.API_SERVER, exception));
 		}
 		return ResponseEntity.status(exception.getStatus())
 			.body(ErrorResponse.error(exception.getErrorCode()));
@@ -61,7 +64,7 @@ public class ControllerExceptionAdvice {
 			log.warn(exception.getMessage(), exception);
 		} else {
 			log.error(exception.getMessage(), exception);
-			slackService.sendSlackMessageProductError(exception);
+			sqsProducer.produce(SlackExceptionDto.of(InstanceType.API_SERVER, exception));
 		}
 		if (exception.getStatus() == UNAUTHORIZED_INVALID_TOKEN_EXCEPTION.getStatus()) {
 			return ResponseEntity.status(UNAUTHORIZED_INVALID_TOKEN_EXCEPTION.getStatus())
@@ -183,7 +186,7 @@ public class ControllerExceptionAdvice {
 	@ExceptionHandler(Exception.class)
 	protected ErrorResponse handleException(final Exception exception) {
 		log.error(exception.getMessage(), exception);
-		slackService.sendSlackMessageProductError(exception);
+		sqsProducer.produce(SlackExceptionDto.of(InstanceType.API_SERVER, exception));
 		return ErrorResponse.error(INTERNAL_SERVER_EXCEPTION);
 	}
 }

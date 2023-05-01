@@ -16,7 +16,8 @@ import hous.api.config.aop.duplicate.PreventDuplicateRequest;
 import hous.api.config.interceptor.auth.Auth;
 import hous.api.config.interceptor.version.Version;
 import hous.api.config.resolver.UserId;
-import hous.api.service.slack.SlackService;
+import hous.api.config.sqs.dto.SlackUserDeleteDto;
+import hous.api.config.sqs.producer.SqsProducer;
 import hous.api.service.user.UserRetrieveService;
 import hous.api.service.user.UserService;
 import hous.api.service.user.UserServiceUtils;
@@ -44,7 +45,7 @@ public class UserController {
 
 	private final UserService userService;
 	private final UserRetrieveService userRetrieveService;
-	private final SlackService slackService;
+	private final SqsProducer sqsProducer;
 
 	@ApiOperation(
 		value = "[인증] 마이 페이지(Profile 뷰) - 나의 프로필 정보를 수정합니다.",
@@ -192,7 +193,7 @@ public class UserController {
 		@Valid @RequestBody DeleteUserRequestDto request) {
 		userService.deleteUser(request, userId);
 		if (UserServiceUtils.isNewFeedback(request.getFeedbackType(), request.getComment())) {
-			slackService.sendSlackMessageDeleteUser(userRetrieveService.getFeedback(request.getComment()));
+			sqsProducer.produce(SlackUserDeleteDto.of(userRetrieveService.getFeedback(request.getComment())));
 		}
 		return SuccessResponse.OK;
 	}

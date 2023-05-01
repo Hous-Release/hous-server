@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import hous.api.config.security.JwtConstants;
+import hous.common.constant.JwtKeys;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -28,7 +28,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 			return true;
 		}
 		Long userId = loginCheckHandler.getUserId(request);
-		request.setAttribute(JwtConstants.USER_ID, userId);
+		request.setAttribute(JwtKeys.USER_ID, userId);
 		return true;
 	}
 }

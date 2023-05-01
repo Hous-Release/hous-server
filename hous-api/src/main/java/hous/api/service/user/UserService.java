@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import hous.api.service.badge.BadgeService;
 import hous.api.service.badge.BadgeServiceUtils;
-import hous.api.service.jwt.JwtService;
 import hous.api.service.room.RoomServiceUtils;
 import hous.api.service.todo.TodoServiceUtils;
 import hous.api.service.user.dto.request.CreateUserRequestDto;
@@ -16,6 +15,7 @@ import hous.api.service.user.dto.request.UpdatePushSettingRequestDto;
 import hous.api.service.user.dto.request.UpdateTestScoreRequestDto;
 import hous.api.service.user.dto.request.UpdateUserInfoRequestDto;
 import hous.api.service.user.dto.response.UpdatePersonalityColorResponse;
+import hous.common.util.JwtUtils;
 import hous.core.domain.badge.Badge;
 import hous.core.domain.badge.BadgeCounter;
 import hous.core.domain.badge.BadgeCounterType;
@@ -70,7 +70,7 @@ public class UserService {
 	private final BadgeCounterRepository badgeCounterRepository;
 
 	private final BadgeService badgeService;
-	private final JwtService jwtService;
+	private final JwtUtils jwtUtils;
 
 	public Long registerUser(CreateUserRequestDto request) {
 		UserServiceUtils.validateNotExistsUser(userRepository, request.getSocialId(), request.getSocialType());
@@ -86,7 +86,7 @@ public class UserService {
 			request.getIsPublic()));
 		User conflictFcmTokenUser = userRepository.findUserByFcmToken(request.getFcmToken());
 		if (conflictFcmTokenUser != null) {
-			jwtService.expireRefreshToken(conflictFcmTokenUser.getId());
+			jwtUtils.expireRefreshToken(conflictFcmTokenUser.getId());
 			conflictFcmTokenUser.resetFcmToken();
 		}
 		user.updateFcmToken(request.getFcmToken());
