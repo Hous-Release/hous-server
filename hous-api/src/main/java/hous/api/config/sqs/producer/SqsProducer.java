@@ -11,24 +11,31 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import hous.api.config.sqs.dto.MessageDto;
-import lombok.RequiredArgsConstructor;
+import hous.common.constant.MessageType;
 import lombok.extern.slf4j.Slf4j;
 
-@RequiredArgsConstructor
-@Component
 @Slf4j
+@Component
 public class SqsProducer {
 	@Value("${cloud.aws.sqs.queue.url}")
 	private String url;
 
+	private static final String messageGroupId = "sqs";
+
 	private final ObjectMapper objectMapper;
 	private final AmazonSQS amazonSQS;
+
+	public SqsProducer(ObjectMapper objectMapper, AmazonSQS amazonSQS) {
+		this.objectMapper = objectMapper;
+		this.amazonSQS = amazonSQS;
+	}
 
 	public void produce(MessageDto dto) {
 		try {
 			SendMessageRequest sendMessageRequest = new SendMessageRequest(url, objectMapper.writeValueAsString(dto))
-				.withMessageGroupId("sqs")
+				.withMessageGroupId(messageGroupId)
 				.withMessageDeduplicationId(UUID.randomUUID().toString());
+			sendMessageRequest.putCustomRequestHeader(MessageType.TYPE, dto.getType());
 			amazonSQS.sendMessage(sendMessageRequest);
 		} catch (JsonProcessingException exception) {
 			log.error(exception.getMessage(), exception);

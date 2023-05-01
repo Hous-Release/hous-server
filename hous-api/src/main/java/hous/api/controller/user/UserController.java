@@ -16,7 +16,7 @@ import hous.api.config.aop.duplicate.PreventDuplicateRequest;
 import hous.api.config.interceptor.auth.Auth;
 import hous.api.config.interceptor.version.Version;
 import hous.api.config.resolver.UserId;
-import hous.api.config.sqs.dto.MessageDto;
+import hous.api.config.sqs.dto.SlackUserDeleteDto;
 import hous.api.config.sqs.producer.SqsProducer;
 import hous.api.service.user.UserRetrieveService;
 import hous.api.service.user.UserService;
@@ -193,7 +193,7 @@ public class UserController {
 		@Valid @RequestBody DeleteUserRequestDto request) {
 		userService.deleteUser(request, userId);
 		if (UserServiceUtils.isNewFeedback(request.getFeedbackType(), request.getComment())) {
-			sqsProducer.produce(MessageDto.of(userRetrieveService.getFeedback(request.getComment())));
+			sqsProducer.produce(SlackUserDeleteDto.of(userRetrieveService.getFeedback(request.getComment())));
 		}
 		return SuccessResponse.OK;
 	}
