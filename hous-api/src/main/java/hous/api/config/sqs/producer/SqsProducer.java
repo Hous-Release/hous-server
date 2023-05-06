@@ -39,6 +39,8 @@ public class SqsProducer {
 				.withMessageDeduplicationId(UUID.randomUUID().toString())
 				.withMessageAttributes(createMessageAttributes(dto.getType()));
 			amazonSQS.sendMessage(sendMessageRequest);
+			log.info(String.format("====> [SQS Queue Request] : %s ",
+				dto));
 		} catch (JsonProcessingException exception) {
 			log.error(exception.getMessage(), exception);
 		}

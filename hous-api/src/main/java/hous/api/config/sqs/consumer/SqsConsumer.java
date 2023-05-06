@@ -33,6 +33,11 @@ public class SqsConsumer {
 	@SqsListener(value = "${cloud.aws.sqs.api.name}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
 	public void consume(@Payload String info, @Headers Map<String, String> headers, Acknowledgment ack) {
 		try {
+			log.info(String.format("====> [SQS Queue Response]\n"
+					+ "info: %s\n"
+					+ "header: %s\n"
+					+ "ack: %s\n",
+				info, headers, ack.toString()));
 			switch (headers.get(MessageType.TYPE)) {
 				case MessageType.FCM_TOKEN_RESET:
 					FcmTokenResetDto fcmTokenResetDto = objectMapper.readValue(info, FcmTokenResetDto.class);
