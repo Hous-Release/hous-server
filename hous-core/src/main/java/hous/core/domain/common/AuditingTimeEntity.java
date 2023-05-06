@@ -26,8 +26,6 @@ public class AuditingTimeEntity {
 	@Field(name = "created_at")
 	private LocalDateTime createdAt;
 
-	// TODO migration - setter 삭제할
-	@Setter
 	@LastModifiedDate
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "Asia/Seoul")
 	@Field(name = "updated_at")

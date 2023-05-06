@@ -55,20 +55,6 @@ public class Notification extends AuditingTimeEntity {
 			.build();
 	}
 
-	// TODO migration - 삭제 예정
-
-	public static Notification migrationInstance(Long id, Long onboardingId, NotificationType type, String content,
-		boolean isRead, LocalDateTime createdAt) {
-		return builder()
-			.id(id)
-			.onboardingId(onboardingId)
-			.type(type)
-			.content(content)
-			.isRead(isRead)
-			.expireAt(createdAt.plusDays(30))
-			.build();
-	}
-
 	public void updateIsRead() {
 		this.isRead = true;
 	}
