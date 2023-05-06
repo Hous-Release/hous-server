@@ -4,6 +4,7 @@ services:
 
  mysql:
   image: mysql/mysql-server:5.7
+  container_name: mysql
   environment:
    MYSQL_ROOT_HOST: '%'
    MYSQL_USER: "hous"
@@ -18,11 +19,22 @@ services:
 
  redis:
   image: redis:alpine
+  container_name: redis
   command: redis-server --port 6379
-  container_name: redis_boot
   hostname: redis_boot
   labels:
    - "name=redis"
    - "mode=standalone"
   ports:
    - 6379:6379
+
+ mongodb:
+  image: mongo:latest
+  hostname: mongodb
+  container_name: mongodb
+  restart: always
+  environment:
+   MONGO_INITDB_ROOT_USERNAME: hous
+   MONGO_INITDB_ROOT_PASSWORD: hous
+  ports:
+   - 27017:27017

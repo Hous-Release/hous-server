@@ -1,0 +1,24 @@
+version: 0.0
+os: linux
+files:
+ - source: /
+   destination: /home/ubuntu/hous-api
+   overwrite: yes
+
+permissions:
+ - object: /home/ubuntu
+   pattern: "**"
+   owner: ubuntu
+   group: ubuntu
+
+hooks:
+ ApplicationStart:
+  - location: run_new_was.sh
+    timeout: 180
+    runas: ubuntu
+  - location: health_check.sh
+    timeout: 180
+    runas: ubuntu
+  - location: switch.sh
+    timeout: 180
+    runas: ubuntu
