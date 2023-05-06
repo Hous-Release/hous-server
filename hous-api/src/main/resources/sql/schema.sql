@@ -8,7 +8,6 @@ DROP TABLE IF EXISTS test_score;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS onboarding;
 DROP TABLE IF EXISTS acquire;
-DROP TABLE IF EXISTS notification;
 DROP TABLE IF EXISTS represent;
 DROP TABLE IF EXISTS room;
 DROP TABLE IF EXISTS participate;
@@ -138,17 +137,6 @@ CREATE TABLE acquire
     updated_at    datetime(6) null,
     is_read       bit not null,
     badge_id      bigint null,
-    onboarding_id bigint null
-);
-
-CREATE TABLE notification
-(
-    id            bigint auto_increment primary key,
-    created_at    datetime(6) null,
-    updated_at    datetime(6) null,
-    content       varchar(100) not null,
-    is_read       bit          not null,
-    type          varchar(30)  not null,
     onboarding_id bigint null
 );
 
