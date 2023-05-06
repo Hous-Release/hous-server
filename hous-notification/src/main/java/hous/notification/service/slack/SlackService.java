@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class SlackService {
 
-	@Value(value = "${spring.profiles.default}")
+	@Value(value = "${spring.profiles.active}")
 	String profile;
 	@Value(value = "${slack.token}")
 	String token;

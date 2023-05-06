@@ -18,7 +18,7 @@ public class SlackServiceUtils {
 	private static final String PROD_ERROR_INSTANCE = "*Error Instance:*\n";
 	private static final String PROD_ERROR_MESSAGE = "*Error Message:*\n";
 	private static final String PROD_ERROR_STACK = "*Error Stack:*\n";
-	private static final String FILTER_STRING = "hous.server";
+	private static final String FILTER_STRING = "hous";
 	private static final String PROD_USER_DELETE_TOTAL_COUNT_MESSAGE = "*피드백을 남긴 총 탈퇴 인원:* ";
 	private static final String PROD_USER_DELETE_MESSAGE = "*피드백 유형별 탈퇴 인원:*\n";
 	private static final String PROD_NOW_USER_DELETE_COMMENT = "*지금 탈퇴한 유저의 의견:*\n";

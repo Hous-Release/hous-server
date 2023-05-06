@@ -34,9 +34,8 @@ public class SqsConsumer {
 		try {
 			log.info(String.format("====> [SQS Queue Response]\n"
 					+ "info: %s\n"
-					+ "header: %s\n"
-					+ "ack: %s\n",
-				info, headers, ack.toString()));
+					+ "header: %s\n",
+				info, headers));
 			switch (headers.get(MessageType.TYPE)) {
 				case MessageType.FIREBASE:
 					FirebaseDto firebaseDto = objectMapper.readValue(info, FirebaseDto.class);
