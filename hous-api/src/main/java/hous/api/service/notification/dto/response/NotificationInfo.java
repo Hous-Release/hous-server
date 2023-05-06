@@ -13,7 +13,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -38,7 +40,7 @@ public class NotificationInfo {
 			.type(notification.getType())
 			.content(notification.getContent())
 			.isRead(notification.isRead())
-			.createdAt(DateUtils.passedTime(now, DateUtils.convertUtcToKst(notification.getCreatedAt())))
+			.createdAt(DateUtils.passedTime(now, notification.getCreatedAt()))
 			.build();
 	}
 }
