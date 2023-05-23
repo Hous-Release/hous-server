@@ -30,6 +30,7 @@ public enum SuccessCode {
 	GET_HOME_INFO_SUCCESS(SuccessStatusCode.OK, "홈 화면 정보 조회 성공입니다."),
 
 	// to-do
+	GET_TODO_ADDABLE_SUCCESS(SuccessStatusCode.OK, "todo 추가 가능 여부 조회 성공입니다."),
 	GET_USERS_INFO_SUCCESS(SuccessStatusCode.OK, "담당자 목록 조회 성공입니다."),
 	GET_TODO_INFO_SUCCESS(SuccessStatusCode.OK, "todo 정보 조회 성공입니다."),
 	GET_TODO_SUMMARY_INFO_SUCCESS(SuccessStatusCode.OK, "todo 요약 정보 조회 성공입니다."),

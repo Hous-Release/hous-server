@@ -11,6 +11,7 @@ import hous.api.config.interceptor.version.Version;
 import hous.api.config.resolver.UserId;
 import hous.api.service.todo.TodoRetrieveService;
 import hous.api.service.todo.dto.response.MyTodoInfoResponse;
+import hous.api.service.todo.dto.response.TodoAddableResponse;
 import hous.api.service.todo.dto.response.TodoAllDayResponse;
 import hous.api.service.todo.dto.response.TodoAllMemberResponse;
 import hous.api.service.todo.dto.response.TodoInfoResponse;
@@ -35,6 +36,29 @@ import springfox.documentation.annotations.ApiIgnore;
 public class TodoRetrieveController {
 
 	private final TodoRetrieveService todoRetrieveService;
+
+	@ApiOperation(
+		value = "[인증] todo 메인 페이지 - todo 추가 가능 여부를 조회합니다.",
+		notes = "todo 개수가 60개 미만인 경우 true, 60개 이상인 경우 false 를 전달합니다."
+	)
+	@ApiResponses(value = {
+		@ApiResponse(code = 200, message = "todo 추가 가능 여부 조회 성공입니다."),
+		@ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+		@ApiResponse(
+			code = 404,
+			message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
+				+ "2. 참가중인 방이 존재하지 않습니다.",
+			response = ErrorResponse.class),
+		@ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
+		@ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+	})
+	@Version
+	@Auth
+	@GetMapping("/todo/addable")
+	public ResponseEntity<SuccessResponse<TodoAddableResponse>> getTodoAddable(@ApiIgnore @UserId Long userId) {
+		return SuccessResponse.success(SuccessCode.GET_TODO_ADDABLE_SUCCESS,
+			todoRetrieveService.getTodoAddable(userId));
+	}
 
 	@ApiOperation(
 		value = "[인증] todo 추가 페이지 - 담당자 목록을 조회합니다.",

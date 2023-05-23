@@ -16,6 +16,7 @@ import hous.api.service.todo.dto.response.DayOfWeekTodo;
 import hous.api.service.todo.dto.response.MyTodoInfoResponse;
 import hous.api.service.todo.dto.response.OurTodo;
 import hous.api.service.todo.dto.response.OurTodoInfo;
+import hous.api.service.todo.dto.response.TodoAddableResponse;
 import hous.api.service.todo.dto.response.TodoAllDayInfo;
 import hous.api.service.todo.dto.response.TodoAllDayResponse;
 import hous.api.service.todo.dto.response.TodoAllMemberInfo;
@@ -28,6 +29,7 @@ import hous.api.service.todo.dto.response.TodoSummaryInfoResponse;
 import hous.api.service.todo.dto.response.UserPersonalityInfo;
 import hous.api.service.todo.dto.response.UserPersonalityInfoResponse;
 import hous.api.service.user.UserServiceUtils;
+import hous.common.constant.Constraint;
 import hous.common.util.DateUtils;
 import hous.core.domain.common.AuditingTimeEntity;
 import hous.core.domain.personality.PersonalityColor;
@@ -51,6 +53,13 @@ public class TodoRetrieveService {
 	private final UserRepository userRepository;
 	private final TodoRepository todoRepository;
 	private final DoneRepository doneRepository;
+
+	public TodoAddableResponse getTodoAddable(Long userId) {
+		User user = UserServiceUtils.findUserById(userRepository, userId);
+		Room room = RoomServiceUtils.findParticipatingRoom(user);
+		List<Todo> todos = room.getTodos();
+		return TodoAddableResponse.of(todos.size() < Constraint.TODO_COUNT_MAX);
+	}
 
 	public UserPersonalityInfoResponse getUsersInfo(Long userId) {
 		User user = UserServiceUtils.findUserById(userRepository, userId);
