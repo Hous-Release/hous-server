@@ -34,6 +34,7 @@ public enum SuccessCode {
 	GET_USERS_INFO_SUCCESS(SuccessStatusCode.OK, "담당자 목록 조회 성공입니다."),
 	GET_TODO_INFO_SUCCESS(SuccessStatusCode.OK, "todo 정보 조회 성공입니다."),
 	GET_TODO_SUMMARY_INFO_SUCCESS(SuccessStatusCode.OK, "todo 요약 정보 조회 성공입니다."),
+	GET_TODO_BY_FILTER_SUCCESS(SuccessStatusCode.OK, "필터별 todo 조회 성공입니다."),
 	GET_TODO_MAIN_SUCCESS(SuccessStatusCode.OK, "todo 메인 페이지 조회 성공입니다."),
 	GET_TODO_ALL_DAY_SUCCESS(SuccessStatusCode.OK, "todo 요일별 정보 조회 성공입니다."),
 	GET_TODO_ALL_MEMBER_SUCCESS(SuccessStatusCode.OK, "todo 멤버별 정보 조회 성공입니다."),

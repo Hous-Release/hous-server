@@ -4,6 +4,7 @@ import static hous.common.exception.ErrorCode.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -53,6 +54,34 @@ public class TodoServiceUtils {
 			throw new ValidationException(
 				String.format("(%s) 유저의 todo (%s) 상태는 이미 (%s) 입니다.", onboarding.getId(), todo.getId(), status),
 				VALIDATION_STATUS_EXCEPTION);
+		}
+	}
+
+	public static List<DayOfWeek> validateDayOfWeeks(String dayOfWeeks) {
+		if (dayOfWeeks == null) {
+			return List.of();
+		}
+		try {
+			return Arrays.stream(dayOfWeeks.split(","))
+				.map(DayOfWeek::valueOf)
+				.collect(Collectors.toList());
+		} catch (IllegalArgumentException exception) {
+			throw new ValidationException(
+				String.format("(%s) dayOfWeeks 형태가 잘못됐습니다.", dayOfWeeks), VALIDATION_DAY_OF_WEEKS_EXCEPTION);
+		}
+	}
+
+	public static List<Long> validateOnboardingIds(String onboardingIds) {
+		if (onboardingIds == null) {
+			return List.of();
+		}
+		try {
+			return Arrays.stream(onboardingIds.split(","))
+				.map(Long::valueOf)
+				.collect(Collectors.toList());
+		} catch (NumberFormatException exception) {
+			throw new ValidationException(
+				String.format("(%s) onboardingIds 형태가 잘못됐습니다.", onboardingIds), VALIDATION_ONBOARDING_IDS_EXCEPTION);
 		}
 	}
 
@@ -177,5 +206,31 @@ public class TodoServiceUtils {
 			}
 		}));
 		return new ArrayList<>(dayMyTodosSet);
+	}
+
+	public static List<Todo> filterByDayOfWeeks(List<Todo> todos, List<DayOfWeek> dayOfWeeks) {
+		if (dayOfWeeks.isEmpty()) {
+			return todos;
+		}
+		Set<Todo> filteredTodos = new HashSet<>();
+		todos.forEach(todo -> todo.getTakes().forEach(take -> take.getRedos().forEach(redo -> {
+			if (dayOfWeeks.contains(redo.getDayOfWeek())) {
+				filteredTodos.add(todo);
+			}
+		})));
+		return new ArrayList<>(filteredTodos);
+	}
+
+	public static List<Todo> filterByOnboardingIds(List<Todo> todos, List<Long> onboardingIds) {
+		if (onboardingIds.isEmpty()) {
+			return todos;
+		}
+		Set<Todo> filteredTodos = new HashSet<>();
+		todos.forEach(todo -> todo.getTakes().forEach(take -> {
+			if (onboardingIds.contains(take.getOnboarding().getId())) {
+				filteredTodos.add(todo);
+			}
+		}));
+		return new ArrayList<>(filteredTodos);
 	}
 }

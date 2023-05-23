@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import hous.api.config.interceptor.auth.Auth;
@@ -14,6 +15,7 @@ import hous.api.service.todo.dto.response.MyTodoInfoResponse;
 import hous.api.service.todo.dto.response.TodoAddableResponse;
 import hous.api.service.todo.dto.response.TodoAllDayResponse;
 import hous.api.service.todo.dto.response.TodoAllMemberResponse;
+import hous.api.service.todo.dto.response.TodoFilterResponse;
 import hous.api.service.todo.dto.response.TodoInfoResponse;
 import hous.api.service.todo.dto.response.TodoMainResponse;
 import hous.api.service.todo.dto.response.TodoSummaryInfoResponse;
@@ -155,6 +157,43 @@ public class TodoRetrieveController {
 		@ApiIgnore @UserId Long userId) {
 		return SuccessResponse.success(SuccessCode.GET_TODO_SUMMARY_INFO_SUCCESS,
 			todoRetrieveService.getTodoSummaryInfo(todoId, userId));
+	}
+
+	@ApiOperation(
+		value = "[인증] todo 보기 페이지 - 필터별 todo 를 조회합니다.",
+		notes = "필터를 적용하여 todo 를 조회합니다.\n"
+			+ "dayOfWeeks 에는 MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY 를 , 로 구별하여 설정해주세요.\n"
+			+ "onboardingIds 에는 호미 id 를 , 로 구별하여 설정해주세요.\n"
+			+ "쉼표 사이에는 띄어쓰기를 포함하지 말아주세요.\n"
+			+ "필터가 적용되지 않는 경우는 각각 null 을 보내주세요."
+	)
+	@ApiResponses(value = {
+		@ApiResponse(code = 200, message = "필터별 todo 조회 성공입니다."),
+		@ApiResponse(
+			code = 400,
+			message = "1. 잘못된 dayOfWeeks 형태입니다.\n"
+				+ "2. 잘못된 onboardingIds 형태입니다.",
+			response = ErrorResponse.class),
+		@ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+		@ApiResponse(
+			code = 404,
+			message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
+				+ "2. 참가중인 방이 존재하지 않습니다.",
+			response = ErrorResponse.class),
+		@ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
+		@ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+	})
+	@Version
+	@Auth
+	@GetMapping("/todos")
+	public ResponseEntity<SuccessResponse<TodoFilterResponse>> getTodosByFilter(
+		@ApiParam(name = "dayOfWeeks", value = "필터로 적용할 요일 목록", example = "MONDAY,TUESDAY")
+		@RequestParam(required = false) String dayOfWeeks,
+		@ApiParam(name = "onboardingIds", value = "필터로 적용할 호미 id 목록", example = "1,2,3")
+		@RequestParam(required = false) String onboardingIds,
+		@ApiIgnore @UserId Long userId) {
+		return SuccessResponse.success(SuccessCode.GET_TODO_BY_FILTER_SUCCESS,
+			todoRetrieveService.getTodosByFilter(dayOfWeeks, onboardingIds, userId));
 	}
 
 	@ApiOperation(

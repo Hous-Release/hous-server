@@ -22,6 +22,7 @@ import hous.api.service.todo.dto.response.TodoAllDayResponse;
 import hous.api.service.todo.dto.response.TodoAllMemberInfo;
 import hous.api.service.todo.dto.response.TodoAllMemberResponse;
 import hous.api.service.todo.dto.response.TodoDetailInfo;
+import hous.api.service.todo.dto.response.TodoFilterResponse;
 import hous.api.service.todo.dto.response.TodoInfo;
 import hous.api.service.todo.dto.response.TodoInfoResponse;
 import hous.api.service.todo.dto.response.TodoMainResponse;
@@ -126,6 +127,18 @@ public class TodoRetrieveService {
 		List<Onboarding> meFirstTodoTakes = UserServiceUtils.toMeFirstList(todoTakes, user.getOnboarding());
 		List<UserPersonalityInfo> userPersonalityInfos = TodoServiceUtils.toUserPersonalityInfoList(meFirstTodoTakes);
 		return TodoSummaryInfoResponse.of(todo, userPersonalityInfos, user.getOnboarding());
+	}
+
+	public TodoFilterResponse getTodosByFilter(String dayOfWeeks, String onboardingIds, Long userId) {
+		User user = UserServiceUtils.findUserById(userRepository, userId);
+		Room room = RoomServiceUtils.findParticipatingRoom(user);
+		List<Todo> todos = room.getTodos();
+		List<DayOfWeek> days = TodoServiceUtils.validateDayOfWeeks(dayOfWeeks);
+		List<Long> ids = TodoServiceUtils.validateOnboardingIds(onboardingIds);
+		todos = TodoServiceUtils.filterByDayOfWeeks(todos, days);
+		todos = TodoServiceUtils.filterByOnboardingIds(todos, ids);
+		todos.sort(Comparator.comparing(AuditingTimeEntity::getCreatedAt));
+		return TodoFilterResponse.of(todos, DateUtils.todayLocalDateTime());
 	}
 
 	public TodoAllDayResponse getTodoAllDayInfo(Long userId) {
