@@ -99,7 +99,7 @@ public class TodoRetrieveController {
 	})
 	@Version
 	@Auth
-	@GetMapping("/todos")
+	@GetMapping("/todos/main")
 	public ResponseEntity<SuccessResponse<TodoMainResponse>> getTodoMain(@ApiIgnore @UserId Long userId) {
 		return SuccessResponse.success(SuccessCode.GET_TODO_MAIN_SUCCESS, todoRetrieveService.getTodoMain(userId));
 	}
