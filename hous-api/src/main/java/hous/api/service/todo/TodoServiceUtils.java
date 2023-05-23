@@ -5,10 +5,8 @@ import static hous.common.exception.ErrorCode.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,7 +20,6 @@ import hous.common.util.DateUtils;
 import hous.core.domain.room.Room;
 import hous.core.domain.todo.DayOfWeek;
 import hous.core.domain.todo.Done;
-import hous.core.domain.todo.Take;
 import hous.core.domain.todo.Todo;
 import hous.core.domain.todo.mysql.DoneRepository;
 import hous.core.domain.todo.mysql.TodoRepository;
@@ -147,25 +144,6 @@ public class TodoServiceUtils {
 		return dones.stream()
 			.filter(done -> done.getOnboarding().getId().equals(me.getId()))
 			.collect(Collectors.toList());
-	}
-
-	public static Map<Integer, Set<Todo>> mapByDayOfWeekToMyTodosList(Onboarding me, List<Todo> todos) {
-		Map<Integer, Set<Todo>> todosMapByDayOfWeek = new HashMap<>();
-		for (int i = DayOfWeek.MONDAY.getIndex(); i <= DayOfWeek.SUNDAY.getIndex(); i++) {
-			todosMapByDayOfWeek.put(i, new HashSet<>());
-		}
-		todos.forEach(todo -> {
-			for (Take take : todo.getTakes()) {
-				if (take.getOnboarding().getId().equals(me.getId())) {
-					take.getRedos().forEach(redo -> {
-						Set<Todo> todosByDayOfWeek = todosMapByDayOfWeek.get(redo.getDayOfWeek().getIndex());
-						todosByDayOfWeek.add(todo);
-						todosMapByDayOfWeek.put(redo.getDayOfWeek().getIndex(), todosByDayOfWeek);
-					});
-				}
-			}
-		});
-		return todosMapByDayOfWeek;
 	}
 
 	public static List<Todo> filterDayMyTodos(LocalDate day, Onboarding me, List<Todo> todos) {

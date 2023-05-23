@@ -13,7 +13,6 @@ import hous.api.config.resolver.UserId;
 import hous.api.service.todo.TodoRetrieveService;
 import hous.api.service.todo.dto.response.MyTodoInfoResponse;
 import hous.api.service.todo.dto.response.TodoAddableResponse;
-import hous.api.service.todo.dto.response.TodoAllMemberResponse;
 import hous.api.service.todo.dto.response.TodoFilterResponse;
 import hous.api.service.todo.dto.response.TodoInfoResponse;
 import hous.api.service.todo.dto.response.TodoMainResponse;
@@ -193,30 +192,6 @@ public class TodoRetrieveController {
 		@ApiIgnore @UserId Long userId) {
 		return SuccessResponse.success(SuccessCode.GET_TODO_BY_FILTER_SUCCESS,
 			todoRetrieveService.getTodosByFilter(dayOfWeeks, onboardingIds, userId));
-	}
-
-	@ApiOperation(
-		value = "[인증] todo 전체 보기 페이지 - 멤버별 todo를 조회합니다.",
-		notes = "방 내 모든 멤버의 요일별 todo를 조회합니다."
-	)
-	@ApiResponses(value = {
-		@ApiResponse(code = 200, message = "todo 멤버별 정보 조회 성공입니다."),
-		@ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
-		@ApiResponse(
-			code = 404,
-			message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
-				+ "2. 존재하지 않는 todo 입니다.\n"
-				+ "3. 참가중인 방이 존재하지 않습니다.",
-			response = ErrorResponse.class),
-		@ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
-		@ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
-	})
-	@Version
-	@Auth
-	@GetMapping("/todos/member")
-	public ResponseEntity<SuccessResponse<TodoAllMemberResponse>> getTodoAllMemberInfo(@ApiIgnore @UserId Long userId) {
-		return SuccessResponse.success(SuccessCode.GET_TODO_ALL_MEMBER_SUCCESS,
-			todoRetrieveService.getTodoAllMemberInfo(userId));
 	}
 
 	@ApiOperation(

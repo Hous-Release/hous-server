@@ -1,26 +1,19 @@
 package hous.api.service.todo;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import hous.api.service.room.RoomServiceUtils;
-import hous.api.service.todo.dto.response.DayOfWeekTodo;
 import hous.api.service.todo.dto.response.MyTodoInfoResponse;
 import hous.api.service.todo.dto.response.OurTodoInfo;
 import hous.api.service.todo.dto.response.TodoAddableResponse;
-import hous.api.service.todo.dto.response.TodoAllMemberInfo;
-import hous.api.service.todo.dto.response.TodoAllMemberResponse;
 import hous.api.service.todo.dto.response.TodoDetailInfo;
 import hous.api.service.todo.dto.response.TodoFilterResponse;
-import hous.api.service.todo.dto.response.TodoInfo;
 import hous.api.service.todo.dto.response.TodoInfoResponse;
 import hous.api.service.todo.dto.response.TodoMainResponse;
 import hous.api.service.todo.dto.response.TodoSummaryInfoResponse;
@@ -30,7 +23,6 @@ import hous.api.service.user.UserServiceUtils;
 import hous.common.constant.Constraint;
 import hous.common.util.DateUtils;
 import hous.core.domain.common.AuditingTimeEntity;
-import hous.core.domain.personality.PersonalityColor;
 import hous.core.domain.room.Participate;
 import hous.core.domain.room.Room;
 import hous.core.domain.todo.DayOfWeek;
@@ -136,48 +128,6 @@ public class TodoRetrieveService {
 		todos = TodoServiceUtils.filterByOnboardingIds(todos, ids);
 		todos.sort(Comparator.comparing(AuditingTimeEntity::getCreatedAt));
 		return TodoFilterResponse.of(todos, DateUtils.todayLocalDateTime());
-	}
-
-	public TodoAllMemberResponse getTodoAllMemberInfo(Long userId) {
-		User user = UserServiceUtils.findUserById(userRepository, userId);
-		Room room = RoomServiceUtils.findParticipatingRoom(user);
-		List<Todo> todos = room.getTodos();
-
-		List<TodoAllMemberInfo> allMemberTodos = new ArrayList<>();
-		List<TodoAllMemberInfo> otherMemberTodos = new ArrayList<>();
-
-		// 성향테스트 참여 순서로 정렬
-		room.getParticipates().stream()
-			.sorted(Participate::compareTo)
-			.forEach(participate -> {
-				Onboarding onboarding = participate.getOnboarding();
-				List<Todo> memberTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, onboarding);
-
-				Map<Integer, Set<Todo>> allDayMemberTodos = TodoServiceUtils.mapByDayOfWeekToMyTodosList(onboarding,
-					memberTodos);
-
-				List<DayOfWeekTodo> dayOfWeekTodos = new ArrayList<>();
-				for (int day = DayOfWeek.MONDAY.getIndex(); day <= DayOfWeek.SUNDAY.getIndex(); day++) {
-					String dayOfWeek = DayOfWeek.getValueByIndex(day);
-					List<TodoInfo> thisDayTodosName = allDayMemberTodos.get(day).stream()
-						.sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
-						.map(todo -> TodoInfo.of(todo.getId(), todo.getName()))
-						.collect(Collectors.toList());
-					dayOfWeekTodos.add(DayOfWeekTodo.of(dayOfWeek, thisDayTodosName.size(), thisDayTodosName));
-				}
-
-				String userName = onboarding.getNickname();
-				PersonalityColor color = onboarding.getPersonality().getColor();
-
-				if (user.getOnboarding().equals(onboarding)) {
-					allMemberTodos.add(TodoAllMemberInfo.of(userName, color, memberTodos.size(), dayOfWeekTodos));
-				} else {
-					otherMemberTodos.add(TodoAllMemberInfo.of(userName, color, memberTodos.size(), dayOfWeekTodos));
-				}
-			});
-		allMemberTodos.addAll(otherMemberTodos);
-
-		return TodoAllMemberResponse.of(room.getTodos().size(), allMemberTodos);
 	}
 
 	public MyTodoInfoResponse getMyTodoInfo(Long userId) {
