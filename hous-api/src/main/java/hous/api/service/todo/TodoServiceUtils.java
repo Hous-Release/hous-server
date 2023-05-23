@@ -149,19 +149,6 @@ public class TodoServiceUtils {
 			.collect(Collectors.toList());
 	}
 
-	public static Map<Integer, Set<Todo>> mapByDayOfWeekToOurTodosList(List<Todo> todos) {
-		Map<Integer, Set<Todo>> todosMapByDayOfWeek = new HashMap<>();
-		for (int i = DayOfWeek.MONDAY.getIndex(); i <= DayOfWeek.SUNDAY.getIndex(); i++) {
-			todosMapByDayOfWeek.put(i, new HashSet<>());
-		}
-		todos.forEach(todo -> todo.getTakes().stream().flatMap(take -> take.getRedos().stream()).forEach(redo -> {
-			Set<Todo> todosByDayOfWeek = todosMapByDayOfWeek.get(redo.getDayOfWeek().getIndex());
-			todosByDayOfWeek.add(todo);
-			todosMapByDayOfWeek.put(redo.getDayOfWeek().getIndex(), todosByDayOfWeek);
-		}));
-		return todosMapByDayOfWeek;
-	}
-
 	public static Map<Integer, Set<Todo>> mapByDayOfWeekToMyTodosList(Onboarding me, List<Todo> todos) {
 		Map<Integer, Set<Todo>> todosMapByDayOfWeek = new HashMap<>();
 		for (int i = DayOfWeek.MONDAY.getIndex(); i <= DayOfWeek.SUNDAY.getIndex(); i++) {

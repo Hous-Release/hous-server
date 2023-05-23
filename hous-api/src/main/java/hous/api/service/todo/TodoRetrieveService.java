@@ -14,11 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import hous.api.service.room.RoomServiceUtils;
 import hous.api.service.todo.dto.response.DayOfWeekTodo;
 import hous.api.service.todo.dto.response.MyTodoInfoResponse;
-import hous.api.service.todo.dto.response.OurTodo;
 import hous.api.service.todo.dto.response.OurTodoInfo;
 import hous.api.service.todo.dto.response.TodoAddableResponse;
-import hous.api.service.todo.dto.response.TodoAllDayInfo;
-import hous.api.service.todo.dto.response.TodoAllDayResponse;
 import hous.api.service.todo.dto.response.TodoAllMemberInfo;
 import hous.api.service.todo.dto.response.TodoAllMemberResponse;
 import hous.api.service.todo.dto.response.TodoDetailInfo;
@@ -139,39 +136,6 @@ public class TodoRetrieveService {
 		todos = TodoServiceUtils.filterByOnboardingIds(todos, ids);
 		todos.sort(Comparator.comparing(AuditingTimeEntity::getCreatedAt));
 		return TodoFilterResponse.of(todos, DateUtils.todayLocalDateTime());
-	}
-
-	public TodoAllDayResponse getTodoAllDayInfo(Long userId) {
-		User user = UserServiceUtils.findUserById(userRepository, userId);
-		Onboarding onboarding = user.getOnboarding();
-		Room room = RoomServiceUtils.findParticipatingRoom(user);
-
-		// 이 방의 모든 요일의 todo list 조회
-		List<Todo> ourTodosList = room.getTodos();
-		List<Todo> myTodosList = TodoServiceUtils.filterAllDaysUserTodos(ourTodosList, onboarding);
-
-		// 요일별(index) todo list 형태로 가공
-		Map<Integer, Set<Todo>> allDayOurTodosList = TodoServiceUtils.mapByDayOfWeekToOurTodosList(ourTodosList);
-		Map<Integer, Set<Todo>> allDayMyTodosList = TodoServiceUtils.mapByDayOfWeekToMyTodosList(onboarding,
-			myTodosList);
-
-		// List<TodoAllDayResponse> response dto 형태로 가공
-		List<TodoAllDayInfo> allDayTodosList = new ArrayList<>();
-		for (int day = DayOfWeek.MONDAY.getIndex(); day <= DayOfWeek.SUNDAY.getIndex(); day++) {
-			String dayOfWeek = DayOfWeek.getValueByIndex(day);
-			List<TodoInfo> todoInfos = allDayMyTodosList.get(day).stream()
-				.sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
-				.map(todo -> TodoInfo.of(todo.getId(), todo.getName()))
-				.collect(Collectors.toList());
-			List<OurTodo> ourTodoInfos = allDayOurTodosList.get(day).stream()
-				.sorted(Comparator.comparing(AuditingTimeEntity::getCreatedAt))
-				.map(todo -> OurTodo.of(todo.getId(), todo.getName(), todo.getTakes().stream()
-					.map(Take::getOnboarding)
-					.collect(Collectors.toSet()), onboarding))
-				.collect(Collectors.toList());
-			allDayTodosList.add(TodoAllDayInfo.of(dayOfWeek, todoInfos, ourTodoInfos));
-		}
-		return TodoAllDayResponse.of(room.getTodos().size(), allDayTodosList);
 	}
 
 	public TodoAllMemberResponse getTodoAllMemberInfo(Long userId) {
