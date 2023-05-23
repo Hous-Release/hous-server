@@ -61,7 +61,7 @@ public class TodoRetrieveController {
 	}
 
 	@ApiOperation(
-		value = "[인증] todo 추가 페이지 - 담당자 목록을 조회합니다.",
+		value = "[인증] todo 추가 페이지 / todo 필터 바텀 시트 - 담당자 목록을 조회합니다.",
 		notes = "방에 참가중인 사용자들의 id, 성향 색, 닉네임을 조회합니다."
 	)
 	@ApiResponses(value = {
@@ -132,7 +132,7 @@ public class TodoRetrieveController {
 	}
 
 	@ApiOperation(
-		value = "[인증] todo 전체 보기 페이지 - 저장된 todo 요약 정보를 조회합니다.",
+		value = "[인증] todo 보기 페이지 - 저장된 todo 요약 정보를 조회합니다.",
 		notes = "저장된 전체 담당자, 전체 담당 요일을 조회합니다."
 	)
 	@ApiResponses(value = {
