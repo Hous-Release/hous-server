@@ -2,9 +2,9 @@ package hous.common.constant;
 
 public final class Constraint {
 
-	public static final int ONBOARDING_NICKNAME_MAX = 3;
+	public static final int ONBOARDING_NICKNAME_MAX = 5;
 	public static final int ONBOARDING_MBTI_MAX = 4;
-	public static final int ONBOARDING_JOB_MAX = 3;
+	public static final int ONBOARDING_JOB_MAX = 5;
 	public static final int ONBOARDING_INTRODUCTION_MAX = 40;
 	public static final int ONBOARDING_TESTSCORE_MIN = 3;
 	public static final int ONBOARDING_TESTSCORE_MAX = 9;
