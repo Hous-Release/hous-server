@@ -1,5 +1,7 @@
 package hous.api.controller.todo;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +23,7 @@ import hous.api.service.todo.dto.response.UserPersonalityInfoResponse;
 import hous.common.dto.ErrorResponse;
 import hous.common.dto.SuccessResponse;
 import hous.common.success.SuccessCode;
+import hous.core.domain.todo.DayOfWeek;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -167,11 +170,6 @@ public class TodoRetrieveController {
 	)
 	@ApiResponses(value = {
 		@ApiResponse(code = 200, message = "필터별 todo 조회 성공입니다."),
-		@ApiResponse(
-			code = 400,
-			message = "1. 잘못된 dayOfWeeks 형태입니다.\n"
-				+ "2. 잘못된 onboardingIds 형태입니다.",
-			response = ErrorResponse.class),
 		@ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
 		@ApiResponse(
 			code = 404,
@@ -186,9 +184,9 @@ public class TodoRetrieveController {
 	@GetMapping("/todos")
 	public ResponseEntity<SuccessResponse<TodoFilterResponse>> getTodosByFilter(
 		@ApiParam(name = "dayOfWeeks", value = "필터로 적용할 요일 목록", example = "MONDAY,TUESDAY")
-		@RequestParam(required = false) String dayOfWeeks,
+		@RequestParam(required = false) List<DayOfWeek> dayOfWeeks,
 		@ApiParam(name = "onboardingIds", value = "필터로 적용할 호미 id 목록", example = "1,2,3")
-		@RequestParam(required = false) String onboardingIds,
+		@RequestParam(required = false) List<Long> onboardingIds,
 		@ApiIgnore @UserId Long userId) {
 		return SuccessResponse.success(SuccessCode.GET_TODO_BY_FILTER_SUCCESS,
 			todoRetrieveService.getTodosByFilter(dayOfWeeks, onboardingIds, userId));

@@ -118,14 +118,12 @@ public class TodoRetrieveService {
 		return TodoSummaryInfoResponse.of(todo, userPersonalityInfos, user.getOnboarding());
 	}
 
-	public TodoFilterResponse getTodosByFilter(String dayOfWeeks, String onboardingIds, Long userId) {
+	public TodoFilterResponse getTodosByFilter(List<DayOfWeek> dayOfWeeks, List<Long> onboardingIds, Long userId) {
 		User user = UserServiceUtils.findUserById(userRepository, userId);
 		Room room = RoomServiceUtils.findParticipatingRoom(user);
 		List<Todo> todos = room.getTodos();
-		List<DayOfWeek> days = TodoServiceUtils.validateDayOfWeeks(dayOfWeeks);
-		List<Long> ids = TodoServiceUtils.validateOnboardingIds(onboardingIds);
-		todos = TodoServiceUtils.filterByDayOfWeeks(todos, days);
-		todos = TodoServiceUtils.filterByOnboardingIds(todos, ids);
+		todos = TodoServiceUtils.filterByDayOfWeeks(todos, dayOfWeeks);
+		todos = TodoServiceUtils.filterByOnboardingIds(todos, onboardingIds);
 		todos.sort(Comparator.comparing(AuditingTimeEntity::getCreatedAt));
 		return TodoFilterResponse.of(todos, DateUtils.todayLocalDateTime());
 	}
