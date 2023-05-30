@@ -1,9 +1,12 @@
 package hous.api.controller.todo;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import hous.api.config.interceptor.auth.Auth;
@@ -11,8 +14,8 @@ import hous.api.config.interceptor.version.Version;
 import hous.api.config.resolver.UserId;
 import hous.api.service.todo.TodoRetrieveService;
 import hous.api.service.todo.dto.response.MyTodoInfoResponse;
-import hous.api.service.todo.dto.response.TodoAllDayResponse;
-import hous.api.service.todo.dto.response.TodoAllMemberResponse;
+import hous.api.service.todo.dto.response.TodoAddableResponse;
+import hous.api.service.todo.dto.response.TodoFilterResponse;
 import hous.api.service.todo.dto.response.TodoInfoResponse;
 import hous.api.service.todo.dto.response.TodoMainResponse;
 import hous.api.service.todo.dto.response.TodoSummaryInfoResponse;
@@ -20,6 +23,7 @@ import hous.api.service.todo.dto.response.UserPersonalityInfoResponse;
 import hous.common.dto.ErrorResponse;
 import hous.common.dto.SuccessResponse;
 import hous.common.success.SuccessCode;
+import hous.core.domain.todo.DayOfWeek;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -37,7 +41,30 @@ public class TodoRetrieveController {
 	private final TodoRetrieveService todoRetrieveService;
 
 	@ApiOperation(
-		value = "[인증] todo 추가 페이지 - 담당자 목록을 조회합니다.",
+		value = "[인증] todo 메인 페이지 - todo 추가 가능 여부를 조회합니다.",
+		notes = "todo 개수가 60개 미만인 경우 true, 60개 이상인 경우 false 를 전달합니다."
+	)
+	@ApiResponses(value = {
+		@ApiResponse(code = 200, message = "todo 추가 가능 여부 조회 성공입니다."),
+		@ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+		@ApiResponse(
+			code = 404,
+			message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
+				+ "2. 참가중인 방이 존재하지 않습니다.",
+			response = ErrorResponse.class),
+		@ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
+		@ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+	})
+	@Version
+	@Auth
+	@GetMapping("/todo/addable")
+	public ResponseEntity<SuccessResponse<TodoAddableResponse>> getTodoAddable(@ApiIgnore @UserId Long userId) {
+		return SuccessResponse.success(SuccessCode.GET_TODO_ADDABLE_SUCCESS,
+			todoRetrieveService.getTodoAddable(userId));
+	}
+
+	@ApiOperation(
+		value = "[인증] todo 추가 페이지 / todo 필터 바텀 시트 - 담당자 목록을 조회합니다.",
 		notes = "방에 참가중인 사용자들의 id, 성향 색, 닉네임을 조회합니다."
 	)
 	@ApiResponses(value = {
@@ -75,7 +102,7 @@ public class TodoRetrieveController {
 	})
 	@Version
 	@Auth
-	@GetMapping("/todos")
+	@GetMapping("/todos/main")
 	public ResponseEntity<SuccessResponse<TodoMainResponse>> getTodoMain(@ApiIgnore @UserId Long userId) {
 		return SuccessResponse.success(SuccessCode.GET_TODO_MAIN_SUCCESS, todoRetrieveService.getTodoMain(userId));
 	}
@@ -108,7 +135,7 @@ public class TodoRetrieveController {
 	}
 
 	@ApiOperation(
-		value = "[인증] todo 전체 보기 페이지 - 저장된 todo 요약 정보를 조회합니다.",
+		value = "[인증] todo 보기 페이지 - 저장된 todo 요약 정보를 조회합니다.",
 		notes = "저장된 전체 담당자, 전체 담당 요일을 조회합니다."
 	)
 	@ApiResponses(value = {
@@ -134,51 +161,35 @@ public class TodoRetrieveController {
 	}
 
 	@ApiOperation(
-		value = "[인증] todo 전체 보기 페이지 - 요일별 todo를 조회합니다.",
-		notes = "모든 요일의 todo별 나의 todo와 방의 todo를 조회합니다."
+		value = "[인증] todo 보기 페이지 - 필터별 todo 를 조회합니다.",
+		notes = "필터를 적용하여 todo 를 조회합니다.\n"
+			+ "dayOfWeeks 에는 MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY 를 , 로 구별하여 설정해주세요.\n"
+			+ "onboardingIds 에는 호미 id 를 , 로 구별하여 설정해주세요.\n"
+			+ "쉼표 사이에는 띄어쓰기를 포함하지 말아주세요.\n"
+			+ "필터가 적용되지 않는 경우는 각각 null 을 보내주세요."
 	)
 	@ApiResponses(value = {
-		@ApiResponse(code = 200, message = "todo 요일별 정보 조회 성공입니다."),
+		@ApiResponse(code = 200, message = "필터별 todo 조회 성공입니다."),
 		@ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
 		@ApiResponse(
 			code = 404,
 			message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
-				+ "2. 존재하지 않는 todo 입니다.\n"
-				+ "3. 참가중인 방이 존재하지 않습니다.",
+				+ "2. 참가중인 방이 존재하지 않습니다.",
 			response = ErrorResponse.class),
 		@ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
 		@ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
 	})
 	@Version
 	@Auth
-	@GetMapping("/todos/day")
-	public ResponseEntity<SuccessResponse<TodoAllDayResponse>> getTodoAllDayInfo(@ApiIgnore @UserId Long userId) {
-		return SuccessResponse.success(SuccessCode.GET_TODO_ALL_DAY_SUCCESS,
-			todoRetrieveService.getTodoAllDayInfo(userId));
-	}
-
-	@ApiOperation(
-		value = "[인증] todo 전체 보기 페이지 - 멤버별 todo를 조회합니다.",
-		notes = "방 내 모든 멤버의 요일별 todo를 조회합니다."
-	)
-	@ApiResponses(value = {
-		@ApiResponse(code = 200, message = "todo 멤버별 정보 조회 성공입니다."),
-		@ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
-		@ApiResponse(
-			code = 404,
-			message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
-				+ "2. 존재하지 않는 todo 입니다.\n"
-				+ "3. 참가중인 방이 존재하지 않습니다.",
-			response = ErrorResponse.class),
-		@ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
-		@ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
-	})
-	@Version
-	@Auth
-	@GetMapping("/todos/member")
-	public ResponseEntity<SuccessResponse<TodoAllMemberResponse>> getTodoAllMemberInfo(@ApiIgnore @UserId Long userId) {
-		return SuccessResponse.success(SuccessCode.GET_TODO_ALL_MEMBER_SUCCESS,
-			todoRetrieveService.getTodoAllMemberInfo(userId));
+	@GetMapping("/todos")
+	public ResponseEntity<SuccessResponse<TodoFilterResponse>> getTodosByFilter(
+		@ApiParam(name = "dayOfWeeks", value = "필터로 적용할 요일 목록", example = "MONDAY,TUESDAY")
+		@RequestParam(required = false) List<DayOfWeek> dayOfWeeks,
+		@ApiParam(name = "onboardingIds", value = "필터로 적용할 호미 id 목록", example = "1,2,3")
+		@RequestParam(required = false) List<Long> onboardingIds,
+		@ApiIgnore @UserId Long userId) {
+		return SuccessResponse.success(SuccessCode.GET_TODO_BY_FILTER_SUCCESS,
+			todoRetrieveService.getTodosByFilter(dayOfWeeks, onboardingIds, userId));
 	}
 
 	@ApiOperation(

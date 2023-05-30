@@ -156,7 +156,7 @@ public class TodoController {
 	}
 
 	@ApiOperation(
-		value = "[인증] todo 전체 페이지 - todo 를 삭제합니다.",
+		value = "[인증] todo 보기 페이지 - todo 를 삭제합니다.",
 		notes = "todo 삭제를 요청합니다."
 	)
 	@ApiResponses(value = {

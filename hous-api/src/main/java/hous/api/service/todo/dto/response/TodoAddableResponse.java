@@ -1,6 +1,6 @@
 package hous.api.service.todo.dto.response;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,15 +14,18 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
-public class TodoAllDayResponse {
+public class TodoAddableResponse {
 
-	private int totalRoomTodoCnt;
-	private List<TodoAllDayInfo> todos;
+	private boolean isAddable;
 
-	public static TodoAllDayResponse of(int totalRoomTodoCnt, List<TodoAllDayInfo> todos) {
-		return TodoAllDayResponse.builder()
-			.totalRoomTodoCnt(totalRoomTodoCnt)
-			.todos(todos)
+	@JsonProperty("isAddable")
+	public boolean isAddable() {
+		return isAddable;
+	}
+
+	public static TodoAddableResponse of(boolean isAddable) {
+		return TodoAddableResponse.builder()
+			.isAddable(isAddable)
 			.build();
 	}
 }
