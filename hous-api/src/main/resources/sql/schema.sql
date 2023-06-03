@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS represent;
 DROP TABLE IF EXISTS room;
 DROP TABLE IF EXISTS participate;
 DROP TABLE IF EXISTS rule;
+DROP TABLE IF EXISTS rule_image;
 DROP TABLE IF EXISTS todo;
 DROP TABLE IF EXISTS done;
 DROP TABLE IF EXISTS take;
@@ -171,12 +172,23 @@ CREATE TABLE participate
 
 CREATE TABLE rule
 (
-    id         bigint auto_increment primary key,
-    created_at datetime(6) null,
-    updated_at datetime(6) null,
-    idx        int          not null,
-    name       varchar(100) not null,
-    room_id    bigint null
+    id          bigint auto_increment primary key,
+    created_at  datetime(6) null,
+    updated_at  datetime(6) null,
+    idx         int          not null,
+    name        varchar(100) not null,
+    description varchar(100) not null,
+    room_id     bigint null
+);
+
+CREATE TABLE rule_image
+(
+    id            bigint auto_increment primary key,
+    created_at    datetime(6) null,
+    updated_at    datetime(6) null,
+    original_name varchar(255) null,
+    image_s3_url  varchar(100) null,
+    rule_id       bigint null
 );
 
 CREATE TABLE todo
