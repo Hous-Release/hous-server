@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import hous.core.domain.rule.Rule;
+import hous.core.domain.rule.RuleImage;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,13 +19,19 @@ import lombok.ToString;
 @Builder(access = AccessLevel.PRIVATE)
 public class RuleInfoResponse {
 
-	private List<RuleInfo> rules;
+	private Long id;
+	private String name;
+	private String description;
+	private List<String> images;
+	private String updatedAt;
 
-	public static RuleInfoResponse of(List<Rule> rules) {
+	public static RuleInfoResponse of(Rule rule) {
 		return RuleInfoResponse.builder()
-			.rules(rules.stream()
-				.sorted(Rule::compareTo)
-				.map(RuleInfo::of).collect(Collectors.toList()))
+			.id(rule.getId())
+			.name(rule.getName())
+			.description(rule.getDescription())
+			.images(rule.getImages().stream().map(RuleImage::getImageS3Url).collect(Collectors.toList()))
+			.updatedAt(rule.getUpdatedAt().toString())
 			.build();
 	}
 }
