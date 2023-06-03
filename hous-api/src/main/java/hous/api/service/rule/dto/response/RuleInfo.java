@@ -1,5 +1,8 @@
 package hous.api.service.rule.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import hous.common.util.DateUtils;
 import hous.core.domain.rule.Rule;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -19,10 +22,21 @@ public class RuleInfo {
 
 	private String name;
 
+	private boolean isNew;
+
+	private String createdAt;
+
+	@JsonProperty("isNew")
+	public boolean isNew() {
+		return isNew;
+	}
+
 	public static RuleInfo of(Rule rule) {
 		return RuleInfo.builder()
 			.id(rule.getId())
 			.name(rule.getName())
+			.isNew(DateUtils.todayLocalDateTime().isBefore(rule.getCreatedAt().plusHours(12)))
+			.createdAt(rule.getCreatedAt().toString())
 			.build();
 	}
 }

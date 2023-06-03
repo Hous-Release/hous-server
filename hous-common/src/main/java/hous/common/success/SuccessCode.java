@@ -39,6 +39,7 @@ public enum SuccessCode {
 	GET_MY_TODO_SUCCESS(SuccessStatusCode.OK, "나의 todo 정보 조회 성공입니다."),
 
 	// rule
+	GET_RULES_INFO_SUCCESS(SuccessStatusCode.OK, "규칙 메인 페이지 조회 성공입니다."),
 	GET_RULE_INFO_SUCCESS(SuccessStatusCode.OK, "규칙 조회 성공입니다."),
 	GET_RULE_ADDABLE_SUCCESS(SuccessStatusCode.OK, "규칙 추가 가능 여부 조회 성공입니다."),
 
