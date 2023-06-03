@@ -9,6 +9,7 @@ import hous.api.config.interceptor.auth.Auth;
 import hous.api.config.interceptor.version.Version;
 import hous.api.config.resolver.UserId;
 import hous.api.service.rule.RuleRetrieveService;
+import hous.api.service.rule.dto.response.RuleAddableResponse;
 import hous.api.service.rule.dto.response.RuleInfoResponse;
 import hous.common.dto.ErrorResponse;
 import hous.common.dto.SuccessResponse;
@@ -43,5 +44,28 @@ public class RuleRetrieveController {
 	@GetMapping("/rules")
 	public ResponseEntity<SuccessResponse<RuleInfoResponse>> getRulesInfo(@ApiIgnore @UserId Long userId) {
 		return SuccessResponse.success(SuccessCode.GET_RULE_INFO_SUCCESS, ruleRetrieveService.getRulesInfo(userId));
+	}
+
+	@ApiOperation(
+		value = "[인증] 규칙 메인 페이지 - 규칙 추가 가능 여부를 조회합니다.",
+		notes = "규칙 개수가 30개 미만인 경우 true, 30개 이상인 경우 false 를 전달합니다."
+	)
+	@ApiResponses(value = {
+		@ApiResponse(code = 200, message = "규칙 추가 가능 여부 조회 성공입니다."),
+		@ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+		@ApiResponse(
+			code = 404,
+			message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
+				+ "2. 참가중인 방이 존재하지 않습니다.",
+			response = ErrorResponse.class),
+		@ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
+		@ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+	})
+	@Version
+	@Auth
+	@GetMapping("/rule/addable")
+	public ResponseEntity<SuccessResponse<RuleAddableResponse>> getTodoAddable(@ApiIgnore @UserId Long userId) {
+		return SuccessResponse.success(SuccessCode.GET_RULE_ADDABLE_SUCCESS,
+			ruleRetrieveService.getRuleAddable(userId));
 	}
 }

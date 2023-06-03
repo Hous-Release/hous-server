@@ -40,6 +40,7 @@ public enum SuccessCode {
 
 	// rule
 	GET_RULE_INFO_SUCCESS(SuccessStatusCode.OK, "규칙 조회 성공입니다."),
+	GET_RULE_ADDABLE_SUCCESS(SuccessStatusCode.OK, "규칙 추가 가능 여부 조회 성공입니다."),
 
 	// profile
 	GET_MY_PROFILE_INFO_SUCCESS(SuccessStatusCode.OK, "나의 프로필 정보 조회 성공입니다."),
