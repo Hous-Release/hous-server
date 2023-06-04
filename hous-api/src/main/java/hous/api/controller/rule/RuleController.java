@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -110,9 +111,9 @@ public class RuleController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("/v2/rule")
 	public ResponseEntity<SuccessResponse<String>> createRule(@ApiIgnore @UserId Long userId,
-		@Valid @RequestBody CreateRuleInfoRequestDto request,
+		@Valid @ModelAttribute CreateRuleInfoRequestDto request,
 		@ApiParam(name = "images", value = "규칙 이미지 리스트")
-		@RequestPart(required = false) List<MultipartFile> images) {
+		@RequestPart(required = false, name = "images") List<MultipartFile> images) {
 		ruleService.createRule(request, userId, images);
 		return SuccessResponse.CREATED;
 	}

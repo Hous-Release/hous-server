@@ -96,7 +96,7 @@ public class NotificationServiceTest {
 		Long userId = userService.registerUser(createUserRequestDto);
 		User user = userRepository.findUserById(userId);
 		Room room = Room.newInstance(user.getOnboarding(), "room1", "code1");
-		Rule rule = Rule.newInstance(room, "rule1", 1);
+		Rule rule = Rule.newInstance(room, "rule1", 1, "");
 
 		// when
 		notificationService.sendNewRuleNotification(user, List.of(rule));

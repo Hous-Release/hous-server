@@ -34,7 +34,7 @@ public class RuleImage extends AuditingTimeEntity {
 	@Column(length = 255)
 	private String originalName;
 
-	@Column(length = 255)
+	@Column(length = 255, name = "image_s3_url")
 	private String imageS3Url;
 
 	public static RuleImage newInstance(Rule rule, String originalName, String imageS3Url) {

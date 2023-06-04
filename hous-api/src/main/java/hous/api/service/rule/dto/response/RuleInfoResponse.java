@@ -1,6 +1,8 @@
 package hous.api.service.rule.dto.response;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import hous.core.domain.rule.Rule;
@@ -30,7 +32,10 @@ public class RuleInfoResponse {
 			.id(rule.getId())
 			.name(rule.getName())
 			.description(rule.getDescription())
-			.images(rule.getImages().stream().map(RuleImage::getImageS3Url).collect(Collectors.toList()))
+			.images(Optional.ofNullable(rule.getImages()).orElse(Collections.emptyList())
+				.stream()
+				.map(RuleImage::getImageS3Url)
+				.collect(Collectors.toList()))
 			.updatedAt(rule.getUpdatedAt().toString())
 			.build();
 	}

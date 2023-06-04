@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 public class S3FileStorageClient implements FileStorageClient {
 
-	@Value("${cloud.aws.s3.bucket}")
+	@Value("${cloud.aws.s3.rule-bucket}")
 	public String bucket;  // S3 버킷 이름
 
 	private final AmazonS3 amazonS3;

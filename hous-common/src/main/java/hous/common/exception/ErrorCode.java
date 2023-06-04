@@ -26,6 +26,7 @@ public enum ErrorCode {
 	VALIDATION_RULE_MIN_LENGTH_EXCEPTION(BAD_REQUEST, "규칙 내용을 입력해주세요."),
 	VALIDATION_BIRTHDAY_EXCEPTION(BAD_REQUEST, "생년월일이 없는 경우 공개 여부는 true가 될 수 없습니다."),
 	VALIDATION_RULE_IMAGE_MAX_COUNT_EXCEPTION(BAD_REQUEST, "규칙 이미지는 최대 5 개 입니다."),
+	VALIDATION_IMAGE_SIZE_EXCEPTION(BAD_REQUEST, "이미지가 (720x720) 보다 큽니다."),
 
 	/**
 	 * 401 UnAuthorized

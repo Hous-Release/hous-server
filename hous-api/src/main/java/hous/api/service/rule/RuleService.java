@@ -2,7 +2,9 @@ package hous.api.service.rule;
 
 import static hous.common.exception.ErrorCode.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -103,14 +105,17 @@ public class RuleService {
 		Onboarding me = user.getOnboarding();
 		Room room = RoomServiceUtils.findParticipatingRoom(user);
 		RuleServiceUtils.existsNowRuleByRoomRule(room, request.getName());
-		if (images.size() > Constraint.RULE_IMAGE_MAX) {
-			throw new ValidationException(
-				String.format("방 (%s) 의 규칙 이미지는 최대 % 개만 가능합니다.", room.getId(), Constraint.RULE_IMAGE_MAX),
-				VALIDATION_RULE_IMAGE_MAX_COUNT_EXCEPTION);
-		}
+		var maybeImages = Optional.ofNullable(images);
+		maybeImages.ifPresent(image -> {
+			if (image.size() > Constraint.RULE_IMAGE_MAX) {
+				throw new ValidationException(
+					String.format("방 (%s) 의 규칙 이미지는 최대 % 개만 가능합니다.", room.getId(), Constraint.RULE_IMAGE_MAX),
+					VALIDATION_RULE_IMAGE_MAX_COUNT_EXCEPTION);
+			}
+		});
 		Rule rule = Rule.newInstance(room, request.getName(), 0, request.getDescription());
 		ruleRepository.save(rule);
-		List<RuleImage> s3ImageUrls = images.stream().map(image -> {
+		List<RuleImage> s3ImageUrls = maybeImages.orElse(Collections.emptyList()).stream().map(image -> {
 			String imageUrl = s3Provider.uploadFile(ImageUploadFileRequest.of(FileType.IMAGE), image);
 			return ruleImageRepository.save(RuleImage.newInstance(rule, image.toString(), imageUrl));
 		}).collect(Collectors.toList());
