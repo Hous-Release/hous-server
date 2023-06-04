@@ -66,6 +66,10 @@ public class Rule extends AuditingTimeEntity implements Comparable<Rule> {
 		this.name = name;
 	}
 
+	public void addAllRuleImage(List<RuleImage> images) {
+		this.images.addAll(images);
+	}
+
 	@Override
 	public int compareTo(@NotNull Rule rule) {
 		return getCreatedAt().compareTo(rule.getCreatedAt());

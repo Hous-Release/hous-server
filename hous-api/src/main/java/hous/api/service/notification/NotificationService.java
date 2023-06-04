@@ -92,6 +92,7 @@ public class NotificationService {
 		}
 	}
 
+	// TODO Deprecated
 	public void sendNewRuleNotification(User to, List<Rule> rules) {
 		rules.forEach(rule ->
 			notificationRepository.save(
@@ -99,6 +100,18 @@ public class NotificationService {
 					generateContent(rule.getName(), NotificationMessage.NEW_RULE.getValue()),
 					false))
 		);
+
+		if (to.getSetting().isPushNotification() && to.getSetting().getRulesPushStatus() == PushStatus.ON) {
+			sqsProducer.produce(
+				FirebaseDto.of(to.getFcmToken(), PushMessage.NEW_RULE.getTitle(), PushMessage.NEW_RULE.getBody()));
+		}
+	}
+
+	public void sendNewRuleNotification(User to, Rule rule) {
+		notificationRepository.save(
+			Notification.newInstance(to.getOnboarding().getId(), NotificationType.RULE,
+				generateContent(rule.getName(), NotificationMessage.NEW_RULE.getValue()),
+				false));
 
 		if (to.getSetting().isPushNotification() && to.getSetting().getRulesPushStatus() == PushStatus.ON) {
 			sqsProducer.produce(

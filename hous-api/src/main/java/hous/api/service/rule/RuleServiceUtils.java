@@ -55,6 +55,7 @@ public class RuleServiceUtils {
 		return rule;
 	}
 
+	// TODO Deprecated
 	public static void existsRuleByRoomRules(Room room, List<String> requestRules) {
 		List<String> rules = room.getRules().stream().map(Rule::getName).collect(Collectors.toList());
 		for (String ruleName : requestRules) {
@@ -64,6 +65,15 @@ public class RuleServiceUtils {
 					CONFLICT_RULE_EXCEPTION);
 
 			}
+		}
+	}
+
+	public static void existsNowRuleByRoomRule(Room room, String requestRules) {
+		List<String> rules = room.getRules().stream().map(Rule::getName).collect(Collectors.toList());
+		if (rules.contains(requestRules)) {
+			throw new ConflictException(
+				String.format("방 (%s) 에 이미 존재하는 ruleName (%s) 입니다.", room.getId(), requestRules),
+				CONFLICT_RULE_EXCEPTION);
 		}
 	}
 
