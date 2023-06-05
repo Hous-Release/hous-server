@@ -22,8 +22,8 @@ DROP TABLE IF EXISTS redo;
 CREATE TABLE badge
 (
     id         bigint auto_increment primary key,
-    created_at datetime(6) null,
-    updated_at datetime(6) null,
+    created_at datetime(6)  null,
+    updated_at datetime(6)  null,
     image_url  varchar(300) not null,
     info       varchar(30)  not null
 );
@@ -31,8 +31,8 @@ CREATE TABLE badge
 CREATE TABLE deploy
 (
     id         bigint auto_increment primary key,
-    created_at datetime(6) null,
-    updated_at datetime(6) null,
+    created_at datetime(6)  null,
+    updated_at datetime(6)  null,
     market_url varchar(300) not null,
     os         varchar(30)  not null,
     version    varchar(30)  not null
@@ -41,17 +41,17 @@ CREATE TABLE deploy
 CREATE TABLE feedback
 (
     id            bigint auto_increment primary key,
-    created_at    datetime(6) null,
-    updated_at    datetime(6) null,
+    created_at    datetime(6)  null,
+    updated_at    datetime(6)  null,
     comment       varchar(300) null,
-    feedback_type varchar(30) null
+    feedback_type varchar(30)  null
 );
 
 CREATE TABLE personality
 (
     id                         bigint auto_increment primary key,
-    created_at                 datetime(6) null,
-    updated_at                 datetime(6) null,
+    created_at                 datetime(6)  null,
+    updated_at                 datetime(6)  null,
     bad_personality_image_url  varchar(300) not null,
     bad_personality_name       varchar(300) not null,
     color                      varchar(30)  not null,
@@ -68,8 +68,8 @@ CREATE TABLE personality
 CREATE TABLE personality_test
 (
     id            bigint auto_increment primary key,
-    created_at    datetime(6) null,
-    updated_at    datetime(6) null,
+    created_at    datetime(6)  null,
+    updated_at    datetime(6)  null,
     answers       varchar(300) not null,
     idx           int          not null,
     image_url     varchar(300) not null,
@@ -95,18 +95,18 @@ CREATE TABLE test_score
     id           bigint auto_increment primary key,
     created_at   datetime(6) null,
     updated_at   datetime(6) null,
-    clean        int not null,
-    introversion int not null,
-    light        int not null,
-    noise        int not null,
-    smell        int not null
+    clean        int         not null,
+    introversion int         not null,
+    light        int         not null,
+    noise        int         not null,
+    smell        int         not null
 );
 
 CREATE TABLE user
 (
     id          bigint auto_increment primary key,
-    created_at  datetime(6) null,
-    updated_at  datetime(6) null,
+    created_at  datetime(6)  null,
+    updated_at  datetime(6)  null,
     fcm_token   varchar(300) null,
     social_id   varchar(300) not null,
     social_type varchar(30)  not null,
@@ -118,16 +118,16 @@ CREATE TABLE user
 CREATE TABLE onboarding
 (
     id             bigint auto_increment primary key,
-    created_at     datetime(6) null,
-    updated_at     datetime(6) null,
+    created_at     datetime(6)  null,
+    updated_at     datetime(6)  null,
     birthday       varchar(255) not null,
     introduction   varchar(100) null,
     is_public      bit          not null,
-    job            varchar(30) null,
-    mbti           varchar(30) null,
+    job            varchar(30)  null,
+    mbti           varchar(30)  null,
     nickname       varchar(30)  not null,
     personality_id bigint       not null,
-    test_score_id  bigint null,
+    test_score_id  bigint       null,
     user_id        bigint       not null
 );
 
@@ -136,9 +136,9 @@ CREATE TABLE acquire
     id            bigint auto_increment primary key,
     created_at    datetime(6) null,
     updated_at    datetime(6) null,
-    is_read       bit not null,
-    badge_id      bigint null,
-    onboarding_id bigint null
+    is_read       bit         not null,
+    badge_id      bigint      null,
+    onboarding_id bigint      null
 );
 
 CREATE TABLE represent
@@ -146,8 +146,8 @@ CREATE TABLE represent
     id            bigint auto_increment primary key,
     created_at    datetime(6) null,
     updated_at    datetime(6) null,
-    badge_id      bigint null,
-    onboarding_id bigint null
+    badge_id      bigint      null,
+    onboarding_id bigint      null
 );
 
 CREATE TABLE room
@@ -166,39 +166,39 @@ CREATE TABLE participate
     id            bigint auto_increment primary key,
     created_at    datetime(6) null,
     updated_at    datetime(6) null,
-    onboarding_id bigint null,
-    room_id       bigint null
+    onboarding_id bigint      null,
+    room_id       bigint      null
 );
 
 CREATE TABLE rule
 (
     id          bigint auto_increment primary key,
-    created_at  datetime(6) null,
-    updated_at  datetime(6) null,
+    created_at  datetime(6)  null,
+    updated_at  datetime(6)  null,
     idx         int          not null,
     name        varchar(100) not null,
     description varchar(100) not null,
-    room_id     bigint null
+    room_id     bigint       null
 );
 
 CREATE TABLE rule_image
 (
     id            bigint auto_increment primary key,
-    created_at    datetime(6) null,
-    updated_at    datetime(6) null,
+    created_at    datetime(6)  null,
+    updated_at    datetime(6)  null,
     original_name varchar(255) null,
-    image_s3_url  varchar(100) null,
-    rule_id       bigint null
+    image_s3_url  varchar(255) null,
+    rule_id       bigint       null
 );
 
 CREATE TABLE todo
 (
     id                   bigint auto_increment primary key,
-    created_at           datetime(6) null,
-    updated_at           datetime(6) null,
+    created_at           datetime(6)  null,
+    updated_at           datetime(6)  null,
     is_push_notification bit          not null,
     name                 varchar(100) not null,
-    room_id              bigint null
+    room_id              bigint       null
 );
 
 CREATE TABLE done
@@ -206,8 +206,8 @@ CREATE TABLE done
     id            bigint auto_increment primary key,
     created_at    datetime(6) null,
     updated_at    datetime(6) null,
-    onboarding_id bigint null,
-    todo_id       bigint null
+    onboarding_id bigint      null,
+    todo_id       bigint      null
 );
 
 CREATE TABLE take
@@ -215,8 +215,8 @@ CREATE TABLE take
     id            bigint auto_increment primary key,
     created_at    datetime(6) null,
     updated_at    datetime(6) null,
-    onboarding_id bigint null,
-    todo_id       bigint not null
+    onboarding_id bigint      null,
+    todo_id       bigint      not null
 );
 
 CREATE TABLE redo
@@ -225,5 +225,5 @@ CREATE TABLE redo
     created_at  datetime(6) null,
     updated_at  datetime(6) null,
     day_of_week varchar(30) not null,
-    take_id     bigint null
+    take_id     bigint      null
 );
