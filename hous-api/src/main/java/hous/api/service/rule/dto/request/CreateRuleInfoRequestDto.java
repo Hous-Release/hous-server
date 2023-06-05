@@ -20,10 +20,11 @@ import lombok.ToString;
 public class CreateRuleInfoRequestDto {
 
 	@ApiModelProperty(value = "규칙 내용", example = "우리집 대장은 김또순")
-	@NotNull(message = "{rule.list.notNull}")
-	@Size(min = Constraint.RULE_NAME_MIN, message = "{rule.name.min}")
+	@NotNull(message = "{rule.name.notNull}")
+	@Size(max = Constraint.RULE_NAME_MAX, message = "{rule.name.min}")
 	private String name;
 
+	@ApiModelProperty(value = "규칙 설명", example = "김또순은 고구마를 좋아한다.")
 	@Size(max = Constraint.RULE_DESCRIPTION_MAX, message = "{rule.description.max}")
 	private String description;
 }
