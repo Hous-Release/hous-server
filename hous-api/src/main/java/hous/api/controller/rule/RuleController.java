@@ -100,7 +100,8 @@ public class RuleController {
 		@ApiResponse(
 			code = 409,
 			message = "1. 처리중인 요청입니다.\n"
-				+ "2. 이미 존재하는 규칙입니다.",
+				+ "2. 존재하지 않는 방입니다.\n"
+				+ "3. 존재하지 않는 규칙입니다.",
 			response = ErrorResponse.class),
 		@ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
 		@ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
