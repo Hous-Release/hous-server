@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+// TODO deprecated 삭제될 api 와 response 에서만 사용되고 있어서 기존 api 삭제 시 지워주고 내부클래스 쓰기
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

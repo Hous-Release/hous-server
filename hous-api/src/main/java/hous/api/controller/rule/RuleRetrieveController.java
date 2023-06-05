@@ -3,7 +3,6 @@ package hous.api.controller.rule;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hous.api.config.interceptor.auth.Auth;
@@ -12,6 +11,7 @@ import hous.api.config.resolver.UserId;
 import hous.api.service.rule.RuleRetrieveService;
 import hous.api.service.rule.dto.response.RuleAddableResponse;
 import hous.api.service.rule.dto.response.RuleInfoResponse;
+import hous.api.service.rule.dto.response.RuleRepresentResponse;
 import hous.api.service.rule.dto.response.RulesResponse;
 import hous.common.dto.ErrorResponse;
 import hous.common.dto.SuccessResponse;
@@ -27,7 +27,6 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(tags = "Rule")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/v1")
 public class RuleRetrieveController {
 
 	private final RuleRetrieveService ruleRetrieveService;
@@ -44,7 +43,7 @@ public class RuleRetrieveController {
 	})
 	@Version
 	@Auth
-	@GetMapping("/rules")
+	@GetMapping("/v1/rules")
 	public ResponseEntity<SuccessResponse<RulesResponse>> getRulesInfo(@ApiIgnore @UserId Long userId) {
 		return SuccessResponse.success(SuccessCode.GET_RULES_INFO_SUCCESS, ruleRetrieveService.getRulesInfo(userId));
 	}
@@ -66,7 +65,7 @@ public class RuleRetrieveController {
 	})
 	@Version
 	@Auth
-	@GetMapping("/rule/addable")
+	@GetMapping("/v2/rule/addable")
 	public ResponseEntity<SuccessResponse<RuleAddableResponse>> getTodoAddable(@ApiIgnore @UserId Long userId) {
 		return SuccessResponse.success(SuccessCode.GET_RULE_ADDABLE_SUCCESS,
 			ruleRetrieveService.getRuleAddable(userId));
@@ -90,12 +89,35 @@ public class RuleRetrieveController {
 	})
 	@Version
 	@Auth
-	@GetMapping("/rule/{ruleId}")
+	@GetMapping("/v2/rule/{ruleId}")
 	public ResponseEntity<SuccessResponse<RuleInfoResponse>> getRuleInfo(
 		@ApiParam(name = "ruleId", value = "조회할 규칙의 id", required = true, example = "1")
 		@PathVariable Long ruleId,
 		@ApiIgnore @UserId Long userId) {
 		return SuccessResponse.success(SuccessCode.GET_RULE_INFO_SUCCESS,
 			ruleRetrieveService.getRuleInfo(userId, ruleId));
+	}
+
+	@ApiOperation(
+		value = "[인증] 대표 규칙 편집 페이지 - 대표 규칙 정보를 조회합니다.",
+		notes = "이미지가 없는 경우, 빈 배열([])을 전달합니다."
+	)
+	@ApiResponses(value = {
+		@ApiResponse(code = 200, message = "대표 규칙 여부 조회 성공입니다."),
+		@ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+		@ApiResponse(
+			code = 404,
+			message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
+				+ "2. 참가중인 방이 존재하지 않습니다.",
+			response = ErrorResponse.class),
+		@ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
+		@ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+	})
+	@Version
+	@Auth
+	@GetMapping("/v2/rules/represent")
+	public ResponseEntity<SuccessResponse<RuleRepresentResponse>> getRepresentRuleInfo(@ApiIgnore @UserId Long userId) {
+		return SuccessResponse.success(SuccessCode.GET_REPRESENT_RULE_EDIT_INFO_SUCCESS,
+			ruleRetrieveService.getRepresentRuleInfo(userId));
 	}
 }

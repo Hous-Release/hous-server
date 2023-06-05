@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import hous.api.service.room.RoomServiceUtils;
 import hous.api.service.rule.dto.response.RuleAddableResponse;
 import hous.api.service.rule.dto.response.RuleInfoResponse;
+import hous.api.service.rule.dto.response.RuleRepresentResponse;
 import hous.api.service.rule.dto.response.RulesResponse;
 import hous.api.service.user.UserServiceUtils;
 import hous.common.constant.Constraint;
@@ -41,5 +42,11 @@ public class RuleRetrieveService {
 		Room room = RoomServiceUtils.findParticipatingRoom(user);
 		Rule rule = RuleServiceUtils.findRuleByIdAndRoom(ruleRepository, ruleId, room);
 		return RuleInfoResponse.of(rule);
+	}
+
+	public RuleRepresentResponse getRepresentRuleInfo(Long userId) {
+		User user = UserServiceUtils.findUserById(userRepository, userId);
+		Room room = RoomServiceUtils.findParticipatingRoom(user);
+		return RuleRepresentResponse.of(room.getRules());
 	}
 }

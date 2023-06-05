@@ -172,13 +172,14 @@ CREATE TABLE participate
 
 CREATE TABLE rule
 (
-    id          bigint auto_increment primary key,
-    created_at  datetime(6)  null,
-    updated_at  datetime(6)  null,
-    idx         int          not null,
-    name        varchar(100) not null,
-    description varchar(100) not null,
-    room_id     bigint       null
+    id           bigint auto_increment primary key,
+    created_at   datetime(6)  null,
+    updated_at   datetime(6)  null,
+    idx          int          not null,
+    name         varchar(100) not null,
+    description  varchar(100) not null,
+    is_represent bit          not null,
+    room_id      bigint       null
 );
 
 CREATE TABLE rule_image

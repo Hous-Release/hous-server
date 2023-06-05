@@ -49,6 +49,9 @@ public class Rule extends AuditingTimeEntity implements Comparable<Rule> {
 	@Column(length = 100)
 	private String description;
 
+	@Column(nullable = false)
+	private boolean isRepresent;
+
 	@OneToMany(mappedBy = "rule", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private final List<RuleImage> images = new ArrayList<>();
 
