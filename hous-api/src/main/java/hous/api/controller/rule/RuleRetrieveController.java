@@ -73,7 +73,8 @@ public class RuleRetrieveController {
 	}
 
 	@ApiOperation(
-		value = "[인증] 규칙 개별 페이지 - 규칙 세부 정보를 조회합니다."
+		value = "[인증] 규칙 개별 페이지 - 규칙 세부 정보를 조회합니다.",
+		notes = "이미지가 없는 경우, 빈 배열([])을 전달합니다."
 	)
 	@ApiResponses(value = {
 		@ApiResponse(code = 200, message = "규칙 조회 성공입니다."),
