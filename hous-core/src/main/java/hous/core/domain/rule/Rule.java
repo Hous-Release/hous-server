@@ -61,9 +61,16 @@ public class Rule extends AuditingTimeEntity implements Comparable<Rule> {
 			.build();
 	}
 
+	// TODO deprecated
 	public void updateRule(String name, int idx) {
 		this.idx = idx;
 		this.name = name;
+	}
+
+	public void updateRule(String name, int idx, String description) {
+		this.idx = idx;
+		this.name = name;
+		this.description = description;
 	}
 
 	public void addAllRuleImage(List<RuleImage> images) {

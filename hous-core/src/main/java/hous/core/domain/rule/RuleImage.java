@@ -44,4 +44,9 @@ public class RuleImage extends AuditingTimeEntity {
 			.imageS3Url(imageS3Url)
 			.build();
 	}
+
+	public void updateRuleImage(String originalName, String imageS3Url) {
+		this.originalName = originalName;
+		this.imageS3Url = imageS3Url;
+	}
 }

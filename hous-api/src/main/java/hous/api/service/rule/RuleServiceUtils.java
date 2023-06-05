@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import hous.common.constant.Constraint;
 import hous.common.exception.ConflictException;
 import hous.common.exception.ForbiddenException;
@@ -47,6 +49,14 @@ public class RuleServiceUtils {
 		}
 	}
 
+	public static void validateRuleImageFileCounts(Room room, List<MultipartFile> images) {
+		if (images.size() > Constraint.RULE_IMAGE_MAX) {
+			throw new ValidationException(
+				String.format("방 (%s) 의 규칙 이미지는 최대 % 개만 가능합니다.", room.getId(), Constraint.RULE_IMAGE_MAX),
+				VALIDATION_RULE_IMAGE_MAX_COUNT_EXCEPTION);
+		}
+	}
+
 	public static Rule findRuleByIdAndRoom(RuleRepository ruleRepository, Long ruleId, Room room) {
 		Rule rule = ruleRepository.findRuleByIdAndRoom(ruleId, room);
 		if (rule == null) {
@@ -68,15 +78,16 @@ public class RuleServiceUtils {
 		}
 	}
 
-	public static void existsNowRuleByRoomRule(Room room, String requestRules) {
+	public static void existsNowRuleByRoomRule(Room room, String requestRule) {
 		List<String> rules = room.getRules().stream().map(Rule::getName).collect(Collectors.toList());
-		if (rules.contains(requestRules)) {
+		if (rules.contains(requestRule)) {
 			throw new ConflictException(
-				String.format("방 (%s) 에 이미 존재하는 ruleName (%s) 입니다.", room.getId(), requestRules),
+				String.format("방 (%s) 에 이미 존재하는 ruleName (%s) 입니다.", room.getId(), requestRule),
 				CONFLICT_RULE_EXCEPTION);
 		}
 	}
 
+	// TODO deprecated
 	public static void existsRuleByRules(List<String> requestRules) {
 		if (requestRules.size() != new HashSet<>(requestRules).size()) {
 			throw new ConflictException("규칙 이름 중복입니다.", CONFLICT_RULE_EXCEPTION);

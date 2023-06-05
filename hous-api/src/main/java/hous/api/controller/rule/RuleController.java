@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +25,7 @@ import hous.api.service.rule.RuleService;
 import hous.api.service.rule.dto.request.CreateRuleInfoRequestDto;
 import hous.api.service.rule.dto.request.CreateRuleRequestDto;
 import hous.api.service.rule.dto.request.DeleteRuleRequestDto;
+import hous.api.service.rule.dto.request.UpdateRuleInfoRequestDto;
 import hous.api.service.rule.dto.request.UpdateRuleRequestDto;
 import hous.common.dto.ErrorResponse;
 import hous.common.dto.SuccessResponse;
@@ -119,8 +121,9 @@ public class RuleController {
 		return SuccessResponse.CREATED;
 	}
 
+	// TODO Deprecated
 	@ApiOperation(
-		value = "[인증] 규칙 페이지 - 규칙 여러 개의 정렬 및 내용을 수정합니다.",
+		value = "@@ Deprecated 될 API 입니다. @@ [인증] 규칙 페이지 - 규칙 여러 개의 정렬 및 내용을 수정합니다.",
 		notes = "전체 규칙 id와 내용이 담긴 리스트를 정렬 순서에 따라 resquest dto에 리스트 형태로 담아주세요."
 	)
 	@ApiResponses(value = {
@@ -147,9 +150,46 @@ public class RuleController {
 	@Version
 	@Auth
 	@PutMapping("/v1/rules")
-	public ResponseEntity<SuccessResponse<String>> updateRules(@ApiIgnore @UserId Long userId,
+	public ResponseEntity<SuccessResponse<String>> updateRulesDeprecated(@ApiIgnore @UserId Long userId,
 		@Valid @RequestBody UpdateRuleRequestDto request) {
-		ruleService.updateRules(request, userId);
+		ruleService.updateRulesDeprecated(request, userId);
+		return SuccessResponse.OK;
+	}
+
+	@ApiOperation(
+		value = "[인증] 규칙 개별 페이지 - 규칙의 내용 및 사진을 수정합니다.",
+		notes = "수정 사항이 없는 필드 및 사진도 모두 포함하여 request dto 형식에 맞춰 보내주세요."
+	)
+	@ApiResponses(value = {
+		@ApiResponse(code = 200, message = "성공입니다."),
+		@ApiResponse(
+			code = 400,
+			message = "1. 규칙 제목을 입력해주세요.\n"
+				+ "2. 규칙 제목은 20 글자 이내로 입력해주세요.\n"
+				+ "3. 허용되지 않은 파일 형식입니다.\n"
+				+ "4. 이미지가 (720x720) 보다 큽니다.",
+			response = ErrorResponse.class),
+		@ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+		@ApiResponse(
+			code = 404,
+			message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
+				+ "2. 존재하지 않는 방입니다.\n"
+				+ "3. 존재하지 않는 규칙입니다.",
+			response = ErrorResponse.class),
+		@ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
+		@ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
+		@ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+	})
+	@PreventDuplicateRequest
+	@Version
+	@Auth
+	@PutMapping("/v2/rule/{ruleId}")
+	public ResponseEntity<SuccessResponse<String>> updateRule(@ApiIgnore @UserId Long userId,
+		@ApiParam(name = "ruleId", value = "규칙 id") @PathVariable Long ruleId,
+		@Valid @ModelAttribute UpdateRuleInfoRequestDto request,
+		@ApiParam(name = "images", value = "규칙 이미지 리스트")
+		@RequestPart(required = false, name = "images") List<MultipartFile> images) {
+		ruleService.updateRule(request, ruleId, userId, images);
 		return SuccessResponse.OK;
 	}
 

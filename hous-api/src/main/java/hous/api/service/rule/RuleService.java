@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import hous.api.service.badge.BadgeService;
 import hous.api.service.badge.BadgeServiceUtils;
+import hous.api.service.image.dto.UploadResponseDto;
 import hous.api.service.image.provider.S3Provider;
 import hous.api.service.image.provider.dto.request.ImageUploadFileRequest;
 import hous.api.service.notification.NotificationService;
@@ -22,11 +23,11 @@ import hous.api.service.room.RoomServiceUtils;
 import hous.api.service.rule.dto.request.CreateRuleInfoRequestDto;
 import hous.api.service.rule.dto.request.CreateRuleRequestDto;
 import hous.api.service.rule.dto.request.DeleteRuleRequestDto;
+import hous.api.service.rule.dto.request.UpdateRuleInfoRequestDto;
 import hous.api.service.rule.dto.request.UpdateRuleRequestDto;
 import hous.api.service.rule.dto.response.RuleInfo;
 import hous.api.service.user.UserServiceUtils;
-import hous.common.constant.Constraint;
-import hous.common.exception.ValidationException;
+import hous.common.exception.ConflictException;
 import hous.common.type.FileType;
 import hous.core.domain.badge.BadgeCounter;
 import hous.core.domain.badge.BadgeCounterType;
@@ -106,18 +107,13 @@ public class RuleService {
 		Room room = RoomServiceUtils.findParticipatingRoom(user);
 		RuleServiceUtils.existsNowRuleByRoomRule(room, request.getName());
 		var maybeImages = Optional.ofNullable(images);
-		maybeImages.ifPresent(image -> {
-			if (image.size() > Constraint.RULE_IMAGE_MAX) {
-				throw new ValidationException(
-					String.format("방 (%s) 의 규칙 이미지는 최대 % 개만 가능합니다.", room.getId(), Constraint.RULE_IMAGE_MAX),
-					VALIDATION_RULE_IMAGE_MAX_COUNT_EXCEPTION);
-			}
-		});
+		maybeImages.ifPresent(imageList -> RuleServiceUtils.validateRuleImageFileCounts(room, imageList));
 		Rule rule = Rule.newInstance(room, request.getName(), 0, request.getDescription());
 		ruleRepository.save(rule);
 		List<RuleImage> s3ImageUrls = maybeImages.orElse(Collections.emptyList()).stream().map(image -> {
-			String imageUrl = s3Provider.uploadFile(ImageUploadFileRequest.of(FileType.IMAGE), image);
-			return ruleImageRepository.save(RuleImage.newInstance(rule, image.toString(), imageUrl));
+			UploadResponseDto response = s3Provider.uploadFile(ImageUploadFileRequest.of(FileType.IMAGE), image);
+			return ruleImageRepository.save(
+				RuleImage.newInstance(rule, response.getOriginalFileName(), response.getUploadFileName()));
 		}).collect(Collectors.toList());
 		rule.addAllRuleImage(s3ImageUrls);
 		room.addRule(rule);
@@ -143,7 +139,8 @@ public class RuleService {
 		usersExceptMe.forEach(userExceptMe -> notificationService.sendNewRuleNotification(userExceptMe, rule));
 	}
 
-	public void updateRules(UpdateRuleRequestDto request, Long userId) {
+	// TODO Deprecated
+	public void updateRulesDeprecated(UpdateRuleRequestDto request, Long userId) {
 		User user = UserServiceUtils.findUserById(userRepository, userId);
 		Room room = RoomServiceUtils.findParticipatingRoom(user);
 		RuleServiceUtils.existsRuleByRules(
@@ -154,6 +151,44 @@ public class RuleService {
 			rule.updateRule(request.getRules().get(idx).getName(), idx);
 			room.updateRule(rule);
 		}
+	}
+
+	public void updateRule(UpdateRuleInfoRequestDto request, Long ruleId, Long userId, List<MultipartFile> images) {
+		User user = UserServiceUtils.findUserById(userRepository, userId);
+		Room room = RoomServiceUtils.findParticipatingRoom(user);
+		Rule rule = RuleServiceUtils.findRuleByIdAndRoom(ruleRepository, ruleId, room);
+
+		boolean isRuleNameDuplicate = room.getRules()
+			.stream()
+			.filter(roomRule -> !roomRule.getId().equals(ruleId))
+			.anyMatch(roomRule -> {
+				System.out.println(roomRule.getName());
+				return roomRule.getName().equals(request.getName());
+			});
+		System.out.println(isRuleNameDuplicate);
+		if (isRuleNameDuplicate) {
+			throw new ConflictException(
+				String.format("방 (%s) 에 이미 존재하는 ruleName (%s) 입니다.", room.getId(), request.getName()),
+				CONFLICT_RULE_EXCEPTION);
+		}
+
+		var maybeRequestImages = Optional.ofNullable(images).orElse(Collections.emptyList());
+		var maybeRuleImages = Optional.ofNullable(rule.getImages()).orElse(Collections.emptyList());
+
+		RuleServiceUtils.validateRuleImageFileCounts(room, maybeRequestImages);
+		rule.updateRule(request.getName(), 0, request.getDescription());
+
+		// 이미지 s3에서 삭제
+		maybeRuleImages.forEach(ruleImage -> s3Provider.deleteFile(ruleImage.getImageS3Url()));
+		rule.getImages().clear();
+
+		// 이미지 s3에 추가
+		List<RuleImage> s3ImageUrls = maybeRequestImages.stream().map(image -> {
+			UploadResponseDto response = s3Provider.uploadFile(ImageUploadFileRequest.of(FileType.IMAGE), image);
+			return ruleImageRepository.save(
+				RuleImage.newInstance(rule, response.getOriginalFileName(), response.getUploadFileName()));
+		}).collect(Collectors.toList());
+		rule.addAllRuleImage(s3ImageUrls);
 	}
 
 	public void deleteRules(DeleteRuleRequestDto request, Long userId) {
