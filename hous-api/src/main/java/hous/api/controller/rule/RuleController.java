@@ -193,8 +193,9 @@ public class RuleController {
 		return SuccessResponse.OK;
 	}
 
+	// TODO Deprecated
 	@ApiOperation(
-		value = "[인증] 규칙 페이지 - 규칙 여러 개를 삭제합니다.",
+		value = "@@ Deprecated 될 API 입니다. @@ [인증] 규칙 페이지 - 규칙 여러 개를 삭제합니다.",
 		notes = "삭제할 규칙의 id만 resquest dto에 리스트 형태로 담아주세요."
 	)
 	@ApiResponses(value = {
@@ -222,6 +223,30 @@ public class RuleController {
 	public ResponseEntity<SuccessResponse<String>> deleteRules(@ApiIgnore @UserId Long userId,
 		@Valid @RequestBody DeleteRuleRequestDto request) {
 		ruleService.deleteRules(request, userId);
+		return SuccessResponse.OK;
+	}
+
+	@ApiOperation(value = "[인증] 규칙 개별 페이지 - 규칙을 삭제합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(code = 200, message = "성공입니다."),
+		@ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+		@ApiResponse(
+			code = 404,
+			message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
+				+ "2. 존재하지 않는 방입니다.\n"
+				+ "3. 존재하지 않는 규칙입니다.",
+			response = ErrorResponse.class),
+		@ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
+		@ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
+		@ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+	})
+	@PreventDuplicateRequest
+	@Version
+	@Auth
+	@DeleteMapping("/v2/rule/{ruleId}")
+	public ResponseEntity<SuccessResponse<String>> deleteRule(@ApiIgnore @UserId Long userId,
+		@ApiParam(name = "ruleId", value = "규칙 id") @PathVariable Long ruleId) {
+		ruleService.deleteRule(ruleId, userId);
 		return SuccessResponse.OK;
 	}
 }

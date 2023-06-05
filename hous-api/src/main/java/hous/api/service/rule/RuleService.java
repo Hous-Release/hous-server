@@ -191,6 +191,7 @@ public class RuleService {
 		rule.addAllRuleImage(s3ImageUrls);
 	}
 
+	// TODO Deprecated
 	public void deleteRules(DeleteRuleRequestDto request, Long userId) {
 		User user = UserServiceUtils.findUserById(userRepository, userId);
 		Room room = RoomServiceUtils.findParticipatingRoom(user);
@@ -199,6 +200,19 @@ public class RuleService {
 			room.deleteRule(rule);
 			ruleRepository.delete(rule);
 		});
+	}
 
+	public void deleteRule(Long ruleId, Long userId) {
+		User user = UserServiceUtils.findUserById(userRepository, userId);
+		Room room = RoomServiceUtils.findParticipatingRoom(user);
+		Rule rule = RuleServiceUtils.findRuleByIdAndRoom(ruleRepository, ruleId, room);
+
+		var maybeRuleImages = Optional.ofNullable(rule.getImages()).orElse(Collections.emptyList());
+
+		// 이미지 s3에서 삭제
+		maybeRuleImages.forEach(ruleImage -> s3Provider.deleteFile(ruleImage.getImageS3Url()));
+		rule.getImages().clear();
+
+		room.deleteRule(rule);
 	}
 }
