@@ -105,6 +105,7 @@ public class RoomServiceUtils {
 		List<Participate> participates = room.getParticipates();
 		if (participates.size() == 1) {
 			me.deleteParticipate(participate);
+			room.getRules().clear();
 			roomRepository.delete(room);
 			return;
 		}
