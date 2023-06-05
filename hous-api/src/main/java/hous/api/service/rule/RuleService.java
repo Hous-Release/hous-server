@@ -24,10 +24,12 @@ import hous.api.service.rule.dto.request.CreateRuleInfoRequestDto;
 import hous.api.service.rule.dto.request.CreateRuleRequestDto;
 import hous.api.service.rule.dto.request.DeleteRuleRequestDto;
 import hous.api.service.rule.dto.request.UpdateRuleInfoRequestDto;
+import hous.api.service.rule.dto.request.UpdateRuleRepresentRequestDto;
 import hous.api.service.rule.dto.request.UpdateRuleRequestDto;
 import hous.api.service.rule.dto.response.RuleInfo;
 import hous.api.service.user.UserServiceUtils;
 import hous.common.exception.ConflictException;
+import hous.common.exception.ForbiddenException;
 import hous.common.type.FileType;
 import hous.core.domain.badge.BadgeCounter;
 import hous.core.domain.badge.BadgeCounterType;
@@ -214,5 +216,22 @@ public class RuleService {
 		rule.getImages().clear();
 
 		room.deleteRule(rule);
+	}
+
+	public void updateRepresentRule(UpdateRuleRepresentRequestDto request, Long userId) {
+		User user = UserServiceUtils.findUserById(userRepository, userId);
+		Room room = RoomServiceUtils.findParticipatingRoom(user);
+
+		var validateIsPresentCount =
+			request.getRules().stream().filter(represent -> Boolean.TRUE.equals(represent.getIsPresent())).count() > 3;
+		if (validateIsPresentCount) {
+			throw new ForbiddenException(String.format("방 (%s) 의 대표 rule 는 3 개를 초과할 수 없습니다.", room.getId()),
+				FORBIDDEN_REPRESENT_RULE_COUNT_EXCEPTION);
+		}
+
+		request.getRules().forEach(represent -> {
+			Rule rule = RuleServiceUtils.findRuleByIdAndRoom(ruleRepository, represent.getId(), room);
+			rule.updateRuleRepresent(represent.getIsPresent());
+		});
 	}
 }

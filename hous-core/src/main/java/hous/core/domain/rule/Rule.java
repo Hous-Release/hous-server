@@ -76,6 +76,10 @@ public class Rule extends AuditingTimeEntity implements Comparable<Rule> {
 		this.description = description;
 	}
 
+	public void updateRuleRepresent(boolean isRepresent) {
+		this.isRepresent = isRepresent;
+	}
+
 	public void addAllRuleImage(List<RuleImage> images) {
 		this.images.addAll(images);
 	}
