@@ -55,6 +55,7 @@ public class Rule extends AuditingTimeEntity implements Comparable<Rule> {
 	@OneToMany(mappedBy = "rule", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private final List<RuleImage> images = new ArrayList<>();
 
+	// TODO deprecated idx
 	public static Rule newInstance(Room room, String name, int idx, String description) {
 		return builder()
 			.room(room)
