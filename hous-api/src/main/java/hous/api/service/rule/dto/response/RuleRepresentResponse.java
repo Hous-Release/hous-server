@@ -35,14 +35,12 @@ public class RuleRepresentResponse {
 		private Long id;
 		private String name;
 		private boolean isRepresent;
-		private String updatedAt;
 
 		public static RuleInfo of(Rule rule) {
 			return RuleInfo.builder()
 				.id(rule.getId())
 				.name(rule.getName())
 				.isRepresent(rule.isRepresent())
-				.updatedAt(rule.getUpdatedAt().toString())
 				.build();
 		}
 	}

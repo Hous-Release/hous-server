@@ -21,7 +21,7 @@ public class UpdateRuleInfoRequestDto {
 
 	@ApiModelProperty(value = "규칙 내용", example = "우리집 대장은 김또순")
 	@NotNull(message = "{rule.name.notNull}")
-	@Size(max = Constraint.RULE_NAME_MAX, message = "{rule.name.min}")
+	@Size(max = Constraint.RULE_NAME_MAX, message = "{rule.name.max}")
 	private String name;
 
 	@ApiModelProperty(value = "규칙 설명", example = "김또순은 고구마를 좋아한다.")

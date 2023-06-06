@@ -46,7 +46,7 @@ public enum FileType {
 
 	public String createOriginalFileNameWithDate(String originalFileName) {
 		if (originalFileName == null) {
-			throw new ValidationException("잘못된 파일의 originFilename 입니다", FORBIDDEN_FILE_NAME_EXCEPTION);
+			throw new ValidationException("잘못된 파일의 originalFileName 입니다", FORBIDDEN_FILE_NAME_EXCEPTION);
 		}
 		return String.format("%s%s", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")),
 			originalFileName);

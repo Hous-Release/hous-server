@@ -49,10 +49,10 @@ public class RuleServiceUtils {
 		}
 	}
 
-	public static void validateRuleImageFileCounts(Room room, List<MultipartFile> images) {
+	public static void validateRuleImageFileCounts(List<MultipartFile> images) {
 		if (images.size() > Constraint.RULE_IMAGE_MAX) {
 			throw new ValidationException(
-				String.format("방 (%s) 의 규칙 이미지는 최대 % 개만 가능합니다.", room.getId(), Constraint.RULE_IMAGE_MAX),
+				String.format("규칙 이미지는 최대 %s 개만 가능합니다.", Constraint.RULE_IMAGE_MAX),
 				VALIDATION_RULE_IMAGE_MAX_COUNT_EXCEPTION);
 		}
 	}

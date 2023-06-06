@@ -109,7 +109,7 @@ public class RuleService {
 		Room room = RoomServiceUtils.findParticipatingRoom(user);
 		RuleServiceUtils.existsNowRuleByRoomRule(room, request.getName());
 		var maybeImages = Optional.ofNullable(images);
-		maybeImages.ifPresent(imageList -> RuleServiceUtils.validateRuleImageFileCounts(room, imageList));
+		maybeImages.ifPresent(RuleServiceUtils::validateRuleImageFileCounts);
 		Rule rule = Rule.newInstance(room, request.getName(), 0, request.getDescription());
 		ruleRepository.save(rule);
 		List<RuleImage> s3ImageUrls = maybeImages.orElse(Collections.emptyList()).stream().map(image -> {
@@ -163,9 +163,7 @@ public class RuleService {
 		boolean isRuleNameDuplicate = room.getRules()
 			.stream()
 			.filter(roomRule -> !roomRule.getId().equals(ruleId))
-			.anyMatch(roomRule -> {
-				return roomRule.getName().equals(request.getName());
-			});
+			.anyMatch(roomRule -> roomRule.getName().equals(request.getName()));
 		if (isRuleNameDuplicate) {
 			throw new ConflictException(
 				String.format("방 (%s) 에 이미 존재하는 ruleName (%s) 입니다.", room.getId(), request.getName()),
@@ -175,7 +173,7 @@ public class RuleService {
 		var maybeRequestImages = Optional.ofNullable(images).orElse(Collections.emptyList());
 		var maybeRuleImages = Optional.ofNullable(rule.getImages()).orElse(Collections.emptyList());
 
-		RuleServiceUtils.validateRuleImageFileCounts(room, maybeRequestImages);
+		RuleServiceUtils.validateRuleImageFileCounts(maybeRequestImages);
 		rule.updateRule(request.getName(), 0, request.getDescription());
 
 		// 이미지 s3에서 삭제

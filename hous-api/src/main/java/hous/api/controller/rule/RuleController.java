@@ -48,7 +48,7 @@ public class RuleController {
 	// TODO Deprecated
 	@ApiOperation(
 		value = "@@ Deprecated 될 API 입니다. @@ [인증] 규칙 페이지 - 방의 규칙을 생성합니다.",
-		notes = "생성할 규칙을 resquest dto에 리스트 형태로 담아주세요."
+		notes = "생성할 규칙을 request dto 에 리스트 형태로 담아주세요."
 	)
 	@ApiResponses(value = {
 		@ApiResponse(code = 201, message = "생성 성공입니다."),
@@ -83,7 +83,7 @@ public class RuleController {
 
 	@ApiOperation(
 		value = "[인증] 규칙 페이지 - 방의 규칙을 생성합니다.",
-		notes = "생성할 규칙 정보를 resquest dto에 리스트 형태로 담아주세요."
+		notes = "생성할 규칙 정보를 request dto 에 리스트 형태로 담아주세요."
 	)
 	@ApiResponses(value = {
 		@ApiResponse(code = 201, message = "생성 성공입니다."),
@@ -91,20 +91,22 @@ public class RuleController {
 			code = 400,
 			message = "1. 규칙 제목을 입력해주세요.\n"
 				+ "2. 규칙 제목은 20 글자 이내로 입력해주세요.\n"
-				+ "3. 허용되지 않은 파일 형식입니다.\n"
-				+ "4. 이미지가 (720x720) 보다 큽니다.",
+				+ "3. 규칙 설명은 50 글자 이내로 입력해주세요.\n"
+				+ "4. 허용되지 않은 파일 형식입니다.\n"
+				+ "5. 이미지가 (720x720) 보다 큽니다.\n"
+				+ "6. 규칙 이미지는 최대 5 개 입니다.",
 			response = ErrorResponse.class),
 		@ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
 		@ApiResponse(
 			code = 404,
 			message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
-				+ "2. 참가중인 방이 존재하지 않습니다.",
+				+ "2. 존재하지 않는 규칙입니다.\n"
+				+ "3. 존재하지 않는 배지 입니다.",
 			response = ErrorResponse.class),
 		@ApiResponse(
 			code = 409,
 			message = "1. 처리중인 요청입니다.\n"
-				+ "2. 존재하지 않는 방입니다.\n"
-				+ "3. 존재하지 않는 규칙입니다.",
+				+ "2. 이미 존재하는 규칙입니다.",
 			response = ErrorResponse.class),
 		@ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
 		@ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
@@ -125,7 +127,7 @@ public class RuleController {
 	// TODO Deprecated
 	@ApiOperation(
 		value = "@@ Deprecated 될 API 입니다. @@ [인증] 규칙 페이지 - 규칙 여러 개의 정렬 및 내용을 수정합니다.",
-		notes = "전체 규칙 id와 내용이 담긴 리스트를 정렬 순서에 따라 resquest dto에 리스트 형태로 담아주세요."
+		notes = "전체 규칙 id와 내용이 담긴 리스트를 정렬 순서에 따라 request dto 에 리스트 형태로 담아주세요."
 	)
 	@ApiResponses(value = {
 		@ApiResponse(code = 200, message = "성공입니다."),
@@ -167,17 +169,22 @@ public class RuleController {
 			code = 400,
 			message = "1. 규칙 제목을 입력해주세요.\n"
 				+ "2. 규칙 제목은 20 글자 이내로 입력해주세요.\n"
-				+ "3. 허용되지 않은 파일 형식입니다.\n"
-				+ "4. 이미지가 (720x720) 보다 큽니다.",
+				+ "3. 규칙 설명은 50 글자 이내로 입력해주세요.\n"
+				+ "4. 허용되지 않은 파일 형식입니다.\n"
+				+ "5. 이미지가 (720x720) 보다 큽니다.\n"
+				+ "6. 규칙 이미지는 최대 5 개 입니다.",
 			response = ErrorResponse.class),
 		@ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
 		@ApiResponse(
 			code = 404,
 			message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
-				+ "2. 존재하지 않는 방입니다.\n"
-				+ "3. 존재하지 않는 규칙입니다.",
+				+ "2. 존재하지 않는 규칙입니다.",
 			response = ErrorResponse.class),
-		@ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
+		@ApiResponse(
+			code = 409,
+			message = "1. 처리중인 요청입니다.\n"
+				+ "2. 이미 존재하는 규칙입니다.",
+			response = ErrorResponse.class),
 		@ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
 		@ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
 	})
@@ -197,7 +204,7 @@ public class RuleController {
 	// TODO Deprecated
 	@ApiOperation(
 		value = "@@ Deprecated 될 API 입니다. @@ [인증] 규칙 페이지 - 규칙 여러 개를 삭제합니다.",
-		notes = "삭제할 규칙의 id만 resquest dto에 리스트 형태로 담아주세요."
+		notes = "삭제할 규칙의 id만 request dto 에 리스트 형태로 담아주세요."
 	)
 	@ApiResponses(value = {
 		@ApiResponse(code = 200, message = "성공입니다."),
@@ -267,8 +274,7 @@ public class RuleController {
 		@ApiResponse(
 			code = 404,
 			message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
-				+ "2. 존재하지 않는 방입니다.\n"
-				+ "3. 존재하지 않는 규칙입니다.",
+				+ "2. 존재하지 않는 규칙입니다.",
 			response = ErrorResponse.class),
 		@ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
 		@ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
