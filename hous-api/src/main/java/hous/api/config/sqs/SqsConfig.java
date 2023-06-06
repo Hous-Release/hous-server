@@ -27,11 +27,11 @@ public class SqsConfig {
 
 	@Primary
 	@Bean
-	public AmazonSQSAsync amazonSQSAws() {
-		BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(accessKey, secretKey);
+	public AmazonSQSAsync amazonSqsAws() {
+		BasicAWSCredentials basicAwsCredentials = new BasicAWSCredentials(accessKey, secretKey);
 		return AmazonSQSAsyncClientBuilder.standard()
 			.withRegion(region)
-			.withCredentials(new AWSStaticCredentialsProvider(basicAWSCredentials))
+			.withCredentials(new AWSStaticCredentialsProvider(basicAwsCredentials))
 			.build();
 	}
 }

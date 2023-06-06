@@ -25,11 +25,11 @@ public class SqsProducer {
 	private static final String messageGroupId = "sqs";
 
 	private final ObjectMapper objectMapper;
-	private final AmazonSQS amazonSQS;
+	private final AmazonSQS amazonSqs;
 
-	public SqsProducer(ObjectMapper objectMapper, AmazonSQS amazonSQS) {
+	public SqsProducer(ObjectMapper objectMapper, AmazonSQS amazonSqs) {
 		this.objectMapper = objectMapper;
-		this.amazonSQS = amazonSQS;
+		this.amazonSqs = amazonSqs;
 	}
 
 	public void produce(MessageDto dto) {
@@ -38,7 +38,7 @@ public class SqsProducer {
 				.withMessageGroupId(messageGroupId)
 				.withMessageDeduplicationId(UUID.randomUUID().toString())
 				.withMessageAttributes(createMessageAttributes(dto.getType()));
-			amazonSQS.sendMessage(sendMessageRequest);
+			amazonSqs.sendMessage(sendMessageRequest);
 			log.info(String.format("====> [SQS Queue Request] : %s ",
 				dto));
 		} catch (JsonProcessingException exception) {
@@ -47,9 +47,9 @@ public class SqsProducer {
 	}
 
 	private Map<String, MessageAttributeValue> createMessageAttributes(String type) {
-		final String STRING = "String";
+		final String dataType = "String";
 		return Map.of(MessageType.TYPE, new MessageAttributeValue()
-			.withDataType(STRING)
+			.withDataType(dataType)
 			.withStringValue(type));
 	}
 }
