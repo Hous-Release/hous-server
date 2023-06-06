@@ -164,10 +164,8 @@ public class RuleService {
 			.stream()
 			.filter(roomRule -> !roomRule.getId().equals(ruleId))
 			.anyMatch(roomRule -> {
-				System.out.println(roomRule.getName());
 				return roomRule.getName().equals(request.getName());
 			});
-		System.out.println(isRuleNameDuplicate);
 		if (isRuleNameDuplicate) {
 			throw new ConflictException(
 				String.format("방 (%s) 에 이미 존재하는 ruleName (%s) 입니다.", room.getId(), request.getName()),
