@@ -101,7 +101,8 @@ public class RuleController {
 			code = 404,
 			message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
 				+ "2. 존재하지 않는 규칙입니다.\n"
-				+ "3. 존재하지 않는 배지 입니다.",
+				+ "3. 존재하지 않는 배지 입니다.\n"
+				+ "4. 참가중인 방이 존재하지 않습니다.",
 			response = ErrorResponse.class),
 		@ApiResponse(
 			code = 409,
@@ -178,7 +179,8 @@ public class RuleController {
 		@ApiResponse(
 			code = 404,
 			message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
-				+ "2. 존재하지 않는 규칙입니다.",
+				+ "2. 존재하지 않는 규칙입니다.\n"
+				+ "3. 참가중인 방이 존재하지 않습니다.",
 			response = ErrorResponse.class),
 		@ApiResponse(
 			code = 409,
@@ -241,7 +243,7 @@ public class RuleController {
 		@ApiResponse(
 			code = 404,
 			message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
-				+ "2. 존재하지 않는 방입니다.\n"
+				+ "2. 참가중인 방이 존재하지 않습니다.\n"
 				+ "3. 존재하지 않는 규칙입니다.",
 			response = ErrorResponse.class),
 		@ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
