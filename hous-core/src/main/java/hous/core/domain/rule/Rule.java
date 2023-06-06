@@ -70,6 +70,7 @@ public class Rule extends AuditingTimeEntity implements Comparable<Rule> {
 		this.name = name;
 	}
 
+	// TODO deprecated idx
 	public void updateRule(String name, int idx, String description) {
 		this.idx = idx;
 		this.name = name;
