@@ -10,6 +10,7 @@ import hous.api.service.rule.dto.response.RuleRepresentResponse;
 import hous.api.service.rule.dto.response.RulesResponse;
 import hous.api.service.user.UserServiceUtils;
 import hous.common.constant.Constraint;
+import hous.common.util.DateUtils;
 import hous.core.domain.room.Room;
 import hous.core.domain.rule.Rule;
 import hous.core.domain.rule.mysql.RuleRepository;
@@ -28,7 +29,7 @@ public class RuleRetrieveService {
 	public RulesResponse getRulesInfo(Long userId) {
 		User user = UserServiceUtils.findUserById(userRepository, userId);
 		Room room = RoomServiceUtils.findParticipatingRoom(user);
-		return RulesResponse.of(room.getRules());
+		return RulesResponse.of(room.getRules(), DateUtils.todayLocalDateTime());
 	}
 
 	public RuleAddableResponse getRuleAddable(Long userId) {

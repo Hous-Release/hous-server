@@ -1,11 +1,11 @@
 package hous.api.service.rule.dto.response;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import hous.common.util.DateUtils;
 import hous.core.domain.rule.Rule;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,14 +22,14 @@ import lombok.ToString;
 public class RulesResponse {
 	private List<RuleInfo> rules;
 
-	public static RulesResponse of(List<Rule> rules) {
+	public static RulesResponse of(List<Rule> rules, LocalDateTime now) {
 		return RulesResponse.builder()
 			.rules(rules.stream()
 				.sorted(Rule::compareTo)
-				.map(RuleInfo::of).collect(Collectors.toList()))
+				.map(rule -> RuleInfo.of(rule, now)).collect(Collectors.toList()))
 			.build();
 	}
-	
+
 	@Getter
 	@AllArgsConstructor(access = AccessLevel.PRIVATE)
 	@Builder(access = AccessLevel.PRIVATE)
@@ -48,11 +48,11 @@ public class RulesResponse {
 			return isNew;
 		}
 
-		public static RuleInfo of(Rule rule) {
+		public static RuleInfo of(Rule rule, LocalDateTime now) {
 			return RuleInfo.builder()
 				.id(rule.getId())
 				.name(rule.getName())
-				.isNew(DateUtils.todayLocalDateTime().isBefore(rule.getCreatedAt().plusHours(12)))
+				.isNew(now.isBefore(rule.getCreatedAt().plusHours(12)))
 				.createdAt(rule.getCreatedAt().toString())
 				.build();
 		}
