@@ -2,6 +2,9 @@ package hous.common.type;
 
 import static hous.common.exception.ErrorCode.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import hous.common.exception.ValidationException;
 import hous.common.util.FileUtils;
 import hous.common.util.UuidUtils;
@@ -39,5 +42,13 @@ public enum FileType {
 
 	private String getFileNameWithDirectory(String fileName) {
 		return this.directory.concat(fileName);
+	}
+
+	public String createOriginalFileNameWithDate(String originalFileName) {
+		if (originalFileName == null) {
+			throw new ValidationException("잘못된 파일의 originalFileName 입니다", FORBIDDEN_FILE_NAME_EXCEPTION);
+		}
+		return String.format("%s%s", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")),
+			originalFileName);
 	}
 }

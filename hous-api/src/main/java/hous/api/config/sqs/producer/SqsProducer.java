@@ -22,34 +22,40 @@ public class SqsProducer {
 	@Value("${cloud.aws.sqs.notification.url}")
 	private String url;
 
+	@Value(value = "${spring.profiles.active}")
+	String profile;
+
 	private static final String messageGroupId = "sqs";
 
 	private final ObjectMapper objectMapper;
-	private final AmazonSQS amazonSQS;
+	private final AmazonSQS amazonSqs;
 
-	public SqsProducer(ObjectMapper objectMapper, AmazonSQS amazonSQS) {
+	public SqsProducer(ObjectMapper objectMapper, AmazonSQS amazonSqs) {
 		this.objectMapper = objectMapper;
-		this.amazonSQS = amazonSQS;
+		this.amazonSqs = amazonSqs;
 	}
 
 	public void produce(MessageDto dto) {
 		try {
-			SendMessageRequest sendMessageRequest = new SendMessageRequest(url, objectMapper.writeValueAsString(dto))
-				.withMessageGroupId(messageGroupId)
-				.withMessageDeduplicationId(UUID.randomUUID().toString())
-				.withMessageAttributes(createMessageAttributes(dto.getType()));
-			amazonSQS.sendMessage(sendMessageRequest);
-			log.info(String.format("====> [SQS Queue Request] : %s ",
-				dto));
+			if (!profile.equals("local")) {
+				SendMessageRequest sendMessageRequest = new SendMessageRequest(url,
+					objectMapper.writeValueAsString(dto))
+					.withMessageGroupId(messageGroupId)
+					.withMessageDeduplicationId(UUID.randomUUID().toString())
+					.withMessageAttributes(createMessageAttributes(dto.getType()));
+				amazonSqs.sendMessage(sendMessageRequest);
+				log.info(String.format("====> [SQS Queue Request] : %s ",
+					dto));
+			}
 		} catch (JsonProcessingException exception) {
 			log.error(exception.getMessage(), exception);
 		}
 	}
 
 	private Map<String, MessageAttributeValue> createMessageAttributes(String type) {
-		final String STRING = "String";
+		final String dataType = "String";
 		return Map.of(MessageType.TYPE, new MessageAttributeValue()
-			.withDataType(STRING)
+			.withDataType(dataType)
 			.withStringValue(type));
 	}
 }

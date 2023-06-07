@@ -1,5 +1,9 @@
 package hous.core.domain.rule;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -37,30 +42,52 @@ public class Rule extends AuditingTimeEntity implements Comparable<Rule> {
 	@Column(nullable = false, length = 100)
 	private String name;
 
+	// TODO 업데이트 이후 삭제하던가 논의해보기
 	@Column(nullable = false)
 	private int idx;
 
-	public static Rule newInstance(Room room, String name, int idx) {
+	@Column(length = 100)
+	private String description;
+
+	@Column(nullable = false)
+	private boolean isRepresent;
+
+	@OneToMany(mappedBy = "rule", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private final List<RuleImage> images = new ArrayList<>();
+
+	// TODO deprecated idx
+	public static Rule newInstance(Room room, String name, int idx, String description) {
 		return builder()
 			.room(room)
 			.name(name)
 			.idx(idx)
+			.description(description)
 			.build();
 	}
 
+	// TODO deprecated
 	public void updateRule(String name, int idx) {
 		this.idx = idx;
 		this.name = name;
 	}
 
+	// TODO deprecated idx
+	public void updateRule(String name, int idx, String description) {
+		this.idx = idx;
+		this.name = name;
+		this.description = description;
+	}
+
+	public void updateRuleRepresent(boolean isRepresent) {
+		this.isRepresent = isRepresent;
+	}
+
+	public void addAllRuleImage(List<RuleImage> images) {
+		this.images.addAll(images);
+	}
+
 	@Override
 	public int compareTo(@NotNull Rule rule) {
-		if (idx == rule.idx) {
-			if (rule.getCreatedAt().compareTo(getCreatedAt()) == 0) {
-				return Long.compare(id, rule.id);
-			}
-			return getCreatedAt().compareTo(rule.getCreatedAt());
-		}
-		return Integer.compare(idx, rule.idx);
+		return getCreatedAt().compareTo(rule.getCreatedAt());
 	}
 }

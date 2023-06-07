@@ -84,8 +84,13 @@ public class Room extends AuditingTimeEntity {
 		this.participantsCnt -= 1;
 	}
 
+	// TODO Deprecatec
 	public void addRules(List<Rule> rules) {
 		this.rules.addAll(rules);
+	}
+
+	public void addRule(Rule rule) {
+		this.rules.add(rule);
 	}
 
 	public void updateRule(Rule rule) {

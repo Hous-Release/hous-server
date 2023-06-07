@@ -17,7 +17,7 @@ import hous.api.service.room.RoomService;
 import hous.api.service.room.dto.request.SetRoomNameRequestDto;
 import hous.api.service.room.dto.response.RoomInfoResponse;
 import hous.api.service.rule.RuleService;
-import hous.api.service.rule.dto.request.CreateRuleRequestDto;
+import hous.api.service.rule.dto.request.CreateRuleInfoRequestDto;
 import hous.api.service.todo.TodoService;
 import hous.api.service.todo.dto.request.TodoInfoRequestDto;
 import hous.api.service.user.UserService;
@@ -295,8 +295,11 @@ public class BadgeServiceTest {
 		roomService.createRoom(setRoomNameRequestDto, userId);
 
 		// when
-		CreateRuleRequestDto createRuleRequestDto1 = CreateRuleRequestDto.of(List.of("rule1"));
-		ruleService.createRule(createRuleRequestDto1, userId);
+		CreateRuleInfoRequestDto createRuleRequestDto1 = CreateRuleInfoRequestDto.builder()
+			.name("rule")
+			.description(null)
+			.build();
+		ruleService.createRule(createRuleRequestDto1, userId, List.of());
 
 		// then
 		List<Acquire> acquiresByUser = acquireRepository.findAllAcquireByOnboarding(user.getOnboarding());
@@ -327,7 +330,10 @@ public class BadgeServiceTest {
 
 		// when
 		for (int i = 0; i < 5; i++) {
-			ruleService.createRule(CreateRuleRequestDto.of(List.of(String.valueOf(i))), userId);
+			ruleService.createRule(CreateRuleInfoRequestDto.builder()
+				.name("rule" + i)
+				.description(null)
+				.build(), userId, List.of());
 		}
 
 		// then
@@ -422,7 +428,10 @@ public class BadgeServiceTest {
 
 		// when
 		for (int i = 0; i < 3; i++) {
-			ruleService.createRule(CreateRuleRequestDto.of(List.of(String.valueOf(i))), userId);
+			ruleService.createRule(CreateRuleInfoRequestDto.builder()
+				.name("rule" + i)
+				.description(null)
+				.build(), userId, List.of());
 		}
 
 		// then

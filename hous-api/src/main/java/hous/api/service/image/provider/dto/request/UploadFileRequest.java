@@ -13,4 +13,8 @@ public interface UploadFileRequest {
 	default String getFileNameWithBucketDirectory(String originalFileName) {
 		return getType().createUniqueFileNameWithExtension(originalFileName);
 	}
+
+	default String getCreateOriginalFileNameWithDate(String originalFileName) {
+		return getType().createOriginalFileNameWithDate(originalFileName);
+	}
 }
