@@ -52,6 +52,8 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class RuleService {
 
+	private static final String RULE_IMAGE_S3_DIR = "rule-image";
+
 	private final RedisTemplate<String, Object> redisTemplate;
 
 	private final UserRepository userRepository;
@@ -113,7 +115,8 @@ public class RuleService {
 		Rule rule = Rule.newInstance(room, request.getName(), 0, request.getDescription());
 		ruleRepository.save(rule);
 		List<RuleImage> s3ImageUrls = maybeImages.orElse(Collections.emptyList()).stream().map(image -> {
-			UploadResponseDto response = s3Provider.uploadFile(ImageUploadFileRequest.of(FileType.IMAGE), image);
+			UploadResponseDto response = s3Provider.uploadFile(ImageUploadFileRequest.of(FileType.IMAGE), image,
+				RULE_IMAGE_S3_DIR);
 			return ruleImageRepository.save(
 				RuleImage.newInstance(rule, response.getOriginalFileName(), response.getUploadFileName()));
 		}).collect(Collectors.toList());
@@ -182,7 +185,8 @@ public class RuleService {
 
 		// 이미지 s3에 추가
 		List<RuleImage> s3ImageUrls = maybeRequestImages.stream().map(image -> {
-			UploadResponseDto response = s3Provider.uploadFile(ImageUploadFileRequest.of(FileType.IMAGE), image);
+			UploadResponseDto response = s3Provider.uploadFile(ImageUploadFileRequest.of(FileType.IMAGE), image,
+				RULE_IMAGE_S3_DIR);
 			return ruleImageRepository.save(
 				RuleImage.newInstance(rule, response.getOriginalFileName(), response.getUploadFileName()));
 		}).collect(Collectors.toList());
