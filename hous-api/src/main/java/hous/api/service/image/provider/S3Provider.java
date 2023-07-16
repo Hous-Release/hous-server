@@ -19,9 +19,10 @@ public class S3Provider {
 
 	private final S3FileStorageClient fileStorageClient;
 
-	public UploadResponseDto uploadFile(UploadFileRequest request, MultipartFile file) {
+	public UploadResponseDto uploadFile(UploadFileRequest request, MultipartFile file, String dirName) {
 		request.validateAvailableContentType(file.getContentType());
-		String fileName = request.getFileNameWithBucketDirectory(file.getOriginalFilename());
+		String fileName = String.join("/", dirName,
+			request.getFileNameWithBucketDirectory(file.getOriginalFilename()));
 		String originalFileName = request.getCreateOriginalFileNameWithDate(file.getOriginalFilename());
 		validateImageMaxSize(file);
 		fileStorageClient.uploadFile(file, fileName);
