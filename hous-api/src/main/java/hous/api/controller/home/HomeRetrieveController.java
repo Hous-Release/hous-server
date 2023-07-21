@@ -30,7 +30,9 @@ public class HomeRetrieveController {
 
 	@ApiOperation(
 		value = "[인증] Hous- 페이지 - 홈 화면 정보를 조회합니다.",
-		notes = "오늘 우리의 to-do 진행률, MY to-do, Our Rules, Homies 정보를 조회합니다."
+		notes = "오늘 우리의 to-do 진행률, MY to-do, Our Rules, Homies 정보를 조회합니다.\n"
+			+ "나의 성향 테스트 진행 여부 (isPersonalityTest) 에 대한 boolean 값이 추가되었습니다. \n"
+			+ "성향 테스트를 한 경우 true, 아닌 경우 false 를 전달합니다."
 	)
 	@ApiResponses(value = {
 		@ApiResponse(code = 200, message = "홈 화면 정보 조회 성공입니다."),

@@ -5,6 +5,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import hous.api.service.todo.dto.response.OurTodoInfo;
 import hous.api.service.todo.dto.response.TodoDetailInfo;
 import hous.common.util.DateUtils;
@@ -36,8 +38,14 @@ public class HomeInfoResponse {
 	private int myTodosCnt;
 	private List<String> myTodos;
 	private List<String> ourRules;
+	private boolean isPersonalityTest;
 	private List<HomieInfo> homies;
 
+	@JsonProperty("isPersonalityTest")
+	public boolean isPersonalityTest() {
+		return isPersonalityTest;
+	}
+	
 	@ToString
 	@Getter
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -70,6 +78,7 @@ public class HomeInfoResponse {
 				.limit(3)
 				.map(Rule::getName)
 				.collect(Collectors.toList()))
+			.isPersonalityTest(!me.getPersonality().getColor().equals(PersonalityColor.GRAY))
 			.homies(participants.stream()
 				.map(onboarding -> HomieInfo.builder()
 					.onboardingId(onboarding.getId())
