@@ -36,11 +36,9 @@ public class RulesResponse {
 	private static class RuleInfo {
 
 		private Long id;
-
 		private String name;
-
 		private boolean isNew;
-
+		private boolean isRepresent;
 		private String createdAt;
 
 		@JsonProperty("isNew")
@@ -48,11 +46,17 @@ public class RulesResponse {
 			return isNew;
 		}
 
+		@JsonProperty("isRepresent")
+		public boolean isRepresent() {
+			return isRepresent;
+		}
+
 		public static RuleInfo of(Rule rule, LocalDateTime now) {
 			return RuleInfo.builder()
 				.id(rule.getId())
 				.name(rule.getName())
 				.isNew(now.isBefore(rule.getCreatedAt().plusHours(12)))
+				.isRepresent(rule.isRepresent())
 				.createdAt(rule.getCreatedAt().toString())
 				.build();
 		}
