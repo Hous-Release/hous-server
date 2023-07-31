@@ -30,6 +30,7 @@ import hous.api.service.rule.dto.request.UpdateRuleRepresentRequestDto;
 import hous.api.service.rule.dto.request.UpdateRuleRequestDto;
 import hous.api.service.rule.dto.response.RuleInfo;
 import hous.api.service.user.UserServiceUtils;
+import hous.common.constant.Constraint;
 import hous.common.exception.ConflictException;
 import hous.common.exception.ForbiddenException;
 import hous.common.type.FileType;
@@ -225,8 +226,9 @@ public class RuleService {
 		Room room = RoomServiceUtils.findParticipatingRoom(user);
 
 		Set<Long> ruleIds = new HashSet<>(request.getRules());
-		if (ruleIds.size() > 3) {
-			throw new ForbiddenException(String.format("방 (%s) 의 대표 rule 는 3 개를 초과할 수 없습니다.", room.getId()),
+		if (ruleIds.size() > Constraint.RULE_REPRESENT_MAX) {
+			throw new ForbiddenException(
+				String.format("방 (%s) 의 대표 rule 는 %s 개를 초과할 수 없습니다.", room.getId(), Constraint.RULE_REPRESENT_MAX),
 				FORBIDDEN_REPRESENT_RULE_COUNT_EXCEPTION);
 		}
 		room.getRules().forEach(rule -> rule.updateRuleRepresent(ruleIds.contains(rule.getId())));
