@@ -15,17 +15,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UpdateRuleRepresentRequestDto {
 
-	@ApiModelProperty(value = "수정된 규칙 리스트")
+	@ApiModelProperty(value = "설정한 대표 규칙 id 리스트", example = "[1, 2, 3]")
 	@NotNull(message = "{rule.list.notNull}")
 	@Size(min = Constraint.RULE_LIST_MIN, message = "{rule.list.min}")
-	private List<RepresentInfo> rules;
-
-	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class RepresentInfo {
-		@NotNull
-		private Long id;
-		@NotNull
-		private Boolean isPresent;
-	}
+	private List<Long> rules;
 }
