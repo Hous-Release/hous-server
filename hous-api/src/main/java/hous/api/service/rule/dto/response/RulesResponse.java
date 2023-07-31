@@ -1,10 +1,9 @@
 package hous.api.service.rule.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -25,18 +24,13 @@ public class RulesResponse {
 	private List<RuleInfo> rules;
 
 	public static RulesResponse of(List<Rule> rules, LocalDateTime now) {
-		List<RuleInfo> sortedRuleInfo = rules.stream()
-			.sorted(Rule::compareTo)
-			.map(rule -> RuleInfo.of(rule, now)).collect(Collectors.toList());
-
-		Map<Boolean, List<RuleInfo>> ruleInfoMap = sortedRuleInfo.stream()
-			.collect(Collectors.partitioningBy(RuleInfo::isRepresent));
-
-		List<RuleInfo> representRuleInfo = ruleInfoMap.get(true);
-		List<RuleInfo> nonRepresentRuleInfo = ruleInfoMap.get(false);
-
 		return RulesResponse.builder()
-			.rules(Stream.concat(representRuleInfo.stream(), nonRepresentRuleInfo.stream())
+			.rules(rules.stream()
+				.sorted(Rule::compareTo)
+				.map(rule -> RuleInfo.of(rule, now))
+				.collect(Collectors.toList())
+				.stream()
+				.sorted(Comparator.comparing(RuleInfo::isRepresent).reversed())
 				.collect(Collectors.toList()))
 			.build();
 	}
