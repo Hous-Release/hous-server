@@ -36,10 +36,14 @@ public class RulesResponse {
 	private static class RuleInfo {
 
 		private Long id;
-
 		private String name;
-
 		private boolean isNew;
+		private boolean isRepresent;
+
+		@JsonProperty("isRepresent")
+		public boolean isRepresent() {
+			return isRepresent;
+		}
 
 		private String createdAt;
 
@@ -53,6 +57,7 @@ public class RulesResponse {
 				.id(rule.getId())
 				.name(rule.getName())
 				.isNew(now.isBefore(rule.getCreatedAt().plusHours(12)))
+				.isRepresent(rule.isRepresent())
 				.createdAt(rule.getCreatedAt().toString())
 				.build();
 		}
