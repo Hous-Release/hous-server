@@ -188,7 +188,7 @@ public class UserService {
 		userRepository.delete(user);
 	}
 
-	public void acquireFeedbackBadgeDeprecated(Long userId) {
+	public void acquireFeedbackBadge(Long userId) {
 		User user = UserServiceUtils.findUserById(userRepository, userId);
 		RoomServiceUtils.findParticipatingRoom(user);
 		badgeService.acquireBadge(user, BadgeInfo.FEEDBACK_ONE_STEP);
