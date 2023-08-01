@@ -1,4 +1,4 @@
-package hous.notification.config.sqs.dto;
+package hous.common.dto.sqs;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

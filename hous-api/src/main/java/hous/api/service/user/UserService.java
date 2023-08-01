@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import hous.api.config.sqs.dto.SlackUserDeleteFeedbackDto;
 import hous.api.config.sqs.producer.SqsProducer;
 import hous.api.service.badge.BadgeService;
 import hous.api.service.badge.BadgeServiceUtils;
@@ -18,6 +17,7 @@ import hous.api.service.user.dto.request.UpdateTestScoreRequestDto;
 import hous.api.service.user.dto.request.UpdateUserInfoRequestDto;
 import hous.api.service.user.dto.request.UserDeleteFeedbackRequestDto;
 import hous.api.service.user.dto.response.UpdatePersonalityColorResponse;
+import hous.common.dto.sqs.SlackUserDeleteFeedbackDto;
 import hous.common.util.JwtUtils;
 import hous.core.domain.badge.Badge;
 import hous.core.domain.badge.BadgeCounter;

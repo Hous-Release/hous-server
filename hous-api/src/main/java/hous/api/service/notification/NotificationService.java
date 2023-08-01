@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import hous.api.config.sqs.dto.FirebaseDto;
 import hous.api.config.sqs.producer.SqsProducer;
+import hous.common.dto.sqs.FirebaseDto;
 import hous.core.domain.badge.BadgeInfo;
 import hous.core.domain.notification.Notification;
 import hous.core.domain.notification.NotificationMessage;

@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import hous.common.constant.MessageType;
-import hous.notification.config.sqs.dto.FirebaseDto;
-import hous.notification.config.sqs.dto.SlackExceptionDto;
-import hous.notification.config.sqs.dto.SlackUserDeleteFeedbackDto;
+import hous.common.dto.sqs.FirebaseDto;
+import hous.common.dto.sqs.SlackExceptionDto;
+import hous.common.dto.sqs.SlackUserDeleteFeedbackDto;
 import hous.notification.service.firebase.FirebaseCloudMessageService;
 import hous.notification.service.slack.SlackService;
 import lombok.RequiredArgsConstructor;

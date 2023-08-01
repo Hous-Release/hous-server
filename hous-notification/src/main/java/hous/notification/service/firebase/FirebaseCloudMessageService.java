@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 
+import hous.common.dto.sqs.FcmTokenResetDto;
 import hous.common.exception.InternalServerException;
 import hous.common.util.HttpHeaderUtils;
 import hous.external.client.firebase.FirebaseApiClient;
-import hous.notification.config.sqs.dto.FcmTokenResetDto;
 import hous.notification.config.sqs.producer.SqsProducer;
 import hous.notification.service.firebase.dto.request.FcmMessage;
 import lombok.RequiredArgsConstructor;

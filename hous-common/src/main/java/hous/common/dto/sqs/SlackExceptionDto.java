@@ -1,4 +1,4 @@
-package hous.api.config.sqs.dto;
+package hous.common.dto.sqs;
 
 import hous.common.constant.MessageType;
 import lombok.AccessLevel;
