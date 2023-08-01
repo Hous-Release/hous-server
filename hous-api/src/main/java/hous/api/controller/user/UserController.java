@@ -165,8 +165,9 @@ public class UserController {
 		return SuccessResponse.OK;
 	}
 
+	// TODO: 2023/08/01 Deprecated
 	@ApiOperation(
-		value = "[인증] 마이 페이지(설정) - 회원 정보를 삭제합니다.",
+		value = "@@ Deprecated 될 API 입니다. @@ [인증] 마이 페이지(설정) - 회원 정보를 삭제합니다.",
 		notes = "회원 정보 탈퇴 요청 시 해당 유저의 모든 정보를 삭제합니다.\n"
 			+ "feedbackType을 NO를 보낸 경우, 사유가 없는 것으로 판단합니다. comment가 없는 경우 빈스트링(\"\")으로 보내주세요."
 	)
@@ -196,8 +197,9 @@ public class UserController {
 		return SuccessResponse.OK;
 	}
 
+	// TODO: 2023/08/01 Deprecated
 	@ApiOperation(
-		value = "[인증] 마이 페이지(설정) - 피드백 보내기 버튼 클릭 시 피드백 한걸음 배지를 전달 받습니다.",
+		value = "@@ Deprecated 될 API 입니다. @@ [인증] 마이 페이지(설정) - 피드백 보내기 버튼 클릭 시 피드백 한걸음 배지를 전달 받습니다.",
 		notes = "배지는 푸시알림으로 전달합니다."
 	)
 	@ApiResponses(value = {
