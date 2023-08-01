@@ -188,9 +188,9 @@ public class UserController {
 	@Version
 	@Auth
 	@DeleteMapping("/v1/user")
-	public ResponseEntity<SuccessResponse<String>> deleteUser(@ApiIgnore @UserId Long userId,
+	public ResponseEntity<SuccessResponse<String>> deleteUserDeprecated(@ApiIgnore @UserId Long userId,
 		@Valid @RequestBody DeleteUserRequestDto request) {
-		userService.deleteUser(request, userId);
+		userService.deleteUserDeprecated(request, userId);
 		if (UserServiceUtils.isNewFeedback(request.getFeedbackType(), request.getComment())) {
 			sqsProducer.produce(SlackUserDeleteDto.of(userRetrieveService.getFeedback(request.getComment())));
 		}
@@ -217,8 +217,8 @@ public class UserController {
 	@Version
 	@Auth
 	@PostMapping("/v1/user/feedback")
-	public ResponseEntity<SuccessResponse<String>> acquireFeedbackBadge(@ApiIgnore @UserId Long userId) {
-		userService.acquireFeedbackBadge(userId);
+	public ResponseEntity<SuccessResponse<String>> acquireFeedbackBadgeDeprecated(@ApiIgnore @UserId Long userId) {
+		userService.acquireFeedbackBadgeDeprecated(userId);
 		return SuccessResponse.OK;
 	}
 }

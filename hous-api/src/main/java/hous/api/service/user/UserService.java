@@ -168,7 +168,7 @@ public class UserService {
 		me.updateRepresent(represent);
 	}
 
-	public void deleteUser(DeleteUserRequestDto request, Long userId) {
+	public void deleteUserDeprecated(DeleteUserRequestDto request, Long userId) {
 		User user = UserServiceUtils.findUserById(userRepository, userId);
 		Onboarding me = user.getOnboarding();
 		List<Participate> participates = me.getParticipates();
@@ -188,7 +188,7 @@ public class UserService {
 		userRepository.delete(user);
 	}
 
-	public void acquireFeedbackBadge(Long userId) {
+	public void acquireFeedbackBadgeDeprecated(Long userId) {
 		User user = UserServiceUtils.findUserById(userRepository, userId);
 		RoomServiceUtils.findParticipatingRoom(user);
 		badgeService.acquireBadge(user, BadgeInfo.FEEDBACK_ONE_STEP);

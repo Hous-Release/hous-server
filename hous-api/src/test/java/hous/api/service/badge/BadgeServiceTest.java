@@ -366,7 +366,7 @@ public class BadgeServiceTest {
 		roomService.createRoom(setRoomNameRequestDto, userId);
 
 		// when
-		userService.acquireFeedbackBadge(userId);
+		userService.acquireFeedbackBadgeDeprecated(userId);
 
 		// then
 		List<Acquire> acquiresByUser = acquireRepository.findAllAcquireByOnboarding(user.getOnboarding());

@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+// TODO: 2023/08/01 Deprecated
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
