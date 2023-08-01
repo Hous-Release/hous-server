@@ -194,4 +194,20 @@ public class UserService {
 		badgeService.acquireBadge(user, BadgeInfo.FEEDBACK_ONE_STEP);
 	}
 
+	public void deleteUser(Long userId) {
+		User user = UserServiceUtils.findUserById(userRepository, userId);
+		Onboarding me = user.getOnboarding();
+		List<Participate> participates = me.getParticipates();
+
+		if (!participates.isEmpty()) {
+			Participate participate = participates.get(0);
+			Room room = participate.getRoom();
+			List<Todo> todos = room.getTodos();
+			List<Todo> myTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, me);
+			RoomServiceUtils.deleteMyTodosTakeMe(takeRepository, doneRepository, todoRepository, myTodos, me, room);
+			RoomServiceUtils.deleteParticipateUser(participateRepository, roomRepository, me, room, participate);
+		}
+
+		userRepository.delete(user);
+	}
 }
