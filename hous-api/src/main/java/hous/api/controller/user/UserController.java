@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hous.api.config.aop.duplicate.PreventDuplicateRequest;
@@ -40,7 +39,6 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(tags = "User")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/v1")
 public class UserController {
 
 	private final UserService userService;
@@ -77,7 +75,7 @@ public class UserController {
 	@PreventDuplicateRequest
 	@Version
 	@Auth
-	@PutMapping("/user")
+	@PutMapping("/v1/user")
 	public ResponseEntity<SuccessResponse<String>> updateUserInfo(@ApiIgnore @UserId Long userId,
 		@Valid @RequestBody UpdateUserInfoRequestDto request) {
 		userService.updateUserInfo(request, userId);
@@ -103,7 +101,7 @@ public class UserController {
 	@PreventDuplicateRequest
 	@Version
 	@Auth
-	@PatchMapping("/user/push")
+	@PatchMapping("/v1/user/push")
 	public ResponseEntity<SuccessResponse<String>> updateUserPushSetting(@ApiIgnore @UserId Long userId,
 		@Valid @RequestBody UpdatePushSettingRequestDto request) {
 		userService.updateUserPushSetting(request, userId);
@@ -131,7 +129,7 @@ public class UserController {
 	@PreventDuplicateRequest
 	@Version
 	@Auth
-	@PutMapping("/user/personality")
+	@PutMapping("/v1/user/personality")
 	public ResponseEntity<SuccessResponse<UpdatePersonalityColorResponse>> updateUserTestScore(
 		@ApiIgnore @UserId Long userId,
 		@Valid @RequestBody UpdateTestScoreRequestDto request) {
@@ -159,7 +157,7 @@ public class UserController {
 	@PreventDuplicateRequest
 	@Version
 	@Auth
-	@PutMapping("/user/badge/{badgeId}/represent")
+	@PutMapping("/v1/user/badge/{badgeId}/represent")
 	public ResponseEntity<SuccessResponse<String>> updateRepresentBadge(@ApiIgnore @UserId Long userId,
 		@ApiParam(name = "badgeId", value = "대표 배지로 설정할 badge 의 id", required = true, example = "1")
 		@PathVariable Long badgeId) {
@@ -188,7 +186,7 @@ public class UserController {
 	@PreventDuplicateRequest
 	@Version
 	@Auth
-	@DeleteMapping("/user")
+	@DeleteMapping("/v1/user")
 	public ResponseEntity<SuccessResponse<String>> deleteUser(@ApiIgnore @UserId Long userId,
 		@Valid @RequestBody DeleteUserRequestDto request) {
 		userService.deleteUser(request, userId);
@@ -216,7 +214,7 @@ public class UserController {
 	@PreventDuplicateRequest
 	@Version
 	@Auth
-	@PostMapping("/user/feedback")
+	@PostMapping("/v1/user/feedback")
 	public ResponseEntity<SuccessResponse<String>> acquireFeedbackBadge(@ApiIgnore @UserId Long userId) {
 		userService.acquireFeedbackBadge(userId);
 		return SuccessResponse.OK;
