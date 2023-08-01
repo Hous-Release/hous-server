@@ -224,11 +224,6 @@ public class UserController {
 	)
 	@ApiResponses(value = {
 		@ApiResponse(code = 200, message = "성공입니다."),
-		@ApiResponse(code = 400,
-			message = "1. 사유를 선택 안한 경우, NO를 보내주세요. (feedbackType)\n"
-				+ "2. 의견은 200 글자 이내로 입력해주세요. (comment)\n"
-				+ "3. 의견이 없는 경우, 빈 스트링(\"\")을 보내주세요. (comment)",
-			response = ErrorResponse.class),
 		@ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
 		@ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
 		@ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
