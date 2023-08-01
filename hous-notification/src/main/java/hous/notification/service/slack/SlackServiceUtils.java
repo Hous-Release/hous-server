@@ -10,18 +10,12 @@ import com.slack.api.model.Attachment;
 import com.slack.api.model.block.LayoutBlock;
 import com.slack.api.model.block.composition.TextObject;
 
-import hous.notification.service.slack.dto.response.UserDelete;
-import hous.notification.service.slack.dto.response.UserDeleteResponse;
-
 public class SlackServiceUtils {
 
 	private static final String PROD_ERROR_INSTANCE = "*Error Instance:*\n";
 	private static final String PROD_ERROR_MESSAGE = "*Error Message:*\n";
 	private static final String PROD_ERROR_STACK = "*Error Stack:*\n";
 	private static final String FILTER_STRING = "hous";
-	private static final String PROD_USER_DELETE_TOTAL_COUNT_MESSAGE = "*피드백을 남긴 총 탈퇴 인원:* ";
-	private static final String PROD_USER_DELETE_MESSAGE = "*피드백 유형별 탈퇴 인원:*\n";
-	private static final String PROD_NOW_USER_DELETE_COMMENT = "*지금 탈퇴한 유저의 의견:*\n";
 
 	public static List<Attachment> createAttachments(String color, List<LayoutBlock> data) {
 		List<Attachment> attachments = new ArrayList<>();
@@ -30,27 +24,6 @@ public class SlackServiceUtils {
 		attachment.setBlocks(data);
 		attachments.add(attachment);
 		return attachments;
-	}
-
-	public static List<LayoutBlock> createUserDeleteMessage(UserDeleteResponse userDeleteResponse) {
-		List<LayoutBlock> layoutBlockList = new ArrayList<>();
-		layoutBlockList.add(section(section -> section.text(
-			markdownText(PROD_USER_DELETE_TOTAL_COUNT_MESSAGE + userDeleteResponse.getTotalDeleteUserCount()))));
-
-		StringBuilder stringBuilder = new StringBuilder();
-		for (UserDelete userDelete : userDeleteResponse.getTotalDeleteUserList()) {
-			stringBuilder.append(userDelete.toString());
-			stringBuilder.append('\n');
-		}
-		layoutBlockList.add(section(section -> section.text(
-			markdownText(PROD_USER_DELETE_MESSAGE + stringBuilder))));
-
-		if (!userDeleteResponse.getComment().isBlank()) {
-			layoutBlockList.add(section(section -> section.text(
-				markdownText(PROD_NOW_USER_DELETE_COMMENT + userDeleteResponse.getComment()))));
-		}
-
-		return layoutBlockList;
 	}
 
 	public static List<LayoutBlock> createProdErrorMessage(String instance, Exception exception) {

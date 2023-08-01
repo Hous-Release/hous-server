@@ -28,7 +28,6 @@ import hous.core.domain.badge.mongo.BadgeCounterRepository;
 import hous.core.domain.badge.mysql.AcquireRepository;
 import hous.core.domain.badge.mysql.BadgeRepository;
 import hous.core.domain.badge.mysql.RepresentRepository;
-import hous.core.domain.feedback.Feedback;
 import hous.core.domain.feedback.mysql.FeedbackRepository;
 import hous.core.domain.personality.Personality;
 import hous.core.domain.personality.PersonalityColor;
@@ -186,9 +185,6 @@ public class UserService {
 			RoomServiceUtils.deleteParticipateUser(participateRepository, roomRepository, me, room, participate);
 		}
 
-		if (UserServiceUtils.isNewFeedback(request.getFeedbackType(), request.getComment())) {
-			feedbackRepository.save(Feedback.newInstance(request.getFeedbackType(), request.getComment()));
-		}
 		userRepository.delete(user);
 	}
 

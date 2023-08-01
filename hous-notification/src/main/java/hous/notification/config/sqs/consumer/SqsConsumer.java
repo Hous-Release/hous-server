@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hous.common.constant.MessageType;
 import hous.notification.config.sqs.dto.FirebaseDto;
 import hous.notification.config.sqs.dto.SlackExceptionDto;
-import hous.notification.config.sqs.dto.SlackUserDeleteDto;
 import hous.notification.config.sqs.dto.SlackUserDeleteFeedbackDto;
 import hous.notification.service.firebase.FirebaseCloudMessageService;
 import hous.notification.service.slack.SlackService;
@@ -47,10 +46,6 @@ public class SqsConsumer {
 					SlackExceptionDto slackExceptionDto = objectMapper.readValue(info, SlackExceptionDto.class);
 					slackService.sendSlackMessageProductError(
 						slackExceptionDto.getInstance(), slackExceptionDto.getException());
-					break;
-				case MessageType.SLACK_USER_DELETE:
-					SlackUserDeleteDto slackUserDeleteDto = objectMapper.readValue(info, SlackUserDeleteDto.class);
-					slackService.sendSlackMessageDeleteUser(slackUserDeleteDto.getUserDeleteResponse());
 					break;
 				case MessageType.SLACK_USER_DELETE_FEEDBACK:
 					SlackUserDeleteFeedbackDto slackUserDeleteFeedbackDto = objectMapper.readValue(info,

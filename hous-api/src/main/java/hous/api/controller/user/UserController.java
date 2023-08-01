@@ -15,11 +15,9 @@ import hous.api.config.aop.duplicate.PreventDuplicateRequest;
 import hous.api.config.interceptor.auth.Auth;
 import hous.api.config.interceptor.version.Version;
 import hous.api.config.resolver.UserId;
-import hous.api.config.sqs.dto.SlackUserDeleteDto;
 import hous.api.config.sqs.producer.SqsProducer;
 import hous.api.service.user.UserRetrieveService;
 import hous.api.service.user.UserService;
-import hous.api.service.user.UserServiceUtils;
 import hous.api.service.user.dto.request.DeleteUserRequestDto;
 import hous.api.service.user.dto.request.UpdatePushSettingRequestDto;
 import hous.api.service.user.dto.request.UpdateTestScoreRequestDto;
@@ -192,9 +190,6 @@ public class UserController {
 	public ResponseEntity<SuccessResponse<String>> deleteUserDeprecated(@ApiIgnore @UserId Long userId,
 		@Valid @RequestBody DeleteUserRequestDto request) {
 		userService.deleteUserDeprecated(request, userId);
-		if (UserServiceUtils.isNewFeedback(request.getFeedbackType(), request.getComment())) {
-			sqsProducer.produce(SlackUserDeleteDto.of(userRetrieveService.getFeedback(request.getComment())));
-		}
 		return SuccessResponse.OK;
 	}
 
