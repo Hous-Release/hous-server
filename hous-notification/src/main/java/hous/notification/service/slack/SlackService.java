@@ -26,10 +26,13 @@ public class SlackService {
 	String channelProductError;
 	@Value(value = "${slack.channel.notification}")
 	String channelDeleteUserNotification;
+	@Value(value = "${slack.channel.feedback}")
+	String channelDeleteUserFeedback;
 
 	private static final String LOCAL = "local";
 	private static final String PROD_ERROR_MESSAGE_TITLE = "🤯 *500 에러 발생*";
 	private static final String PROD_USER_DELETE_MESSAGE_TITLE = "🤯 *현재 사용자 탈퇴 현황*";
+	private static final String PROD_USER_DELETE_FEEDBACK_TITLE = "🤯 *현재 사용자 탈퇴 피드백*";
 	private static final String ATTACHMENTS_ERROR_COLOR = "#eb4034";
 	private static final String ATTACHMENTS_NOTIFICATION_COLOR = "#36a64f";
 
@@ -61,6 +64,23 @@ public class SlackService {
 					req.channel(channelProductError)
 						.attachments(attachments)
 						.text(PROD_ERROR_MESSAGE_TITLE));
+			} catch (SlackApiException | IOException e) {
+				log.error(e.getMessage(), e);
+			}
+		}
+	}
+
+	public void sendSlackMessageUserDeleteFeedback(String comment) {
+		if (!profile.equals(LOCAL)) {
+			try {
+				Slack slack = Slack.getInstance();
+				List<LayoutBlock> layoutBlocks = SlackServiceUtils.createUserDeleteFeedbackMessage(comment);
+				List<Attachment> attachments = SlackServiceUtils.createAttachments(ATTACHMENTS_NOTIFICATION_COLOR,
+					layoutBlocks);
+				slack.methods(token).chatPostMessage(req ->
+					req.channel(channelDeleteUserFeedback)
+						.attachments(attachments)
+						.text(PROD_USER_DELETE_FEEDBACK_TITLE));
 			} catch (SlackApiException | IOException e) {
 				log.error(e.getMessage(), e);
 			}

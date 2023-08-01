@@ -69,6 +69,12 @@ public class SlackServiceUtils {
 		return layoutBlockList;
 	}
 
+	public static List<LayoutBlock> createUserDeleteFeedbackMessage(String comment) {
+		List<LayoutBlock> layoutBlockList = new ArrayList<>();
+		layoutBlockList.add(section(section -> section.text(markdownText(comment))));
+		return layoutBlockList;
+	}
+
 	private static String filterErrorStack(StackTraceElement[] stacks) {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("```");

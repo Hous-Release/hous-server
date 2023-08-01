@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import hous.api.config.sqs.dto.SlackUserDeleteFeedbackDto;
+import hous.api.config.sqs.producer.SqsProducer;
 import hous.api.service.badge.BadgeService;
 import hous.api.service.badge.BadgeServiceUtils;
 import hous.api.service.room.RoomServiceUtils;
@@ -14,6 +16,7 @@ import hous.api.service.user.dto.request.DeleteUserRequestDto;
 import hous.api.service.user.dto.request.UpdatePushSettingRequestDto;
 import hous.api.service.user.dto.request.UpdateTestScoreRequestDto;
 import hous.api.service.user.dto.request.UpdateUserInfoRequestDto;
+import hous.api.service.user.dto.request.UserDeleteFeedbackRequestDto;
 import hous.api.service.user.dto.response.UpdatePersonalityColorResponse;
 import hous.common.util.JwtUtils;
 import hous.core.domain.badge.Badge;
@@ -69,6 +72,7 @@ public class UserService {
 	private final FeedbackRepository feedbackRepository;
 	private final BadgeCounterRepository badgeCounterRepository;
 
+	private final SqsProducer sqsProducer;
 	private final BadgeService badgeService;
 	private final JwtUtils jwtUtils;
 
@@ -209,5 +213,9 @@ public class UserService {
 		}
 
 		userRepository.delete(user);
+	}
+
+	public void sendUserDeleteFeedback(UserDeleteFeedbackRequestDto request) {
+		sqsProducer.produce(SlackUserDeleteFeedbackDto.of(request.getComment()));
 	}
 }

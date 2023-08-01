@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+// TODO: 2023/08/01 Deprecated
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum FeedbackType {
