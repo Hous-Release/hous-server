@@ -1,5 +1,6 @@
 package hous.api.service.rule.dto.response;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +27,11 @@ public class RuleRepresentResponse {
 		return RuleRepresentResponse.builder()
 			.rules(rules.stream()
 				.sorted(Rule::compareTo)
-				.map(RuleInfo::of).collect(Collectors.toList()))
+				.map(RuleInfo::of)
+				.collect(Collectors.toList())
+				.stream()
+				.sorted(Comparator.comparing(RuleInfo::isRepresent).reversed())
+				.collect(Collectors.toList()))
 			.build();
 	}
 
