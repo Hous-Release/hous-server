@@ -40,11 +40,10 @@ CREATE TABLE deploy
 
 CREATE TABLE feedback
 (
-    id            bigint auto_increment primary key,
-    created_at    datetime(6) null,
-    updated_at    datetime(6) null,
-    comment       varchar(300) null,
-    feedback_type varchar(30) null
+    id         bigint auto_increment primary key,
+    created_at datetime(6) null,
+    updated_at datetime(6) null,
+    comment    varchar(300) null
 );
 
 CREATE TABLE personality

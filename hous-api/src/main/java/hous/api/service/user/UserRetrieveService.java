@@ -1,8 +1,6 @@
 package hous.api.service.user;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -13,8 +11,6 @@ import hous.api.service.user.dto.response.MyBadgeInfoResponse;
 import hous.api.service.user.dto.response.PersonalityInfoResponse;
 import hous.api.service.user.dto.response.PersonalityTestInfoResponse;
 import hous.api.service.user.dto.response.PushSettingResponse;
-import hous.api.service.user.dto.response.UserDelete;
-import hous.api.service.user.dto.response.UserDeleteResponse;
 import hous.api.service.user.dto.response.UserInfoResponse;
 import hous.core.domain.badge.Acquire;
 import hous.core.domain.badge.Badge;
@@ -22,9 +18,6 @@ import hous.core.domain.badge.Represent;
 import hous.core.domain.badge.mysql.AcquireRepository;
 import hous.core.domain.badge.mysql.BadgeRepository;
 import hous.core.domain.badge.mysql.RepresentRepository;
-import hous.core.domain.feedback.Feedback;
-import hous.core.domain.feedback.FeedbackType;
-import hous.core.domain.feedback.mysql.FeedbackRepository;
 import hous.core.domain.personality.Personality;
 import hous.core.domain.personality.PersonalityColor;
 import hous.core.domain.personality.PersonalityTest;
@@ -49,7 +42,6 @@ public class UserRetrieveService {
 	private final RepresentRepository representRepository;
 	private final BadgeRepository badgeRepository;
 	private final AcquireRepository acquireRepository;
-	private final FeedbackRepository feedbackRepository;
 
 	public UserInfoResponse getUserInfo(Long userId) {
 		User user = UserServiceUtils.findUserById(userRepository, userId);
@@ -103,18 +95,6 @@ public class UserRetrieveService {
 			.filter(acquire -> !acquire.isRead())
 			.forEach(Acquire::updateIsRead);
 		return MyBadgeInfoResponse.of(represent, badges, myBadges, newBadges);
-	}
-
-	public UserDeleteResponse getFeedback(String comment) {
-		Map<FeedbackType, List<Feedback>> users = feedbackRepository.findAll().stream()
-			.collect(Collectors.groupingBy(Feedback::getFeedbackType));
-		List<UserDelete> userDeletes = new ArrayList<>();
-		long totalCount = 0;
-		for (FeedbackType feedbackType : users.keySet()) {
-			totalCount += users.get(feedbackType).size();
-			userDeletes.add(UserDelete.of(users.get(feedbackType).size(), feedbackType.getValue()));
-		}
-		return UserDeleteResponse.of(totalCount, userDeletes, comment);
 	}
 
 	private UserInfoResponse getProfileInfoByUser(User user) {

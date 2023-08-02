@@ -12,8 +12,8 @@ import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import hous.api.config.sqs.dto.MessageDto;
 import hous.common.constant.MessageType;
+import hous.common.dto.sqs.MessageDto;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

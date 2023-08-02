@@ -1,4 +1,4 @@
-package hous.notification.config.sqs.dto;
+package hous.common.dto.sqs;
 
 import hous.common.constant.MessageType;
 import lombok.AccessLevel;
@@ -13,18 +13,14 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder
-public class FirebaseDto extends MessageDto {
+public class SlackUserDeleteFeedbackDto extends MessageDto {
 
-	private String fcmToken;
-	private String title;
-	private String body;
+	private String comment;
 
-	public static FirebaseDto of(String fcmToken, String title, String body) {
-		return FirebaseDto.builder()
-			.type(MessageType.FIREBASE)
-			.fcmToken(fcmToken)
-			.title(title)
-			.body(body)
+	public static SlackUserDeleteFeedbackDto of(String coment) {
+		return SlackUserDeleteFeedbackDto.builder()
+			.type(MessageType.SLACK_USER_DELETE_FEEDBACK)
+			.comment(coment)
 			.build();
 	}
 }

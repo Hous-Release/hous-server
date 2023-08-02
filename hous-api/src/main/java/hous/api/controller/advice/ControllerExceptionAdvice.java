@@ -24,10 +24,10 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 
-import hous.api.config.sqs.dto.SlackExceptionDto;
 import hous.api.config.sqs.producer.SqsProducer;
 import hous.common.constant.InstanceType;
 import hous.common.dto.ErrorResponse;
+import hous.common.dto.sqs.SlackExceptionDto;
 import hous.common.exception.FeignClientException;
 import hous.common.exception.HousException;
 import lombok.AllArgsConstructor;

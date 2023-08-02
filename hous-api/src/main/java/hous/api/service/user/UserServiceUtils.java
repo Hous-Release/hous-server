@@ -10,7 +10,6 @@ import hous.api.service.user.dto.request.UpdatePushSettingRequestDto;
 import hous.common.exception.ConflictException;
 import hous.common.exception.NotFoundException;
 import hous.common.exception.ValidationException;
-import hous.core.domain.feedback.FeedbackType;
 import hous.core.domain.personality.Personality;
 import hous.core.domain.personality.PersonalityColor;
 import hous.core.domain.personality.mysql.PersonalityRepository;
@@ -144,10 +143,6 @@ public class UserServiceUtils {
 		result.addAll(justMeList);
 		result.addAll(exceptMeList);
 		return result;
-	}
-
-	public static boolean isNewFeedback(FeedbackType feedbackType, String comment) {
-		return !(feedbackType.equals(FeedbackType.NO) && comment.isBlank());
 	}
 
 	public static void validateBirthdayAndIsPublic(String birthday, Boolean isPublic) {

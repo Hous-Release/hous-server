@@ -9,22 +9,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hous.api.config.aop.duplicate.PreventDuplicateRequest;
 import hous.api.config.interceptor.auth.Auth;
 import hous.api.config.interceptor.version.Version;
 import hous.api.config.resolver.UserId;
-import hous.api.config.sqs.dto.SlackUserDeleteDto;
 import hous.api.config.sqs.producer.SqsProducer;
 import hous.api.service.user.UserRetrieveService;
 import hous.api.service.user.UserService;
-import hous.api.service.user.UserServiceUtils;
 import hous.api.service.user.dto.request.DeleteUserRequestDto;
 import hous.api.service.user.dto.request.UpdatePushSettingRequestDto;
 import hous.api.service.user.dto.request.UpdateTestScoreRequestDto;
 import hous.api.service.user.dto.request.UpdateUserInfoRequestDto;
+import hous.api.service.user.dto.request.UserDeleteFeedbackRequestDto;
 import hous.api.service.user.dto.response.UpdatePersonalityColorResponse;
 import hous.common.dto.ErrorResponse;
 import hous.common.dto.SuccessResponse;
@@ -40,7 +38,6 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(tags = "User")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/v1")
 public class UserController {
 
 	private final UserService userService;
@@ -77,7 +74,7 @@ public class UserController {
 	@PreventDuplicateRequest
 	@Version
 	@Auth
-	@PutMapping("/user")
+	@PutMapping("/v1/user")
 	public ResponseEntity<SuccessResponse<String>> updateUserInfo(@ApiIgnore @UserId Long userId,
 		@Valid @RequestBody UpdateUserInfoRequestDto request) {
 		userService.updateUserInfo(request, userId);
@@ -103,7 +100,7 @@ public class UserController {
 	@PreventDuplicateRequest
 	@Version
 	@Auth
-	@PatchMapping("/user/push")
+	@PatchMapping("/v1/user/push")
 	public ResponseEntity<SuccessResponse<String>> updateUserPushSetting(@ApiIgnore @UserId Long userId,
 		@Valid @RequestBody UpdatePushSettingRequestDto request) {
 		userService.updateUserPushSetting(request, userId);
@@ -131,7 +128,7 @@ public class UserController {
 	@PreventDuplicateRequest
 	@Version
 	@Auth
-	@PutMapping("/user/personality")
+	@PutMapping("/v1/user/personality")
 	public ResponseEntity<SuccessResponse<UpdatePersonalityColorResponse>> updateUserTestScore(
 		@ApiIgnore @UserId Long userId,
 		@Valid @RequestBody UpdateTestScoreRequestDto request) {
@@ -159,7 +156,7 @@ public class UserController {
 	@PreventDuplicateRequest
 	@Version
 	@Auth
-	@PutMapping("/user/badge/{badgeId}/represent")
+	@PutMapping("/v1/user/badge/{badgeId}/represent")
 	public ResponseEntity<SuccessResponse<String>> updateRepresentBadge(@ApiIgnore @UserId Long userId,
 		@ApiParam(name = "badgeId", value = "대표 배지로 설정할 badge 의 id", required = true, example = "1")
 		@PathVariable Long badgeId) {
@@ -167,8 +164,9 @@ public class UserController {
 		return SuccessResponse.OK;
 	}
 
+	// TODO: 2023/08/01 Deprecated
 	@ApiOperation(
-		value = "[인증] 마이 페이지(설정) - 회원 정보를 삭제합니다.",
+		value = "@@ Deprecated 될 API 입니다. @@ [인증] 마이 페이지(설정) - 회원 정보를 삭제합니다.",
 		notes = "회원 정보 탈퇴 요청 시 해당 유저의 모든 정보를 삭제합니다.\n"
 			+ "feedbackType을 NO를 보낸 경우, 사유가 없는 것으로 판단합니다. comment가 없는 경우 빈스트링(\"\")으로 보내주세요."
 	)
@@ -188,13 +186,10 @@ public class UserController {
 	@PreventDuplicateRequest
 	@Version
 	@Auth
-	@DeleteMapping("/user")
-	public ResponseEntity<SuccessResponse<String>> deleteUser(@ApiIgnore @UserId Long userId,
+	@DeleteMapping("/v1/user")
+	public ResponseEntity<SuccessResponse<String>> deleteUserDeprecated(@ApiIgnore @UserId Long userId,
 		@Valid @RequestBody DeleteUserRequestDto request) {
-		userService.deleteUser(request, userId);
-		if (UserServiceUtils.isNewFeedback(request.getFeedbackType(), request.getComment())) {
-			sqsProducer.produce(SlackUserDeleteDto.of(userRetrieveService.getFeedback(request.getComment())));
-		}
+		userService.deleteUserDeprecated(request, userId);
 		return SuccessResponse.OK;
 	}
 
@@ -216,9 +211,57 @@ public class UserController {
 	@PreventDuplicateRequest
 	@Version
 	@Auth
-	@PostMapping("/user/feedback")
+	@PostMapping("/v1/user/feedback")
 	public ResponseEntity<SuccessResponse<String>> acquireFeedbackBadge(@ApiIgnore @UserId Long userId) {
 		userService.acquireFeedbackBadge(userId);
+		return SuccessResponse.OK;
+	}
+
+	@ApiOperation(
+		value = "[인증] 마이 페이지(설정) - 회원 정보를 삭제합니다.",
+		notes = "회원 정보 탈퇴 요청 시 해당 유저의 모든 정보를 삭제합니다.\n"
+			+ "feedbackType을 NO를 보낸 경우, 사유가 없는 것으로 판단합니다. comment가 없는 경우 빈스트링(\"\")으로 보내주세요."
+	)
+	@ApiResponses(value = {
+		@ApiResponse(code = 200, message = "성공입니다."),
+		@ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+		@ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다.", response = ErrorResponse.class),
+		@ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
+		@ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
+		@ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+	})
+	@PreventDuplicateRequest
+	@Version
+	@Auth
+	@DeleteMapping("/v2/user")
+	public ResponseEntity<SuccessResponse<String>> deleteUser(@ApiIgnore @UserId Long userId) {
+		userService.deleteUser(userId);
+		return SuccessResponse.OK;
+	}
+
+	@ApiOperation(
+		value = "[인증] 탈퇴 피드백 페이지 - 탈퇴 피드백을 보냅니다.",
+		notes = "내용이 존재할 경우에만 호출해주세요.\n"
+			+ "피드백은 슬랙 알림으로 전달합니다."
+	)
+	@ApiResponses(value = {
+		@ApiResponse(code = 200, message = "성공입니다."),
+		@ApiResponse(code = 400,
+			message = "1. 의견을 입력해주세요. (comment)\n"
+				+ "2. 의견은 200 글자 이내로 입력해주세요. (comment)",
+			response = ErrorResponse.class),
+		@ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
+		@ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
+		@ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
+		@ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
+	})
+	@PreventDuplicateRequest
+	@Version
+	@Auth
+	@PostMapping("/v1/user/delete/feedback")
+	public ResponseEntity<SuccessResponse<String>> sendUserDeleteFeedback(@ApiIgnore @UserId Long userId,
+		@Valid @RequestBody UserDeleteFeedbackRequestDto request) {
+		userService.sendUserDeleteFeedback(request);
 		return SuccessResponse.OK;
 	}
 }

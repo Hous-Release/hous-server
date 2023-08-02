@@ -1,4 +1,4 @@
-package hous.notification.config.sqs.dto;
+package hous.common.dto.sqs;
 
 import hous.common.constant.MessageType;
 import lombok.AccessLevel;
@@ -13,16 +13,14 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder
-public class SlackExceptionDto extends MessageDto {
+public class FcmTokenResetDto extends MessageDto {
 
-	private String instance;
-	private Exception exception;
+	private String fcmToken;
 
-	public static SlackExceptionDto of(String instance, Exception exception) {
-		return SlackExceptionDto.builder()
-			.type(MessageType.SLACK_EXCEPTION)
-			.instance(instance)
-			.exception(exception)
+	public static FcmTokenResetDto of(String fcmToken) {
+		return FcmTokenResetDto.builder()
+			.type(MessageType.FCM_TOKEN_RESET)
+			.fcmToken(fcmToken)
 			.build();
 	}
 }

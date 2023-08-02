@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import hous.api.config.sqs.producer.SqsProducer;
 import hous.api.service.badge.BadgeService;
 import hous.api.service.badge.BadgeServiceUtils;
 import hous.api.service.room.RoomServiceUtils;
@@ -14,7 +15,9 @@ import hous.api.service.user.dto.request.DeleteUserRequestDto;
 import hous.api.service.user.dto.request.UpdatePushSettingRequestDto;
 import hous.api.service.user.dto.request.UpdateTestScoreRequestDto;
 import hous.api.service.user.dto.request.UpdateUserInfoRequestDto;
+import hous.api.service.user.dto.request.UserDeleteFeedbackRequestDto;
 import hous.api.service.user.dto.response.UpdatePersonalityColorResponse;
+import hous.common.dto.sqs.SlackUserDeleteFeedbackDto;
 import hous.common.util.JwtUtils;
 import hous.core.domain.badge.Badge;
 import hous.core.domain.badge.BadgeCounter;
@@ -69,6 +72,7 @@ public class UserService {
 	private final FeedbackRepository feedbackRepository;
 	private final BadgeCounterRepository badgeCounterRepository;
 
+	private final SqsProducer sqsProducer;
 	private final BadgeService badgeService;
 	private final JwtUtils jwtUtils;
 
@@ -168,7 +172,7 @@ public class UserService {
 		me.updateRepresent(represent);
 	}
 
-	public void deleteUser(DeleteUserRequestDto request, Long userId) {
+	public void deleteUserDeprecated(DeleteUserRequestDto request, Long userId) {
 		User user = UserServiceUtils.findUserById(userRepository, userId);
 		Onboarding me = user.getOnboarding();
 		List<Participate> participates = me.getParticipates();
@@ -182,9 +186,6 @@ public class UserService {
 			RoomServiceUtils.deleteParticipateUser(participateRepository, roomRepository, me, room, participate);
 		}
 
-		if (UserServiceUtils.isNewFeedback(request.getFeedbackType(), request.getComment())) {
-			feedbackRepository.save(Feedback.newInstance(request.getFeedbackType(), request.getComment()));
-		}
 		userRepository.delete(user);
 	}
 
@@ -194,4 +195,25 @@ public class UserService {
 		badgeService.acquireBadge(user, BadgeInfo.FEEDBACK_ONE_STEP);
 	}
 
+	public void deleteUser(Long userId) {
+		User user = UserServiceUtils.findUserById(userRepository, userId);
+		Onboarding me = user.getOnboarding();
+		List<Participate> participates = me.getParticipates();
+
+		if (!participates.isEmpty()) {
+			Participate participate = participates.get(0);
+			Room room = participate.getRoom();
+			List<Todo> todos = room.getTodos();
+			List<Todo> myTodos = TodoServiceUtils.filterAllDaysUserTodos(todos, me);
+			RoomServiceUtils.deleteMyTodosTakeMe(takeRepository, doneRepository, todoRepository, myTodos, me, room);
+			RoomServiceUtils.deleteParticipateUser(participateRepository, roomRepository, me, room, participate);
+		}
+
+		userRepository.delete(user);
+	}
+
+	public void sendUserDeleteFeedback(UserDeleteFeedbackRequestDto request) {
+		feedbackRepository.save(Feedback.newInstance(request.getComment()));
+		sqsProducer.produce(SlackUserDeleteFeedbackDto.of(request.getComment()));
+	}
 }

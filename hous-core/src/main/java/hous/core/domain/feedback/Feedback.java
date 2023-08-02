@@ -2,8 +2,6 @@ package hous.core.domain.feedback;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,16 +24,11 @@ public class Feedback extends AuditingTimeEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(length = 30)
-	@Enumerated(EnumType.STRING)
-	private FeedbackType feedbackType;
-
 	@Column(length = 300)
 	private String comment;
 
-	public static Feedback newInstance(FeedbackType feedbackType, String comment) {
+	public static Feedback newInstance(String comment) {
 		return builder()
-			.feedbackType(feedbackType)
 			.comment(comment)
 			.build();
 	}

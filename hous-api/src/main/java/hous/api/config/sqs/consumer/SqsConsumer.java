@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import hous.api.config.sqs.dto.FcmTokenResetDto;
 import hous.common.constant.MessageType;
+import hous.common.dto.sqs.FcmTokenResetDto;
 import hous.common.util.JwtUtils;
 import hous.core.domain.user.User;
 import hous.core.domain.user.mysql.UserRepository;

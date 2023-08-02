@@ -45,7 +45,7 @@ public class UserServiceTest {
 		DeleteUserRequestDto deleteUserRequestDto = DeleteUserRequestDto.of(FeedbackType.NO, "");
 
 		// when
-		userService.deleteUser(deleteUserRequestDto, userId);
+		userService.deleteUserDeprecated(deleteUserRequestDto, userId);
 
 		// then
 		List<User> users = userRepository.findAll();
