@@ -3,8 +3,10 @@ package hous.api.service.rule;
 import static hous.common.exception.ErrorCode.*;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -28,6 +30,7 @@ import hous.api.service.rule.dto.request.UpdateRuleRepresentRequestDto;
 import hous.api.service.rule.dto.request.UpdateRuleRequestDto;
 import hous.api.service.rule.dto.response.RuleInfo;
 import hous.api.service.user.UserServiceUtils;
+import hous.common.constant.Constraint;
 import hous.common.exception.ConflictException;
 import hous.common.exception.ForbiddenException;
 import hous.common.type.FileType;
@@ -222,16 +225,12 @@ public class RuleService {
 		User user = UserServiceUtils.findUserById(userRepository, userId);
 		Room room = RoomServiceUtils.findParticipatingRoom(user);
 
-		var validateIsPresentCount =
-			request.getRules().stream().filter(represent -> Boolean.TRUE.equals(represent.getIsPresent())).count() > 3;
-		if (validateIsPresentCount) {
-			throw new ForbiddenException(String.format("방 (%s) 의 대표 rule 는 3 개를 초과할 수 없습니다.", room.getId()),
+		Set<Long> ruleIds = new HashSet<>(request.getRules());
+		if (ruleIds.size() > Constraint.RULE_REPRESENT_MAX) {
+			throw new ForbiddenException(
+				String.format("방 (%s) 의 대표 rule 는 %s 개를 초과할 수 없습니다.", room.getId(), Constraint.RULE_REPRESENT_MAX),
 				FORBIDDEN_REPRESENT_RULE_COUNT_EXCEPTION);
 		}
-
-		request.getRules().forEach(represent -> {
-			Rule rule = RuleServiceUtils.findRuleByIdAndRoom(ruleRepository, represent.getId(), room);
-			rule.updateRuleRepresent(represent.getIsPresent());
-		});
+		room.getRules().forEach(rule -> rule.updateRuleRepresent(ruleIds.contains(rule.getId())));
 	}
 }
