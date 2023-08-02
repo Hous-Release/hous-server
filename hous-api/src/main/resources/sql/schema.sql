@@ -61,7 +61,9 @@ CREATE TABLE personality
     name                       varchar(30)  not null,
     recommend_title            varchar(300) not null,
     recommend_todo             varchar(300) not null,
-    title                      varchar(300) not null
+    title                      varchar(300) not null,
+    first_download_image_url   varchar(300) not null,
+    second_download_image_url  varchar(300) not null
 );
 
 CREATE TABLE personality_test

@@ -55,4 +55,10 @@ public class Personality extends AuditingTimeEntity {
 
 	@Column(nullable = false, length = 300)
 	private String badPersonalityImageUrl;
+
+	@Column(nullable = false, length = 300)
+	private String firstDownloadImageUrl;
+
+	@Column(nullable = false, length = 300)
+	private String secondDownloadImageUrl;
 }

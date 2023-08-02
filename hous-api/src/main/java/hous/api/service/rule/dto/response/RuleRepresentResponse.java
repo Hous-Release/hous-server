@@ -1,7 +1,10 @@
 package hous.api.service.rule.dto.response;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import hous.core.domain.rule.Rule;
 import lombok.AccessLevel;
@@ -24,7 +27,11 @@ public class RuleRepresentResponse {
 		return RuleRepresentResponse.builder()
 			.rules(rules.stream()
 				.sorted(Rule::compareTo)
-				.map(RuleInfo::of).collect(Collectors.toList()))
+				.map(RuleInfo::of)
+				.collect(Collectors.toList())
+				.stream()
+				.sorted(Comparator.comparing(RuleInfo::isRepresent).reversed())
+				.collect(Collectors.toList()))
 			.build();
 	}
 
@@ -35,6 +42,11 @@ public class RuleRepresentResponse {
 		private Long id;
 		private String name;
 		private boolean isRepresent;
+
+		@JsonProperty("isRepresent")
+		public boolean isRepresent() {
+			return isRepresent;
+		}
 
 		public static RuleInfo of(Rule rule) {
 			return RuleInfo.builder()

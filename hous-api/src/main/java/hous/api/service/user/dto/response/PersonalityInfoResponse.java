@@ -31,6 +31,8 @@ public class PersonalityInfoResponse {
 	private String goodPersonalityImageUrl;
 	private String badPersonalityName;
 	private String badPersonalityImageUrl;
+	private String firstDownloadImageUrl;
+	private String secondDownloadImageUrl;
 
 	public static PersonalityInfoResponse of(Personality personality) {
 		return PersonalityInfoResponse.builder()
@@ -45,6 +47,8 @@ public class PersonalityInfoResponse {
 			.goodPersonalityImageUrl(personality.getGoodPersonalityImageUrl())
 			.badPersonalityName(personality.getBadPersonalityName())
 			.badPersonalityImageUrl(personality.getBadPersonalityImageUrl())
+			.firstDownloadImageUrl(personality.getFirstDownloadImageUrl())
+			.secondDownloadImageUrl(personality.getSecondDownloadImageUrl())
 			.build();
 	}
 
