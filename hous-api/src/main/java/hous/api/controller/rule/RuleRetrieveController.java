@@ -119,7 +119,7 @@ public class RuleRetrieveController {
 	})
 	@Version
 	@Auth
-	@GetMapping("/v2/rules/represent")
+	@GetMapping("/v1/rules/represent")
 	public ResponseEntity<SuccessResponse<RuleRepresentResponse>> getRepresentRuleInfo(@ApiIgnore @UserId Long userId) {
 		return SuccessResponse.success(SuccessCode.GET_REPRESENT_RULE_EDIT_INFO_SUCCESS,
 			ruleRetrieveService.getRepresentRuleInfo(userId));

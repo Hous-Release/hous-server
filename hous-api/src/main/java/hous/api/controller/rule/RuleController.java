@@ -285,7 +285,7 @@ public class RuleController {
 	@PreventDuplicateRequest
 	@Version
 	@Auth
-	@PutMapping("/v2/rules/represent")
+	@PutMapping("/v1/rules/represent")
 	public ResponseEntity<SuccessResponse<String>> updateRepresentRule(@ApiIgnore @UserId Long userId,
 		@Valid @RequestBody UpdateRuleRepresentRequestDto request) {
 		ruleService.updateRepresentRule(request, userId);
