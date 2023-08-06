@@ -42,7 +42,7 @@ public class SlackServiceUtils {
 		return layoutBlockList;
 	}
 
-	public static List<LayoutBlock> createUserDeleteFeedbackMessage(String comment) {
+	public static List<LayoutBlock> createUserFeedbackMessage(String comment) {
 		List<LayoutBlock> layoutBlockList = new ArrayList<>();
 		layoutBlockList.add(section(section -> section.text(markdownText(comment))));
 		return layoutBlockList;

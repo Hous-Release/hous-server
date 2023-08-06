@@ -22,7 +22,7 @@ import hous.api.service.user.dto.request.DeleteUserRequestDto;
 import hous.api.service.user.dto.request.UpdatePushSettingRequestDto;
 import hous.api.service.user.dto.request.UpdateTestScoreRequestDto;
 import hous.api.service.user.dto.request.UpdateUserInfoRequestDto;
-import hous.api.service.user.dto.request.UserDeleteFeedbackRequestDto;
+import hous.api.service.user.dto.request.UserFeedbackRequestDto;
 import hous.api.service.user.dto.response.UpdatePersonalityColorResponse;
 import hous.common.dto.ErrorResponse;
 import hous.common.dto.SuccessResponse;
@@ -260,7 +260,7 @@ public class UserController {
 	@Auth
 	@PostMapping("/v1/user/delete/feedback")
 	public ResponseEntity<SuccessResponse<String>> sendUserDeleteFeedback(@ApiIgnore @UserId Long userId,
-		@Valid @RequestBody UserDeleteFeedbackRequestDto request) {
+		@Valid @RequestBody UserFeedbackRequestDto request) {
 		userService.sendUserDeleteFeedback(request);
 		return SuccessResponse.OK;
 	}

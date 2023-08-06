@@ -17,15 +17,15 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
-public class UserDeleteFeedbackRequestDto {
+public class UserFeedbackRequestDto {
 
 	@ApiModelProperty(value = "의견", example = "흠냐링 제법 괜찮았으나 안쓰게 되네요.")
 	@Size(max = Constraint.FEEDBACK_COMMENT_MAX, message = "{user.comment.max}")
 	@NotBlank(message = "{user.comment.notBlank}")
 	private String comment;
 
-	public static UserDeleteFeedbackRequestDto of(String comment) {
-		return UserDeleteFeedbackRequestDto.builder()
+	public static UserFeedbackRequestDto of(String comment) {
+		return UserFeedbackRequestDto.builder()
 			.comment(comment)
 			.build();
 	}

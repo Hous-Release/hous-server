@@ -15,9 +15,9 @@ import hous.api.service.user.dto.request.DeleteUserRequestDto;
 import hous.api.service.user.dto.request.UpdatePushSettingRequestDto;
 import hous.api.service.user.dto.request.UpdateTestScoreRequestDto;
 import hous.api.service.user.dto.request.UpdateUserInfoRequestDto;
-import hous.api.service.user.dto.request.UserDeleteFeedbackRequestDto;
+import hous.api.service.user.dto.request.UserFeedbackRequestDto;
 import hous.api.service.user.dto.response.UpdatePersonalityColorResponse;
-import hous.common.dto.sqs.SlackUserDeleteFeedbackDto;
+import hous.common.dto.sqs.SlackUserFeedbackDto;
 import hous.common.util.JwtUtils;
 import hous.core.domain.badge.Badge;
 import hous.core.domain.badge.BadgeCounter;
@@ -212,8 +212,8 @@ public class UserService {
 		userRepository.delete(user);
 	}
 
-	public void sendUserDeleteFeedback(UserDeleteFeedbackRequestDto request) {
+	public void sendUserDeleteFeedback(UserFeedbackRequestDto request) {
 		feedbackRepository.save(Feedback.newInstance(request.getComment()));
-		sqsProducer.produce(SlackUserDeleteFeedbackDto.of(request.getComment()));
+		sqsProducer.produce(SlackUserFeedbackDto.of(request.getComment()));
 	}
 }

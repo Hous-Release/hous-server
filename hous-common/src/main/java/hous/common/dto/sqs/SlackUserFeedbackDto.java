@@ -13,12 +13,12 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder
-public class SlackUserDeleteFeedbackDto extends MessageDto {
+public class SlackUserFeedbackDto extends MessageDto {
 
 	private String comment;
 
-	public static SlackUserDeleteFeedbackDto of(String coment) {
-		return SlackUserDeleteFeedbackDto.builder()
+	public static SlackUserFeedbackDto of(String coment) {
+		return SlackUserFeedbackDto.builder()
 			.type(MessageType.SLACK_USER_DELETE_FEEDBACK)
 			.comment(coment)
 			.build();
