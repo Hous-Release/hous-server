@@ -189,10 +189,15 @@ public class UserService {
 		userRepository.delete(user);
 	}
 
-	public void acquireFeedbackBadge(Long userId) {
-		User user = UserServiceUtils.findUserById(userRepository, userId);
-		RoomServiceUtils.findParticipatingRoom(user);
-		badgeService.acquireBadge(user, BadgeInfo.FEEDBACK_ONE_STEP);
+	public void sendUserFeedback(Long userId, UserFeedbackRequestDto request) {
+		if (!request.isDeleting()) {
+			User user = UserServiceUtils.findUserById(userRepository, userId);
+			if (!user.getOnboarding().getParticipates().isEmpty()) {
+				badgeService.acquireBadge(user, BadgeInfo.FEEDBACK_ONE_STEP);
+			}
+		}
+		feedbackRepository.save(Feedback.newInstance(request.getComment()));
+		sqsProducer.produce(SlackUserFeedbackDto.of(request.getComment(), request.isDeleting()));
 	}
 
 	public void deleteUser(Long userId) {
@@ -210,10 +215,5 @@ public class UserService {
 		}
 
 		userRepository.delete(user);
-	}
-
-	public void sendUserDeleteFeedback(UserFeedbackRequestDto request) {
-		feedbackRepository.save(Feedback.newInstance(request.getComment()));
-		sqsProducer.produce(SlackUserFeedbackDto.of(request.getComment()));
 	}
 }

@@ -28,7 +28,7 @@ public class SlackService {
 
 	private static final String LOCAL = "local";
 	private static final String PROD_ERROR_MESSAGE_TITLE = "🤯 *500 에러 발생*";
-	private static final String USER_FEEDBACK_TITLE = "🤯 *새로운 사용자 피드백*";
+	private static final String USER_FEEDBACK_TITLE = "📮 *새로운 사용자 피드백*";
 	private static final String ATTACHMENTS_ERROR_COLOR = "#eb4034";
 	private static final String ATTACHMENTS_NOTIFICATION_COLOR = "#36a64f";
 
@@ -49,11 +49,11 @@ public class SlackService {
 		}
 	}
 
-	public void sendSlackMessageUserFeedback(String comment) {
+	public void sendSlackMessageUserFeedback(String comment, boolean isDeleting) {
 		if (!profile.equals(LOCAL)) {
 			try {
 				Slack slack = Slack.getInstance();
-				List<LayoutBlock> layoutBlocks = SlackServiceUtils.createUserFeedbackMessage(comment);
+				List<LayoutBlock> layoutBlocks = SlackServiceUtils.createUserFeedbackMessage(comment, isDeleting);
 				List<Attachment> attachments = SlackServiceUtils.createAttachments(ATTACHMENTS_NOTIFICATION_COLOR,
 					layoutBlocks);
 				slack.methods(token).chatPostMessage(req ->

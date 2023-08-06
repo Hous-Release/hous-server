@@ -16,6 +16,7 @@ public class SlackServiceUtils {
 	private static final String PROD_ERROR_MESSAGE = "*Error Message:*\n";
 	private static final String PROD_ERROR_STACK = "*Error Stack:*\n";
 	private static final String FILTER_STRING = "hous";
+	private static final String USER_DELETE_STATUS = "*Membership Withdrawal:* ";
 
 	public static List<Attachment> createAttachments(String color, List<LayoutBlock> data) {
 		List<Attachment> attachments = new ArrayList<>();
@@ -42,9 +43,15 @@ public class SlackServiceUtils {
 		return layoutBlockList;
 	}
 
-	public static List<LayoutBlock> createUserFeedbackMessage(String comment) {
+	public static List<LayoutBlock> createUserFeedbackMessage(String comment, boolean isDeleting) {
 		List<LayoutBlock> layoutBlockList = new ArrayList<>();
-		layoutBlockList.add(section(section -> section.text(markdownText(comment))));
+
+		List<TextObject> sectionInFields = new ArrayList<>();
+		sectionInFields.add(markdownText(USER_DELETE_STATUS + isDeleting));
+		layoutBlockList.add(section(section -> section.fields(sectionInFields)));
+
+		layoutBlockList.add(divider());
+		layoutBlockList.add(section(section -> section.text(markdownText("```" + comment + "```"))));
 		return layoutBlockList;
 	}
 

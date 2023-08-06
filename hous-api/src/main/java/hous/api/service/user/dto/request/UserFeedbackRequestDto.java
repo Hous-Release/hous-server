@@ -3,6 +3,8 @@ package hous.api.service.user.dto.request;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import hous.common.constant.Constraint;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
@@ -24,9 +26,11 @@ public class UserFeedbackRequestDto {
 	@NotBlank(message = "{user.comment.notBlank}")
 	private String comment;
 
-	public static UserFeedbackRequestDto of(String comment) {
-		return UserFeedbackRequestDto.builder()
-			.comment(comment)
-			.build();
+	@ApiModelProperty(value = "회원 탈퇴 여부", example = "false")
+	private boolean isDeleting;
+
+	@JsonProperty("isDeleting")
+	public boolean isDeleting() {
+		return isDeleting;
 	}
 }

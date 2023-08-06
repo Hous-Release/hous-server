@@ -50,7 +50,8 @@ public class SqsConsumer {
 				case MessageType.SLACK_USER_DELETE_FEEDBACK:
 					SlackUserFeedbackDto slackUserFeedbackDto = objectMapper.readValue(info,
 						SlackUserFeedbackDto.class);
-					slackService.sendSlackMessageUserFeedback(slackUserFeedbackDto.getComment());
+					slackService.sendSlackMessageUserFeedback(
+						slackUserFeedbackDto.getComment(), slackUserFeedbackDto.getIsDeleting());
 			}
 		} catch (Exception exception) {
 			log.error(exception.getMessage(), exception);
