@@ -22,7 +22,7 @@ import hous.api.service.user.dto.request.DeleteUserRequestDto;
 import hous.api.service.user.dto.request.UpdatePushSettingRequestDto;
 import hous.api.service.user.dto.request.UpdateTestScoreRequestDto;
 import hous.api.service.user.dto.request.UpdateUserInfoRequestDto;
-import hous.api.service.user.dto.request.UserDeleteFeedbackRequestDto;
+import hous.api.service.user.dto.request.UserFeedbackRequestDto;
 import hous.api.service.user.dto.response.UpdatePersonalityColorResponse;
 import hous.common.dto.ErrorResponse;
 import hous.common.dto.SuccessResponse;
@@ -194,11 +194,18 @@ public class UserController {
 	}
 
 	@ApiOperation(
-		value = "[인증] 마이 페이지(설정) - 피드백 보내기 버튼 클릭 시 피드백 한걸음 배지를 전달 받습니다.",
-		notes = "배지는 푸시알림으로 전달합니다."
+		value = "[인증] 마이 페이지(설정) / 탈퇴 피드백 페이지 - 호미나라 피드백 보내기 혹은 탈퇴 피드백을 보냅니다.",
+		notes = "내용이 존재할 경우에만 호출해주세요.\n"
+			+ "피드백은 슬랙 알림으로 전달합니다.\n"
+			+ "호미나라 피드백 보내기의 경우 isDeleting = false,\n"
+			+ "탈퇴 피드백의 경우 isDeleting = true 를 보내주세요."
 	)
 	@ApiResponses(value = {
 		@ApiResponse(code = 200, message = "성공입니다."),
+		@ApiResponse(code = 400,
+			message = "1. 의견을 입력해주세요. (comment)\n"
+				+ "2. 의견은 200 글자 이내로 입력해주세요. (comment)",
+			response = ErrorResponse.class),
 		@ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
 		@ApiResponse(code = 404,
 			message = "1. 탈퇴했거나 존재하지 않는 유저입니다.\n"
@@ -212,8 +219,9 @@ public class UserController {
 	@Version
 	@Auth
 	@PostMapping("/v1/user/feedback")
-	public ResponseEntity<SuccessResponse<String>> acquireFeedbackBadge(@ApiIgnore @UserId Long userId) {
-		userService.acquireFeedbackBadge(userId);
+	public ResponseEntity<SuccessResponse<String>> sendUserFeedback(@ApiIgnore @UserId Long userId,
+		@Valid @RequestBody UserFeedbackRequestDto request) {
+		userService.sendUserFeedback(userId, request);
 		return SuccessResponse.OK;
 	}
 
@@ -236,32 +244,6 @@ public class UserController {
 	@DeleteMapping("/v2/user")
 	public ResponseEntity<SuccessResponse<String>> deleteUser(@ApiIgnore @UserId Long userId) {
 		userService.deleteUser(userId);
-		return SuccessResponse.OK;
-	}
-
-	@ApiOperation(
-		value = "[인증] 탈퇴 피드백 페이지 - 탈퇴 피드백을 보냅니다.",
-		notes = "내용이 존재할 경우에만 호출해주세요.\n"
-			+ "피드백은 슬랙 알림으로 전달합니다."
-	)
-	@ApiResponses(value = {
-		@ApiResponse(code = 200, message = "성공입니다."),
-		@ApiResponse(code = 400,
-			message = "1. 의견을 입력해주세요. (comment)\n"
-				+ "2. 의견은 200 글자 이내로 입력해주세요. (comment)",
-			response = ErrorResponse.class),
-		@ApiResponse(code = 401, message = "토큰이 만료되었습니다. 다시 로그인 해주세요.", response = ErrorResponse.class),
-		@ApiResponse(code = 409, message = "처리중인 요청입니다.", response = ErrorResponse.class),
-		@ApiResponse(code = 426, message = "최신 버전으로 업그레이드가 필요합니다.", response = ErrorResponse.class),
-		@ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생하였습니다.", response = ErrorResponse.class)
-	})
-	@PreventDuplicateRequest
-	@Version
-	@Auth
-	@PostMapping("/v1/user/delete/feedback")
-	public ResponseEntity<SuccessResponse<String>> sendUserDeleteFeedback(@ApiIgnore @UserId Long userId,
-		@Valid @RequestBody UserDeleteFeedbackRequestDto request) {
-		userService.sendUserDeleteFeedback(request);
 		return SuccessResponse.OK;
 	}
 }

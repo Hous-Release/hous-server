@@ -15,9 +15,9 @@ import hous.api.service.user.dto.request.DeleteUserRequestDto;
 import hous.api.service.user.dto.request.UpdatePushSettingRequestDto;
 import hous.api.service.user.dto.request.UpdateTestScoreRequestDto;
 import hous.api.service.user.dto.request.UpdateUserInfoRequestDto;
-import hous.api.service.user.dto.request.UserDeleteFeedbackRequestDto;
+import hous.api.service.user.dto.request.UserFeedbackRequestDto;
 import hous.api.service.user.dto.response.UpdatePersonalityColorResponse;
-import hous.common.dto.sqs.SlackUserDeleteFeedbackDto;
+import hous.common.dto.sqs.SlackUserFeedbackDto;
 import hous.common.util.JwtUtils;
 import hous.core.domain.badge.Badge;
 import hous.core.domain.badge.BadgeCounter;
@@ -189,10 +189,15 @@ public class UserService {
 		userRepository.delete(user);
 	}
 
-	public void acquireFeedbackBadge(Long userId) {
-		User user = UserServiceUtils.findUserById(userRepository, userId);
-		RoomServiceUtils.findParticipatingRoom(user);
-		badgeService.acquireBadge(user, BadgeInfo.FEEDBACK_ONE_STEP);
+	public void sendUserFeedback(Long userId, UserFeedbackRequestDto request) {
+		if (!request.isDeleting()) {
+			User user = UserServiceUtils.findUserById(userRepository, userId);
+			if (!user.getOnboarding().getParticipates().isEmpty()) {
+				badgeService.acquireBadge(user, BadgeInfo.FEEDBACK_ONE_STEP);
+			}
+		}
+		feedbackRepository.save(Feedback.newInstance(request.getComment()));
+		sqsProducer.produce(SlackUserFeedbackDto.of(request.getComment(), request.isDeleting()));
 	}
 
 	public void deleteUser(Long userId) {
@@ -210,10 +215,5 @@ public class UserService {
 		}
 
 		userRepository.delete(user);
-	}
-
-	public void sendUserDeleteFeedback(UserDeleteFeedbackRequestDto request) {
-		feedbackRepository.save(Feedback.newInstance(request.getComment()));
-		sqsProducer.produce(SlackUserDeleteFeedbackDto.of(request.getComment()));
 	}
 }

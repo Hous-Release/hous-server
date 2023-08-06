@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hous.common.constant.MessageType;
 import hous.common.dto.sqs.FirebaseDto;
 import hous.common.dto.sqs.SlackExceptionDto;
-import hous.common.dto.sqs.SlackUserDeleteFeedbackDto;
+import hous.common.dto.sqs.SlackUserFeedbackDto;
 import hous.notification.service.firebase.FirebaseCloudMessageService;
 import hous.notification.service.slack.SlackService;
 import lombok.RequiredArgsConstructor;
@@ -48,9 +48,10 @@ public class SqsConsumer {
 						slackExceptionDto.getInstance(), slackExceptionDto.getException());
 					break;
 				case MessageType.SLACK_USER_DELETE_FEEDBACK:
-					SlackUserDeleteFeedbackDto slackUserDeleteFeedbackDto = objectMapper.readValue(info,
-						SlackUserDeleteFeedbackDto.class);
-					slackService.sendSlackMessageUserDeleteFeedback(slackUserDeleteFeedbackDto.getComment());
+					SlackUserFeedbackDto slackUserFeedbackDto = objectMapper.readValue(info,
+						SlackUserFeedbackDto.class);
+					slackService.sendSlackMessageUserFeedback(
+						slackUserFeedbackDto.getComment(), slackUserFeedbackDto.getIsDeleting());
 			}
 		} catch (Exception exception) {
 			log.error(exception.getMessage(), exception);
