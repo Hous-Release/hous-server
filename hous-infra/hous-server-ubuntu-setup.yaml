@@ -1,0 +1,125 @@
+- hosts: hous-dev-server
+
+  vars:
+    hostname: hous-dev-server
+    homedir: /home/ubuntu
+    swap_memory: 2G
+
+  tasks:
+    - name: apt update
+      shell:
+        cmd: apt update
+      become: yes
+
+    - name: set up timezone KST
+      shell:
+        cmd: timedatectl set-timezone Asia/Seoul
+      become: yes
+
+    - name: set up hostname
+      shell:
+        cmd: hostnamectl set-hostname {{ hostname }}
+      become: yes
+
+    - name: set up vim
+      shell:
+        cmd: apt install -y vim
+      become: yes
+
+    - name: set up mysql client
+      shell:
+        cmd: apt-get install -y mysql-client
+      become: yes
+
+    - name: check installed mysql client
+      shell:
+        cmd: mysql --version
+
+    - name: set up redis-cli
+      shell:
+        cmd: apt install -y redis-tools
+      become: yes
+
+    - name: check installed redis-cli
+      shell:
+        cmd: redis-cli --version
+
+    - name: set up nginx
+      shell:
+        cmd: apt-get install -y nginx
+      become: yes
+
+    - name: check installed nginx
+      shell:
+        cmd: nginx -v
+
+    - name: set up codedeploy - install rube-full
+      shell:
+        cmd: apt install -y ruby-full
+        chdir: "{{ homedir }}"
+      become: yes
+
+    - name: set up codedeploy - install wget
+      shell:
+        cmd: apt install -y wget
+        chdir: "{{ homedir }}"
+      become: yes
+
+    - name: set up codedeploy - install codedeploy-agent
+      shell:
+        cmd: wget https://aws-codedeploy-ap-northeast-2.s3.ap-northeast-2.amazonaws.com/latest/install
+        chdir: "{{ homedir }}"
+      become: yes
+
+    - name: set up codedeploy - chmod +x ./install
+      shell:
+        cmd: chmod +x ./install
+        chdir: "{{ homedir }}"
+      become: yes
+
+    - name: set up codedeploy - install auto
+      shell:
+        cmd: ./install auto
+        chdir: "{{ homedir }}"
+      become: yes
+
+    - name: check install codedeploy
+      shell:
+        cmd: service codedeploy-agent status
+        chdir: "{{ homedir }}"
+      become: yes
+
+    - name: create swap memory
+      shell:
+        cmd: sudo fallocate -l {{ swap_memory }} /swapfile
+      become: yes
+
+    - name: create swap memory file
+      shell:
+        cmd: chmod 600 /swapfile
+      become: yes
+
+    - name: active swap memory 1
+      shell:
+        cmd: mkswap /swapfile
+      become: yes
+
+    - name: active swap memory 2
+      shell:
+        cmd: swapon /swapfile
+      become: yes
+
+    - name: apply created swap memory even after reboot
+      shell:
+        cmd: echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+      become: yes
+
+    - name: check swap memery file
+      shell:
+        cmd: cat /etc/fstab
+      become: yes
+
+    - name: check installed java 11
+      shell:
+        cmd: java --version
+
