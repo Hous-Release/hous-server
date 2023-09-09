@@ -53,7 +53,7 @@
       shell:
         cmd: nginx -v
 
-    - name: set up codedeploy - install rube-full
+    - name: set up codedeploy - install ruby-full
       shell:
         cmd: apt install -y ruby-full
         chdir: "{{ homedir }}"
@@ -114,7 +114,7 @@
         cmd: echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
       become: yes
 
-    - name: check swap memery file
+    - name: check swap memory file
       shell:
         cmd: cat /etc/fstab
       become: yes
