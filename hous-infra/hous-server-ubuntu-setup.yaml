@@ -119,6 +119,11 @@
         cmd: cat /etc/fstab
       become: yes
 
+    - name: set up java 11
+      shell:
+        cmd: apt-get install -y openjdk-11-jdk
+      become: yes
+
     - name: check installed java 11
       shell:
         cmd: java --version
