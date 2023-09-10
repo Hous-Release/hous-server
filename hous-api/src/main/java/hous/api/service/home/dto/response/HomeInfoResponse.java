@@ -45,7 +45,7 @@ public class HomeInfoResponse {
 	public boolean isPersonalityTest() {
 		return isPersonalityTest;
 	}
-	
+
 	@ToString
 	@Getter
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -62,6 +62,9 @@ public class HomeInfoResponse {
 		int doneOurTodosCnt = (int)ourTodos.stream()
 			.filter(ourTodo -> ourTodo.getStatus() == OurTodoStatus.FULL_CHECK)
 			.count();
+		List<Rule> representRules = rules.stream()
+			.filter(Rule::isRepresent)
+			.collect(Collectors.toList());
 		return HomeInfoResponse.builder()
 			.userNickname(me.getNickname())
 			.roomName(room.getName())
@@ -73,11 +76,16 @@ public class HomeInfoResponse {
 				.limit(3)
 				.map(TodoDetailInfo::getTodoName)
 				.collect(Collectors.toList()))
-			.ourRules(rules.stream()
-				.sorted(Comparator.comparing(Rule::getIdx))
-				.limit(3)
-				.map(Rule::getName)
-				.collect(Collectors.toList()))
+			.ourRules(representRules.isEmpty() ?
+				rules.stream()
+					.sorted(Comparator.comparing(Rule::getCreatedAt))
+					.limit(3)
+					.map(Rule::getName)
+					.collect(Collectors.toList()) :
+				representRules.stream()
+					.limit(3)
+					.map(Rule::getName)
+					.collect(Collectors.toList()))
 			.isPersonalityTest(!me.getPersonality().getColor().equals(PersonalityColor.GRAY))
 			.homies(participants.stream()
 				.map(onboarding -> HomieInfo.builder()
