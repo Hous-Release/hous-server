@@ -42,6 +42,10 @@ public class UserServiceUtils {
 		return user;
 	}
 
+	public static List<User> findAllUsers(UserRepository userRepository) {
+		return userRepository.findAll();
+	}
+
 	public static User findUserById(UserRepository userRepository, Long userId) {
 		User user = userRepository.findUserById(userId);
 		if (user == null) {

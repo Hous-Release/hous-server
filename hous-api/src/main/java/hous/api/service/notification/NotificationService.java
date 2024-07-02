@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import hous.api.config.sqs.producer.SqsProducer;
+import hous.api.service.notification.dto.request.NotificationSendAllRequestDto;
+import hous.api.service.user.UserServiceUtils;
 import hous.common.dto.sqs.FirebaseDto;
 import hous.core.domain.badge.BadgeInfo;
 import hous.core.domain.notification.Notification;
@@ -18,6 +20,7 @@ import hous.core.domain.todo.Todo;
 import hous.core.domain.user.PushStatus;
 import hous.core.domain.user.TodoPushStatus;
 import hous.core.domain.user.User;
+import hous.core.domain.user.mysql.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -26,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class NotificationService {
 
 	private final NotificationRepository notificationRepository;
+	private final UserRepository userRepository;
 	private final SqsProducer sqsProducer;
 
 	public void sendNewTodoNotification(User to, Todo todo, boolean isTake) {
@@ -131,6 +135,13 @@ public class NotificationService {
 				generateContent(badgeInfo.getValue(), PushMessage.NEW_BADGE.getTitle()),
 				generateDetailContent(to.getOnboarding().getNickname(), PushMessage.NEW_BADGE.getBody())));
 		}
+	}
+
+	public void sendAll(NotificationSendAllRequestDto request) {
+		List<User> users = UserServiceUtils.findAllUsers(userRepository);
+		users.forEach(user -> {
+			sqsProducer.produce(FirebaseDto.of(user.getFcmToken(), request.getTitle(), request.getBody()));
+		});
 	}
 
 	private String generateContent(String name, String message) {
